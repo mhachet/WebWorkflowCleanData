@@ -1,18 +1,24 @@
 package src.servlets;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -45,15 +51,15 @@ public class UploadControler  extends HttpServlet{
 
 	}
 
-	
+
 	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {		
 		int count = 0;
 		String uuid = "";
 		String nbInput = "";
 		String action = "";
-		
+
 		String firstline = "";		
-		
+
 		List<FileItem> items = null;
 		try {
 			items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
@@ -65,7 +71,7 @@ public class UploadControler  extends HttpServlet{
 			DiskFileItem itemFile = (DiskFileItem) item;
 			String fileExtensionName = itemFile.getName();
 			fileExtensionName = FilenameUtils.getExtension(fileExtensionName);
-			
+
 			if(count == 0){
 				uuid = itemFile.getString();
 				if(!new File(DIRECTORY_PATH + "temp/").exists()){
@@ -88,7 +94,13 @@ public class UploadControler  extends HttpServlet{
 				System.out.println(action);
 			}
 			else if(count == 3){
-				File file = new File(DIRECTORY_PATH + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + ".csv");
+				System.out.println("format : " + fileExtensionName);
+				ArrayList<String> compressedFormat = new ArrayList<>();
+				compressedFormat.add("zip");
+				compressedFormat.add("rar");
+				compressedFormat.add("tar.gz");
+				
+				File file = new File(DIRECTORY_PATH + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + "." + fileExtensionName);
 				if(action.equals("upload")){
 					try {
 						itemFile.write(file);
@@ -96,30 +108,36 @@ public class UploadControler  extends HttpServlet{
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					firstline = this.getFirstLine(file);
-					//String fileContained = this.getFileContained(file);
-					System.out.println(firstline);
-					response.setContentType("application/text");
-					response.setCharacterEncoding("UTF-8");
-					response.getWriter().write(firstline);
+					if(fileExtensionName.equals("zip")){
+						String dezipFile = this.unzip(file, DIRECTORY_PATH + "temp/" + uuid + "/data/");
+						System.out.println("dezipfile : " + dezipFile);
+					}
+					else{
+						firstline = this.getFirstLine(file);
+						//String fileContained = this.getFileContained(file);
+						System.out.println(firstline);
+						response.setContentType("application/text");
+						response.setCharacterEncoding("UTF-8");
+						response.getWriter().write(firstline);
+					}
 				}
 				else if(action.equals("cancel")){
-					
+
 					file.delete();
 					response.getWriter().write("cancelDone");
 				}
 			}
-			
+
 			count ++;			
 		}
-		
+
 
 	}
-	
+
 
 	protected String getFileContained(File file){
 		String contained = "";
-		
+
 		InputStream inputStreamReference;
 		try {
 			inputStreamReference = new FileInputStream(file);
@@ -139,8 +157,8 @@ public class UploadControler  extends HttpServlet{
 
 		return contained;
 	}
-	
-	
+
+
 	protected String getFirstLine(File file){
 		String firstLine = "";
 
@@ -171,5 +189,68 @@ public class UploadControler  extends HttpServlet{
 	}
 
 
+	public String unzip(File zipfile, String folder) throws FileNotFoundException, IOException{
+		
+		ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipfile.getCanonicalFile())));
+		String zipFilename = zipfile.getName().split("/")[zipfile.getName().split("/").length - 1];
+		String dezipFilename = "";
+		ZipEntry ze = null;
+		
+		try {
+			while((ze = zis.getNextEntry()) != null){
+				//dezipFilename = ze.toString();
+				dezipFilename = zipFilename.split("\\.")[0] + ".csv";
+				File f = new File(folder,dezipFilename );
+				if (ze.isDirectory()) {
+					f.mkdirs();
+					continue;
+				}
+				
+
+				f.getParentFile().mkdirs();
+				OutputStream fos = new BufferedOutputStream(new FileOutputStream(f));
+
+				try {
+					try {
+						final byte[] buf = new byte[8192];
+						int bytesRead;
+						while (-1 != (bytesRead = zis.read(buf)))
+							fos.write(buf, 0, bytesRead);
+					}
+					finally {
+						fos.close();
+					}
+				}
+				catch (final IOException ioe) {
+					f.delete();
+					throw ioe;
+				}
+			}
+		}
+		finally {
+			zis.close();
+			zipfile.delete();
+		}
+		
+		return dezipFilename;
+	}
 
 }
+
+/*
+ ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipfile.getCanonicalFile())));
+		String zipFilename = zipfile.getName().split("/")[zipfile.getName().split("/").length - 1];
+		String dezipFilename = "";
+		ZipEntry ze = null;
+		
+		try {
+			while((ze = zis.getNextEntry()) != null){
+
+				File f = new File(folder, zipFilename);
+				System.out.println(f.getAbsolutePath() + "  " + f.getName());
+				if (ze.isDirectory()) {
+					f.mkdirs();
+					continue;
+				}
+				dezipFilename = zipFilename.split("\\.")[0];
+				*/
