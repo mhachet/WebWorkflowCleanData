@@ -53,7 +53,7 @@ import src.model.ReconciliationService;
 @WebServlet(name = "Controler")
 public class Controler extends HttpServlet {
 
-	private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/"; 
+	private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/WebContent/output/"; 
 	private String RESSOURCES_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/";
 
 	private Initialise initialisation;
@@ -345,17 +345,18 @@ public class Controler extends HttpServlet {
 			else if(fieldName.contains(reconcileActive)){
 				String [] tableauField =  fieldName.split("_");
 				int idReconcile = Integer.parseInt(tableauField[tableauField.length-1]);
-				System.out.println("fieldName : " + fieldName + "  " + reconcileActive);
+				System.out.println("fieldName : " + fieldName + "  " + reconcileActive + " value : " + item.getString());
 				for(int i = 0 ; i < listMappingReconcileDWC.size() ; i++ ){
 					int idFile = listMappingReconcileDWC.get(i).getIdFile();
 					if(idFile == (idReconcile)){
 						ReconciliationService reconciliationService = listMappingReconcileDWC.get(i).getReconcileDWC();
 						if(item.getString().equals("true")){
 							reconciliationService.setReconcile(true);
-							HashMap<Integer, String> linesConnectedNewName = new HashMap<>();
-							reconciliationService.setLineConnectedNewName(linesConnectedNewName);
+							HashMap<Integer, String> linesConnectedNewName = new HashMap<Integer, String>();
+							reconciliationService.setLinesConnectedNewName(linesConnectedNewName);
 							reconciliationService.setFilename(listMappingReconcileDWC.get(i).getOriginalName());
 							listReconcileFiles.add(reconciliationService);
+							System.out.println("in reconcileActive : " + reconciliationService.getLinesConnectedNewName());
 						}
 						else{
 							reconciliationService.setReconcile(false);
@@ -388,11 +389,14 @@ public class Controler extends HttpServlet {
 				System.out.println("valueradio : " + value);
 				int idFile = Integer.parseInt(tableauField[tableauField.length-2]);
 				int idLine = Integer.parseInt(tableauField[tableauField.length-1]);
-				System.out.println(idLine);
+				//System.out.println(idLine);
 				ReconciliationService reconciliationService = listReconcileFiles.get(idFile);
-				HashMap<Integer, String> linesConnnectedNewName = reconciliationService.getLineConnectedNewName();
-				System.out.println(linesConnnectedNewName);
-				linesConnnectedNewName.put(idLine, value);
+				if(reconciliationService.isReconcile()){
+					HashMap<Integer, String> linesConnnectedNewName = reconciliationService.getLinesConnectedNewName();
+					System.out.println("in group : " + linesConnnectedNewName);
+					linesConnnectedNewName.put(idLine, value);
+				}
+				
 			}
 			else if(fieldName.contains("csvDropdown_")){
 				//System.out.println("fieldName : " + fieldName);
@@ -412,7 +416,7 @@ public class Controler extends HttpServlet {
 					if(idFile == (idInput)){ 
 						MappingDwC mappingDWC = listMappingReconcileDWC.get(i).getMappingDWC();
 						mappingDWC.getNoMappedFile().setSeparator(separator);
-						System.out.println("separator : " + item.getString());
+						//System.out.println("separator : " + item.getString());
 					}
 				}
 				

@@ -7,7 +7,7 @@
 	version="3.0">
 	<welcome-file-list>
 		<welcome-file>HomePage.html</welcome-file>
-		<!-- <welcome-file>finalWorkflow.jsp</welcome-file> -->
+		<welcome-file>finalWorkflow.jsp</welcome-file>
 	</welcome-file-list>
 	<servlet>
 		<servlet-name>Controler</servlet-name>
@@ -57,14 +57,8 @@
 		<servlet-class>src.servlets.Download</servlet-class>
 		<init-param>
 			<param-name>chemin</param-name>
-			<param-value>workspace/WebWorkflowCleanData/temp/</param-value>
+			<param-value>/home/mhachet/workspace/WebWorkflowCleanData/WebContent/output/temp/</param-value>
 		</init-param>
-		<multipart-config>
-			<!--<location>/home/mhachet/workspace/WebWorkflowCleanData/temp/</location>
-			<max-file-size>2097152</max-file-size>  2 Mo -->
-			<!--<max-request-size>10485760</max-request-size>  5 x 2Mo -->
-			<!--<file-size-threshold>1048576</file-size-threshold>  1 Mo -->
-		</multipart-config>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Download</servlet-name>

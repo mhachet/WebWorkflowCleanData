@@ -104,7 +104,7 @@ public class Treatment {
 
 		String tagReconcile = reconcileService.getReconcileTagBased();
 		int tagReconcileColumn = 0;
-		HashMap<Integer, String> linesConnectedNewName = reconcileService.getLineConnectedNewName();
+		HashMap<Integer, String> linesConnectedNewName = reconcileService.getLinesConnectedNewName();
 		ArrayList<String> listLinesReconciled = new ArrayList<>();
 		try{
 			InputStream inputStreamReference = new FileInputStream(referenceFileReconcile.getCsvFile()); 

@@ -36,7 +36,7 @@ import org.json.JSONException;
 public class UploadControler  extends HttpServlet{
 
 
-	private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/"; 
+	private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/WebContent/output/"; 
 	private String RESSOURCES_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/";
 
 

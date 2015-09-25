@@ -21,7 +21,7 @@ import org.json.simple.JSONObject;
 
 public class JSONobject {
 
-    private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/"; 
+    private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/WebContent/output/"; 
     
     private ArrayList<String> presentTags;
     private ArrayList<String> dwcTags;

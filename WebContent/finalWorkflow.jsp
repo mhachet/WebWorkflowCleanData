@@ -166,7 +166,8 @@
                     </table>
                 </div>
                 <hr class="col-lg-12"></hr>
-                <a href="../temp/data/inputFile_0.csv"/>Test download</a>
+                <!-- <a href="output/test_ipt_ok.csv"/>Test download</a>
+				<a href="test_ipt_ok.csv"/>Test download 2</a> -->
                 <div id="headerStep1_involved" class="post-preview">
                     <h4 class="post-meta">Step 1 : Mapping to DarwinCore format</h4>
                 </div>

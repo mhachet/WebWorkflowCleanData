@@ -37,7 +37,7 @@ import com.mysql.fabric.xmlrpc.base.Array;
 @WebServlet(name = "ReconcileControler")
 public class ReconcileControler extends HttpServlet {
 
-	private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/"; 
+	private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/WebContent/output/"; 
 	private String RESSOURCES_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/";
 
 

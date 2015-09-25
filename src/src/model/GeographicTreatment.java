@@ -284,7 +284,7 @@ public class GeographicTreatment {
      *  
      *  -180 >= longitude > 0
      *   0 < longitude <= 180
-     *   
+     *   locationID_
      *   tag "hasGeospatialIssues" = false
      *   
      *  @return void
@@ -296,7 +296,7 @@ public class GeographicTreatment {
 	messages.add("\n--- Create Table Clean from temporary table ---");
 	String sqlCreateClean = "CREATE TABLE Workflow.Clean_" + this.getNbSessionRandom() + " AS SELECT * FROM Workflow.temp_" + this.getNbSessionRandom() + " WHERE " +
 		"(decimalLatitude_!=0 AND decimalLatitude_<90 AND decimalLatitude_>-90 AND decimalLongitude_!=0 " +
-		"AND decimalLongitude_>-180 AND decimalLongitude_<180) AND (hasGeospatialIssues_='false');";
+		"AND decimalLongitude_>-180 AND decimalLongitude_<180) AND (hasGeospatialIssues_!='true');";
 	messages.addAll(newConnectionClean.newConnection(choiceStatement, sqlCreateClean));
 
 	for(int i = 0 ; i < messages.size() ; i++){

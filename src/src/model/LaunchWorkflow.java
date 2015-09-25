@@ -36,7 +36,7 @@ public class LaunchWorkflow {
 	private Treatment dataTreatment;
 	private Initialise initialisation;
 	private Finalisation finalisation;
-	//private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/";
+	//private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/WebContent/output/";
 
 	private Step1_MappingDwc step1;
 	private Step2_ReconciliationService step2;
@@ -425,7 +425,7 @@ public class LaunchWorkflow {
 
 			listFinalOutput.add(cleanOutput);
 			String pathFile = cleanOutput.getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(),"");
-			listPathsOutput.add(pathFile);//_clean
+			listPathsOutput.add(pathFile);//wrong_coordinates_
 		}
 
 		finalisation.setListPathsOutputFiles(listPathsOutput);

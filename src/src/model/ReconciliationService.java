@@ -51,15 +51,6 @@ public class ReconciliationService{
         this.reconcileTagBased = reconcileTagBased;
     }
 
-    public HashMap<Integer, String> getLineConnectedNewName() {
-        return linesConnectedNewName;
-    }
-
-    public void setLineConnectedNewName(
-    	HashMap<Integer, String> lineConnectedNewName) {
-        this.linesConnectedNewName = lineConnectedNewName;
-    }
-
     public HashMap<Integer, String> getLinesConnectedNewName() {
         return linesConnectedNewName;
     }

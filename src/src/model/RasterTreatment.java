@@ -76,8 +76,8 @@ public class RasterTreatment {
 		this.setNbWrongOccurrences(listNotValidData.size());
 
 		// remove temporary files bind to the raster analysis
-		dataTreatment.deleteDirectory(new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/"));
-
+		//dataTreatment.deleteDirectory(new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/"));
+		//cells_proba_raster_
 
 		return matrixFileValidCells;
 	}
@@ -277,6 +277,9 @@ public class RasterTreatment {
 		}
 		if(!new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/data/").exists()){
 			new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/data/").mkdirs();
+		}
+		if(!new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/data/rasterAnalyse/").exists()){
+			new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/data/rasterAnalyse/").mkdirs();
 		}
 		File matrix = new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/cells_proba_raster_" + dataTreatment.getNbSessionRandom() + ".csv");
 		FileWriter writer = null;
