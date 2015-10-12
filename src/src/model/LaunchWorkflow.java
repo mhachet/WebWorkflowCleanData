@@ -425,7 +425,7 @@ public class LaunchWorkflow {
 
 			listFinalOutput.add(cleanOutput);
 			String pathFile = cleanOutput.getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(),"");
-			listPathsOutput.add(pathFile);//wrong_coordinates_
+			listPathsOutput.add(pathFile);
 		}
 
 		finalisation.setListPathsOutputFiles(listPathsOutput);

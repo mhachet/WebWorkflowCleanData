@@ -1,13 +1,12 @@
 function initialiseFinalPage() {
 	for (var i = 0; i <= 9 ; i++) {
 		var step_involved = document.getElementById("step" + i + "_involved").value;
-        
+		console.log(i + " => " + step_involved);
 		if(step_involved == "true"){
-		      console.log(i + "  => " + step_involved);
             this.initialiseStep(i, true);
 		}
 		else{
-            console.log(i + " => " + step_involved);
+            
 			this.initialiseStep(i, false);
 		}
 		
@@ -15,36 +14,63 @@ function initialiseFinalPage() {
 }
 
 function checkErrorOk(step_ok, p_ok, nbStep){
-    
+	console.log(nbStep + " : " + step_ok);
 	if(step_ok == "true"){
 		console.log("true : " + "p_ok" + nbStep);
 		p_ok.setAttribute("style", "color:#089A4C");
+		p_ok.innerHTML = "Everything went well";
 	}
 	else{
 		//console.log("false : " + step_ok);
 		p_ok.setAttribute("style", "color:#FF0000");
+		p_ok.innerHTML = "Error during process";
 	}
 }
 
 function initialiseStep(nbStep, involved){
 	var divStep = document.getElementById("divStep" + nbStep);
-    if(nbStep !=0 && nbStep != 1 && nbStep !=2){
-        var step_ok = document.getElementById("step" + nbStep + "_ok").value;
-    }
+	var nbInput = document.getElementById("nbTotalInput").value;
 	
-	var p_ok = document.getElementById("p_ok" + nbStep);
+    divStep.setAttribute('style', "margin-left: 40px; visibility: visible");
+    
+    if(nbStep == 0 || nbStep == 1 || nbStep ==2){
+    	if(involved){
+    		for(var i = 0; i < nbInput; i++){
+        		var step_ok_id = document.getElementById("step" + nbStep + "_ok_inp" + i);
+        		if(step_ok_id){
+        			var step_ok = step_ok_id.innerHTML;
+        			var p_ok_step_inp = document.getElementById("p_ok_step" + nbStep + "_inp" + i);
+            		
+            		formatResult(involved, nbStep, step_ok, p_ok_step_inp);
+        		}
+        		
+        	}
+    	}
+    	else{
+    		
+    		formatResult(involved, nbStep, "", "");
+    	}
+    	
+        
+    }
+    else{
+    	var step_ok = document.getElementById("step" + nbStep + "_ok").value;
+    	var p_ok_step_inp = document.getElementById("p_ok_step" + nbStep + "_inp");
+    	
+    	formatResult(involved, nbStep, step_ok, p_ok_step_inp);
+    }
+}
+
+function formatResult(involved, nbStep, step_ok, p_ok_step_inp){
 	var headerStep_involved = $("#headerStep" + nbStep + "_involved");
     var headerStep_notInvolved = $("#headerStep" + nbStep + "_NotInvolved");
     
-	divStep.setAttribute('style', "margin-left: 40px; visibility: visible");
 	console.log(involved);
 	if(involved){
-		var divStepInvolved = document.getElementById("divStep" + nbStep + "Involved");
+		var divStepInvolved = document.getElementById("headerStep" + nbStep + "_involved");
         headerStep_involved.show();
         headerStep_notInvolved.hide();
-        if(nbStep !=0 && nbStep != 1 && nbStep != 2){
-            this.checkErrorOk(step_ok, p_ok, nbStep);
-        }
+        this.checkErrorOk(step_ok, p_ok_step_inp, nbStep);
 		//divStepInvolved.setAttribute('style', "margin-left: 40px; visibility: visible");
 	}
 	else{
@@ -52,14 +78,13 @@ function initialiseStep(nbStep, involved){
         headerStep_involved.hide();
         headerStep_notInvolved.show();
         
-	    var notInvolved = document.getElementById("divStep" + nbStep + "NotInvolved");
+	    var notInvolved = document.getElementById("headerStep" + nbStep + "_NotInvolved");
+	    var divStep = document.getElementById("divStep" + nbStep);
         divStep.style.display = "none";
         console.log(notInvolved);
 	    //notInvolved.setAttribute('style', "margin-left: 40px; visibility: visible");
 	    
 	}
-	
-	
 	
 }
 

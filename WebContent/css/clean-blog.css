@@ -699,3 +699,7 @@ input[type=radio]{
     display: block;   
     font-size: 12px;
 }
+
+.spinner-red-only{
+	border-bottom-color:#F76;
+}

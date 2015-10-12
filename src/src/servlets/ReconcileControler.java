@@ -76,8 +76,6 @@ public class ReconcileControler extends HttpServlet {
 			else if(count == 1){
 				uuid = itemFile.getString();
 				System.out.println(uuid);
-				
-
 			}
 			else if(count == 2){
 				nbInput = itemFile.getString();
@@ -110,9 +108,11 @@ public class ReconcileControler extends HttpServlet {
 			new File(DIRECTORY_PATH + "temp/" + uuid + "/final_results/").mkdirs();
 		}
 
+		String extension = this.getExtension(nbInput, uuid);
+		System.out.println("extension : " + extension);
 		if(action.equals("preparation")){
 
-			File file = new File(DIRECTORY_PATH + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + ".csv");
+			File file = new File(DIRECTORY_PATH + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + "." + extension);
 			firstLine = this.getFirstLine(file);
 
 			response.setContentType("application/text");
@@ -120,14 +120,16 @@ public class ReconcileControler extends HttpServlet {
 			response.getWriter().write(firstLine);
 		}
 		else if(action.equals("reconciliation")){
-			FileReader reader = new FileReader(DIRECTORY_PATH + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + ".csv");
+			FileReader reader = new FileReader(DIRECTORY_PATH + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + "." + extension);
 			BufferedReader br = null;
 			ArrayList<String> lines = new ArrayList<>();
 			int countLines = 0;
 			try {
 				String sCurrentLine;
-				br = new BufferedReader(new FileReader(DIRECTORY_PATH + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + ".csv"));
+				FileReader fileReader = new FileReader(DIRECTORY_PATH + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + "." + extension);
 
+				br = new BufferedReader(fileReader);
+				
 				while ((sCurrentLine = br.readLine()) != null) {
 					if(countLines == 0){
 						firstLine = sCurrentLine;
@@ -164,6 +166,21 @@ public class ReconcileControler extends HttpServlet {
 
 	}
 
+	protected String getExtension(String nbInput, String uuid){
+		String extension = "";
+		File csvFile = new File(DIRECTORY_PATH + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + ".csv");
+		File txtFile = new File(DIRECTORY_PATH + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + ".txt");
+		
+		if(csvFile.exists()){
+			extension = "csv";
+		}
+		else if(txtFile.exists()){
+			extension = "txt";
+		}
+		
+		return extension;
+	}
+	
 	protected String getFirstLine(File file){
 		String firstLine = "";
 

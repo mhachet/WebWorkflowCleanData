@@ -575,6 +575,35 @@ function uploadInputFile(nb_input){
 	var filesize = sampleFile.size;
 	var uuid = this.getUUID();
 	if(sampleText != ""){
+		var divLoadingIcon = document.createElement("div");
+		divLoadingIcon.setAttribute('class', "preloader-wrapper small active");
+		divLoadingIcon.setAttribute('id', "loadIcon_" + nb_input);
+		var divSpinnerIcon = document.createElement('div');
+		divSpinnerIcon.setAttribute('class', "spinner-layer spinner-red-only");
+		var divCircleLeft = document.createElement("div");
+		divCircleLeft.setAttribute('class', "circle-clipper left");
+		var divCircleOne = document.createElement("div");
+		divCircleOne.setAttribute('class', "circle");
+		var divGapPatch = document.createElement("div");
+		divGapPatch.setAttribute('class', "gap-patch");
+		var divCircleTwo = document.createElement("div");
+		divCircleTwo.setAttribute('class', "circle");
+		var divCircleThree = document.createElement("div");
+		divCircleThree.setAttribute('class', "circle");
+		var divClipperRight = document.createElement("div");
+		divClipperRight.setAttribute('class',"circle-clipper right");
+		
+		divCircleLeft.appendChild(divCircleOne);
+		divGapPatch.appendChild(divCircleTwo);
+		divClipperRight.appendChild(divCircleThree);
+		divSpinnerIcon.appendChild(divCircleLeft);
+		divSpinnerIcon.appendChild(divGapPatch);
+		divSpinnerIcon.appendChild(divClipperRight);
+		divLoadingIcon.appendChild(divSpinnerIcon)
+		
+		var divAddLoad = document.getElementById("divAddLoad_" + nb_input);
+		divAddLoad.appendChild(divLoadingIcon);
+		
 		var formdata = new FormData();
 		formdata.append("uuid", uuid);
 		formdata.append("nbInput", nb_input);
@@ -594,6 +623,10 @@ function uploadInputFile(nb_input){
 		xhrPOST.onload = function(e) {
 
 			if (this.status == 200) {
+				
+				divAddLoad.removeChild(divLoadingIcon);
+				
+				
 				actionSeparatorCSV(nb_input, "upload");
 				actionMappingButton(nb_input, "upload");
 				actionReconcileButton(nb_input, "upload");

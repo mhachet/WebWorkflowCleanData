@@ -289,7 +289,7 @@ public class RasterTreatment {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String heading = "idPoint,";
+		String heading = "";
 		boolean firstLine = true;
 		for (Entry<Integer, HashMap<String, Boolean>> entry : hashMapValidOrNot.entrySet()) {
 
@@ -302,7 +302,7 @@ public class RasterTreatment {
 					String rasterName = probaEntry.getKey();
 
 					if(nbRasterFile < rasterFiles.size()){
-						heading += rasterName + ",";
+						heading += "abstract,acceptedNameUsage,acceptedNameUsageID,accessRights,accrualMethod,accrualPeriodicity,accrualPolicy,alternative,associatedMedia,associatedOccurrences,associatedOrganisms,associatedReferences,associatedSequences,associatedTaxa,audience,available,basisOfRecord,bed,behavior,bibliographicCitation,catalogNumber,class,classKey,collectionCode,collectionID,conformsTo,continent,contributor,coordinateAccuracy,coordinatePrecision,coordinateUncertaintyInMeters,country,countryCode,county,coverage,created,creator,dataGeneralizations,datasetID,datasetKey,datasetName,date,dateAccepted,dateCopyrighted,dateIdentified,dateSubmitted,day,decimalLatitude,decimalLongitude,depth,depthAccuracy,description,disposition,distanceAboveSurface,distanceAboveSurfaceAccuracy,dynamicProperties,earliestAgeOrLowestStage,earliestEonOrLowestEonothem,earliestEpochOrLowestSeries,earliestEraOrLowestErathem,earliestPeriodOrLowestSystem,educationLevel,elevation,elevationAccuracy,endDayOfYear,establishmentMeans,event,eventDate,eventID,eventRemarks,eventTime,extent,family,familyKey,fieldNotes,fieldNumber,footprintSpatialFit,footprintSRS,footprintWKT,format,formation,gbifID,genericName,genus,genusKey,geodeticDatum,geologicalContext,geologicalContextID,georeferencedBy,georeferencedDate,georeferenceProtocol,georeferenceRemarks,georeferenceSources,georeferenceVerificationStatus,group,habitat,hasCoordinate,hasFormat,hasGeospatialIssues,hasPart,hasVersion,higherClassification,higherGeography,higherGeographyID,highestBiostratigraphicZone,identification,identificationID,identificationQualifier,identificationReferences,identificationRemarks,identificationVerificationStatus,identifiedBy,identifier,idFile,individualCount,individualID,informationWithheld,infraspecificEpithet,institutionCode,institutionID,instructionalMethod,isFormatOf,island,islandGroup,isPartOf,isReferencedBy,isReplacedBy,isRequiredBy,issue,issued,isVersionOf,kingdom,kingdomKey,language,lastCrawled,lastInterpreted,lastParsed,latestAgeOrHighestStage,latestEonOrHighestEonothem,latestEpochOrHighestSeries,latestEraOrHighestErathem,latestPeriodOrHighestSystem,license,lifeStage,lithostratigraphicTerms,livingSpecimen,locality,locationAccordingTo,locationID,locationRemarks,lowestBiostratigraphicZone,machineObservation,materialSample,materialSampleID,maximumDepthinMeters,maximumDistanceAboveSurfaceInMeters,maximumElevationInMeters,measurementAccuracy,measurementDeterminedBy,measurementDeterminedDate,measurementID,measurementMethod,measurementOrFact,measurementRemarks,measurementType,measurementUnit,mediator,mediaType,medium,member,minimumDepthinMeters,minimumDistanceAboveSurfaceInMeters,minimumElevationInMeters,modified,month,municipality,nameAccordingTo,nameAccordingToID,namePublishedIn,namePublishedInID,namePublishedInYear,nomenclaturalCode,nomenclaturalStatus,occurrence,occurrenceDetails,occurrenceID,occurrenceRemarks,occurrenceStatus,order,orderKey,organism,organismID,organismName,organismRemarks,organismScope,originalNameUsage,originalNameUsageID,otherCatalogNumbers,ownerInstitutionCode,parentNameUsage,parentNameUsageID,phylum,phylumKey,pointRadiusSpatialFit,preparations,preservedSpecimen,previousIdentifications,protocol,provenance,publisher,publishingCountry,recordedBy,recordNumber,references,relatedResourceID,relationshipAccordingTo,relationshipEstablishedDate,relationshipRemarks,relation,replaces,reproductiveCondition,requires,resourceID,resourceRelationship,resourceRelationshipID,rights,rightsHolder,samplingEffort,samplingProtocol,scientificName,scientificNameAuthorship,scientificNameID,sex,source,spatial,species,speciesKey,specificEpithet,startDayOfYear,stateProvince,subgenus,subgenusKey,subject,tableOfContents,taxon,taxonConceptID,taxonID,taxonKey,taxonomicStatus,taxonRank,taxonRemarks,temporal,title,type,typeStatus,typifiedName,valid,verbatimCoordinates,verbatimCoordinateSystem,verbatimDate,verbatimDepth,verbatimElevation,verbatimEventDate,verbatimLatitude,verbatimLocality,verbatimLongitude,verbatimSRS,verbatimTaxonRank,vernacularName,waterBody,year," + rasterName + ",";
 					}
 					else{
 						heading += rasterName + "\n";
@@ -322,20 +322,35 @@ public class RasterTreatment {
 			e.printStackTrace();
 		}
 		for (Entry<Integer, HashMap<String, Boolean>> entry : hashMapValidOrNot.entrySet()) {
-			int id = entry.getKey();
+			int id = entry.getKey();			
 			int nbRasterFile = 1;
-			String line = id + ",";
+			String line = "";
 			HashMap<String, Boolean> probaBis = entry.getValue();
+			String sqlSelectId = "SELECT abstract_,acceptedNameUsage_,acceptedNameUsageID_,accessRights_,accrualMethod_,accrualPeriodicity_,accrualPolicy_,alternative_,associatedMedia_,associatedOccurrences_,associatedOrganisms_,associatedReferences_,associatedSequences_,associatedTaxa_,audience_,available_,basisOfRecord_,bed_,behavior_,bibliographicCitation_,catalogNumber_,class_,classKey_,collectionCode_,collectionID_,conformsTo_,continent_,contributor_,coordinateAccuracy_,coordinatePrecision_,coordinateUncertaintyInMeters_,country_,countryCode_,county_,coverage_,created_,creator_,dataGeneralizations_,datasetID_,datasetKey_,datasetName_,date_,dateAccepted_,dateCopyrighted_,dateIdentified_,dateSubmitted_,day_,decimalLatitude_,decimalLongitude_,depth_,depthAccuracy_,description_,disposition_,distanceAboveSurface_,distanceAboveSurfaceAccuracy_,dynamicProperties_,earliestAgeOrLowestStage_,earliestEonOrLowestEonothem_,earliestEpochOrLowestSeries_,earliestEraOrLowestErathem_,earliestPeriodOrLowestSystem_,educationLevel_,elevation_,elevationAccuracy_,endDayOfYear_,establishmentMeans_,event_,eventDate_,eventID_,eventRemarks_,eventTime_,extent_,family_,familyKey_,fieldNotes_,fieldNumber_,footprintSpatialFit_,footprintSRS_,footprintWKT_,format_,formation_,gbifID_,genericName_,genus_,genusKey_,geodeticDatum_,geologicalContext_,geologicalContextID_,georeferencedBy_,georeferencedDate_,georeferenceProtocol_,georeferenceRemarks_,georeferenceSources_,georeferenceVerificationStatus_,group_,habitat_,hasCoordinate_,hasFormat_,hasGeospatialIssues_,hasPart_,hasVersion_,higherClassification_,higherGeography_,higherGeographyID_,highestBiostratigraphicZone_,identification_,identificationID_,identificationQualifier_,identificationReferences_,identificationRemarks_,identificationVerificationStatus_,identifiedBy_,identifier_,idFile_,individualCount_,individualID_,informationWithheld_,infraspecificEpithet_,institutionCode_,institutionID_,instructionalMethod_,isFormatOf_,island_,islandGroup_,isPartOf_,isReferencedBy_,isReplacedBy_,isRequiredBy_,issue_,issued_,isVersionOf_,kingdom_,kingdomKey_,language_,lastCrawled_,lastInterpreted_,lastParsed_,latestAgeOrHighestStage_,latestEonOrHighestEonothem_,latestEpochOrHighestSeries_,latestEraOrHighestErathem_,latestPeriodOrHighestSystem_,license_,lifeStage_,lithostratigraphicTerms_,livingSpecimen_,locality_,locationAccordingTo_,locationID_,locationRemarks_,lowestBiostratigraphicZone_,machineObservation_,materialSample_,materialSampleID_,maximumDepthinMeters_,maximumDistanceAboveSurfaceInMeters_,maximumElevationInMeters_,measurementAccuracy_,measurementDeterminedBy_,measurementDeterminedDate_,measurementID_,measurementMethod_,measurementOrFact_,measurementRemarks_,measurementType_,measurementUnit_,mediator_,mediaType_,medium_,member_,minimumDepthinMeters_,minimumDistanceAboveSurfaceInMeters_,minimumElevationInMeters_,modified_,month_,municipality_,nameAccordingTo_,nameAccordingToID_,namePublishedIn_,namePublishedInID_,namePublishedInYear_,nomenclaturalCode_,nomenclaturalStatus_,occurrence_,occurrenceDetails_,occurrenceID_,occurrenceRemarks_,occurrenceStatus_,order_,orderKey_,organism_,organismID_,organismName_,organismRemarks_,organismScope_,originalNameUsage_,originalNameUsageID_,otherCatalogNumbers_,ownerInstitutionCode_,parentNameUsage_,parentNameUsageID_,phylum_,phylumKey_,pointRadiusSpatialFit_,preparations_,preservedSpecimen_,previousIdentifications_,protocol_,provenance_,publisher_,publishingCountry_,recordedBy_,recordNumber_,references_,relatedResourceID_,relationshipAccordingTo_,relationshipEstablishedDate_,relationshipRemarks_,relation_,replaces_,reproductiveCondition_,requires_,resourceID_,resourceRelationship_,resourceRelationshipID_,rights_,rightsHolder_,samplingEffort_,samplingProtocol_,scientificName_,scientificNameAuthorship_,scientificNameID_,sex_,source_,spatial_,species_,speciesKey_,specificEpithet_,startDayOfYear_,stateProvince_,subgenus_,subgenusKey_,subject_,tableOfContents_,taxon_,taxonConceptID_,taxonID_,taxonKey_,taxonomicStatus_,taxonRank_,taxonRemarks_,temporal_,title_,type_,typeStatus_,typifiedName_,valid_,verbatimCoordinates_,verbatimCoordinateSystem_,verbatimDate_,verbatimDepth_,verbatimElevation_,verbatimEventDate_,verbatimLatitude_,verbatimLocality_,verbatimLongitude_,verbatimSRS_,verbatimTaxonRank_,vernacularName_,waterBody_,year_ FROM Workflow.Clean_" + this.getDataTreatment().getNbSessionRandom() + " WHERE id_=" + id + ";";
+			ConnectionDatabase newConnectionSelect = new ConnectionDatabase();
+			newConnectionSelect.newConnection("executeQuery", sqlSelectId);
+			ArrayList<String> resultatSelect = newConnectionSelect.getResultatSelect();
+
+			if(resultatSelect != null){
+				for(int i = 0; i < resultatSelect.size() ; i++){
+					if(i != 0){
+						line += resultatSelect.get(i).replace("_", "");
+					}
+					
+				}
+			}
 			for (Entry<String, Boolean> probaBisEntry : probaBis.entrySet()){
+				
 				// TRUE : id valide dans le raster ou FALSE : id non valide dans le raster
 				boolean value = probaBisEntry.getValue();
 				if(nbRasterFile < rasterFiles.size()){
-					line += value + ",";
+					line += "," + value + ",";
 				}
 				else{
 					line += value + "\n";
 				}
 				nbRasterFile ++;
+				System.out.println("line : " + line);
 			}
 			try {
 				writer.write(line);

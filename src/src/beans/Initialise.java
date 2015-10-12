@@ -32,6 +32,7 @@ public class Initialise {
     private boolean raster;
     private boolean establishment;    
     private String nbSessionRandom;
+    private int nbInput;
     
     /**
      * 
@@ -251,5 +252,13 @@ public class Initialise {
     public void setRESSOURCES_PATH(String RESSOURCES_PATH) {
         this.RESSOURCES_PATH = RESSOURCES_PATH;
     }
+
+	public int getNbInput() {
+		return nbInput;
+	}
+
+	public void setNbInput(int nbInput) {
+		this.nbInput = nbInput;
+	}
     
 }

@@ -293,7 +293,7 @@ public class Treatment {
 		File wrongPolygon = this.createFileCsv(geoTreatment.getWrongPolygonList(), "wrong_polygon_" + this.getNbSessionRandom() + ".csv", "wrong");
 		geoTreatment.setWrongPolygonFile(wrongPolygon);
 
-		return geoTreatment;//repCourant : 
+		return geoTreatment;
 	}
 
 

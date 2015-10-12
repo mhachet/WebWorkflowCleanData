@@ -79,6 +79,10 @@ public class Controler extends HttpServlet {
 
 	}
 
+	public void init() throws ServletException{
+		// Do required initialization
+	}
+
 	/**
 	 * @param request
 	 * @param response
@@ -149,8 +153,8 @@ public class Controler extends HttpServlet {
 	 * @return List<FileItem>
 	 */
 	public List<FileItem> initialiseRequest(HttpServletRequest request){
-		
-		
+
+
 		DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
 		ServletFileUpload uploadHandler = new ServletFileUpload(fileItemFactory);
 		List<FileItem> items = null;
@@ -187,8 +191,8 @@ public class Controler extends HttpServlet {
 		int nbFilesHeader = 0;
 		int nbFilesSynonyms = 0;
 		int nbMappingInput = 0;
-				
-		
+
+
 		while (iterator.hasNext()) {
 			// DiskFileItem item = (DiskFileItem) iterator.next();
 			FileItem item = iterator.next();
@@ -201,6 +205,8 @@ public class Controler extends HttpServlet {
 			String reconcileActive = "reconcileActive_";
 			String tableReconcile = "tableReconcile_";
 
+			
+			
 			String fieldName = item.getFieldName();
 			//System.out.println("fieldName : " + fieldName + " item : " + item.getString());
 			if(fieldName.contains("formulaire")){
@@ -236,7 +242,7 @@ public class Controler extends HttpServlet {
 						e.printStackTrace();
 					}
 				}
-				
+
 				CSVFile csvFile = new CSVFile(file);
 				MappingDwC newMappingDWC = new MappingDwC(csvFile, Boolean.toString(false));
 
@@ -260,7 +266,7 @@ public class Controler extends HttpServlet {
 				mappingReconcileDWC.setOriginalName(itemFile.getName());
 				mappingReconcileDWC.setOriginalExtension(fileExtensionName);
 				listMappingReconcileDWC.add(mappingReconcileDWC);
-				
+
 				nbFilesInput ++;
 			}
 			else if(fieldName.equals(raster)){
@@ -326,19 +332,19 @@ public class Controler extends HttpServlet {
 			else if(fieldName.contains(mapping)){
 				//System.out.println("fieldName : " + fieldName);
 				int idMapping = Integer.parseInt(fieldName.split("_")[1]);
-				
-					for(int i = 0 ; i < listMappingReconcileDWC.size() ; i++ ){
-						int idFile = listMappingReconcileDWC.get(i).getIdFile();
-						if(idFile == (idMapping)){ 
-							MappingDwC mappingDWC = listMappingReconcileDWC.get(i).getMappingDWC();
-							if(item.getString().equals("true")){
-								mappingDWC.setMappingInvolved(Boolean.toString(true));
-							}
-							else{
-								mappingDWC.setMappingInvolved(Boolean.toString(false));
-							}
+
+				for(int i = 0 ; i < listMappingReconcileDWC.size() ; i++ ){
+					int idFile = listMappingReconcileDWC.get(i).getIdFile();
+					if(idFile == (idMapping)){ 
+						MappingDwC mappingDWC = listMappingReconcileDWC.get(i).getMappingDWC();
+						if(item.getString().equals("true")){
+							mappingDWC.setMappingInvolved(Boolean.toString(true));
 						}
-					}				
+						else{
+							mappingDWC.setMappingInvolved(Boolean.toString(false));
+						}
+					}
+				}				
 
 				nbMappingInput ++;
 			}
@@ -385,7 +391,7 @@ public class Controler extends HttpServlet {
 				for(int t = 0; t < tableauField.length ; t++){
 					System.out.println("tableau : " + tableauField[t]);
 				}
-				
+
 				System.out.println("valueradio : " + value);
 				int idFile = Integer.parseInt(tableauField[tableauField.length-2]);
 				int idLine = Integer.parseInt(tableauField[tableauField.length-1]);
@@ -396,7 +402,7 @@ public class Controler extends HttpServlet {
 					System.out.println("in group : " + linesConnnectedNewName);
 					linesConnnectedNewName.put(idLine, value);
 				}
-				
+
 			}
 			else if(fieldName.contains("csvDropdown_")){
 				//System.out.println("fieldName : " + fieldName);
@@ -419,7 +425,7 @@ public class Controler extends HttpServlet {
 						//System.out.println("separator : " + item.getString());
 					}
 				}
-				
+
 			}
 			else{
 				System.out.println("fieldName : " + fieldName);
@@ -446,17 +452,25 @@ public class Controler extends HttpServlet {
 				break;
 				}
 			}
-			
-			
+
+
 
 		}
-
 		
+		this.initialisation.setNbInput(nbFilesInput);
+
 		this.initialisation.setListMappingReconcileFiles(listMappingReconcileDWC);
 
 
 	}
 
+	/**
+	 * 
+	 */
+	public void destroy(){
+		// do nothing.
+	}
+	
 	/**
 	 * 
 	 * @return String

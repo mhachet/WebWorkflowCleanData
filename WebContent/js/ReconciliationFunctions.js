@@ -112,14 +112,14 @@ function loadReconcileService(uuid, nb_input){
 	var divTableReconcile = document.getElementById("divTableReconcile_" + nb_input);
 	var reconcileActive = document.getElementById("reconcileActive_" + nb_input);
 	var divSubmitReconcile = document.getElementById("divSubmitReconcile_" + nb_input);
-	
+
 	var divMessageReconcileCancelled = document.getElementById("divMessageReconcileCancelled_" + nb_input);
 	var divMessageReconcileSaved = document.getElementById("divMessageReconcileSaved_" + nb_input);
-	
+
 	var divButtonStartReconciliation = document.getElementById("divButtonStartReconciliation_" + nb_input);
 	var divButtonCancelReconciliation = document.getElementById("divButtonCancelReconciliation_" + nb_input);
 	var divButtonValidReconciliation = document.getElementById("divButtonValidReconciliation_" + nb_input);
-	
+
 	var tablePrepareReconcile = document.getElementById("tablePrepareReconcile_" + nb_input);
 	var divReconciliationCheck = document.getElementById("divReconciliationCheck_" + nb_input);
 
@@ -138,23 +138,23 @@ function loadReconcileService(uuid, nb_input){
 			if(tableReconcileWraper){
 				divTableReconcile.removeChild(tableReconcileWraper);
 			}
-			
+
 			divMessageReconcileCancelled.style.display = "none";
 			divMessageReconcileSaved.style.display = "none";
 			divButtonCancelReconciliation.style.display = "block";
 			divButtonStartReconciliation.style.display = "block";
 			divButtonValidReconciliation.style.display = "none";
-			
+
 			divReconciliationCheck.style.display = "block";
 			reconcileActive.setAttribute('value', 'false');
 		}
 		else{
-			//console.log("start reconcile");
 			startReconciliation(nb_input, uuid);
+
 		}
 	}
-	
-		
+
+
 }
 
 
@@ -188,7 +188,7 @@ function doPreparationReconciliation(uuid, nb_input, separator){
 				var urlTaxo = document.getElementById("urlAPItaxo_" + nb_input);
 				if(urlTaxo == null){
 					var divReconciliationCheck = document.getElementById("divReconciliationCheck_" + nb_input);
-					
+
 					var divUrlTaxo = document.createElement("div");
 					divUrlTaxo.setAttribute('class', "col-lg-12 url-div");
 					divUrlTaxo.id = "divUrlTaxo_" + nb_input;
@@ -403,7 +403,7 @@ function createReconciliationPreparation(uuid, presentTags, nbInput){
 		divSubmitReconcile.appendChild(divMessageReconcileSaved);
 	}
 	else{
-		
+
 	}
 }
 
@@ -428,25 +428,30 @@ function getColumChecked(nbInput){
 
 function startReconciliation(nbInput, uuid){
 
+	var urlTaxo = document.getElementById("urlAPItaxo_" + nbInput).value;
+	console.log("url : " + urlTaxo);
+	if(urlTaxo != ""){
+		console.log("start reconcile");
+		var separator = "";
+		var texte =  document.getElementById("csvDropdown_" + nbInput).options[document.getElementById("csvDropdown_" + nbInput).selectedIndex].value; 
+		if(texte == "comma"){
+			separator = ',';
+		}
+		else if(texte == "semiComma"){
+			separator = ';';
+		}
+		else{
+			separator = '\t';    
+		}
+		var columnsInfo = this.foundColumnsInfos(nbInput);
+		var columnCheck = this.foundColumnCheck(nbInput);
+		columnsInfo.push(columnCheck);
 
-	var separator = "";
-	var texte =  document.getElementById("csvDropdown_" + nbInput).options[document.getElementById("csvDropdown_" + nbInput).selectedIndex].value; 
-	if(texte == "comma"){
-		separator = ',';
-	}
-	else if(texte == "semiComma"){
-		separator = ';';
+		this.getContentFile(uuid, nbInput, columnsInfo, separator);
 	}
 	else{
-		separator = '\t';    
+		alert("Missing url");
 	}
-	var columnsInfo = this.foundColumnsInfos(nbInput);
-	var columnCheck = this.foundColumnCheck(nbInput);
-	columnsInfo.push(columnCheck);
-
-	this.getContentFile(uuid, nbInput, columnsInfo, separator);
-
-
 }
 
 function doReconciliation(nbInput, contentFile, separator){
@@ -547,11 +552,11 @@ function doReconciliation(nbInput, contentFile, separator){
 		            	   cursor: 'pointer'
 		               }
 		               ],
-		 "fnInitComplete": function() {
-			 this.fnAdjustColumnSizing();
-		 }
+		               "fnInitComplete": function() {
+		            	   this.fnAdjustColumnSizing();
+		               }
 	});
-	
+
 
 	/*this.adjustJSON(nbInput);
 	$(window).bind('resize', function () {
@@ -617,14 +622,14 @@ function createTitleJSON(headers){
 		if(i < headers.length){
 			var header = headers[i];	
 			col['title'] = header;
-			
+
 		}
 		else{
 			col["title"] = "Show all or mask all";
 		}
 		cols.push(col);
 	}
-	
+
 	return cols;
 }
 

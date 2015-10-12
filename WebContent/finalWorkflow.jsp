@@ -65,6 +65,7 @@
 					<h3 class="post-subtitle">All results can be downloaded</h3>
 				</div>
                 <div id="hiddenResults">
+                	<input type="hidden" id="nbTotalInput" value="${initialise.nbInput}" />
                     <c:set var="count0" value="0" scope="page"/>
                     <c:forEach var="info" items="${step1.infos_mapping}">
                         <c:if test="${info.value.mappingInvolved == false}">
@@ -77,7 +78,7 @@
                     <c:if test="${count0 == 0}">
                         <input type="hidden" id="step0_involved" value="false"/>
                     </c:if>
-                    
+                   	
                     <input type="hidden" id="step1_involved" value="${step1.involved}" />
                     
                     <input type="hidden" id="step2_involved" value="${step2.involved}" />
@@ -112,7 +113,8 @@
                     <input
                         type="hidden" id="step7_nbFound" value="${step7.nbFound}" />
                     <input
-                        type="hidden" id="step7_path" value="${step7.pathWrongIso2}" />                         <input
+                        type="hidden" id="step7_path" value="${step7.pathWrongIso2}" />
+                   	<input
                         type="hidden" id="step8_involved" value="${step8.involved}" />
                     <input
                         type="hidden" id="step8_ok" value="${step8.step8_ok}" />
@@ -155,7 +157,7 @@
                                             </div>
                                             <div id="p_ok_step0_inp<c:out value='${count0}'/>" class="card-view">
                                                 <span class="title">Success</span>
-                                                <span id="spanSuccessStep0_inp<c:out value='${count0}'/>" class="value"><c:out value="${info.value.successMapping}"/></span>
+                                                <span id="step0_ok_inp<c:out value='${count0}'/>" class="value"><c:out value="${info.value.successMapping}"/></span>
                                             </div>
                                         </td>
                                     </c:if>
@@ -204,7 +206,7 @@
                                             </div>
                                             <div id="p_ok_step1_inp<c:out value='${count1}'/>" class="card-view">
                                                 <span class="title">Success</span>
-                                                <span id="spanSuccessStep1_inp<c:out value='${count1}'/>" class="value"><c:out value="${info.value.successMapping}"/></span>
+                                                <span id="step1_ok_inp<c:out value='${count1}'/>" class="value"><c:out value="${info.value.successMapping}"/></span>
                                             </div>
                                             <div class="card-view">
                                                 <span class="title">Download link</span>
@@ -244,7 +246,7 @@
                                             </div>
                                             <div id="p_ok_step2_inp<c:out value='${count2}'/>" class="card-view">
                                                 <span class="title">Success</span>
-                                                <span id="spanSuccessStep2_inp<c:out value='${count2}'/>" class="value"> <c:out value="${info.value.successReconcile}"/></span>
+                                                <span id="step2_ok_inp<c:out value='${count2}'/>" class="value"> <c:out value="${info.value.successReconcile}"/></span>
                                             </div>
                                             <div class="card-view">
                                                 <span class="title">Download link</span>
@@ -277,7 +279,7 @@
                         <tbody>
                             <tr data-index=0 />
                                 <td colspan="6">
-                                    <div id="p_ok3" class="card-view">
+                                    <div id="p_ok_step3_inp" class="card-view">
                                         <span class="title">Success</span>
                                         <span id="spanSuccessStep3" class="value">${step3.step3_ok}</span>
                                     </div>
@@ -311,7 +313,7 @@
                         <tbody>
                             <tr data-index=0 />
                                 <td colspan="6">
-                                    <div id="p_ok4" class="card-view">
+                                    <div id="p_ok_step4_inp" class="card-view">
                                         <span class="title">Success</span>
                                         <span id="spanSuccessStep4" class="value">${step4.step4_ok}</span>
                                     </div>
@@ -342,7 +344,7 @@
                             <div id=divStep5Involved style="display: none">
                                 Number of occurrences involved : ${step5.nbFound}
                             </div>
-                            <div id="p_ok5" class="card-view">
+                            <div id="p_ok_step5_inp" class="card-view">
                                 <span class="title">Success</span>
                                 <span id="spanSuccessStep5" class="value">${step5.step5_ok}</span>
                             </div>
@@ -361,7 +363,7 @@
                     <table data-toggle="table" data-card-view="true" class="table table-hover" style="margin-top: 0px;" id=divStep6>
                         <tr data-index=0 />
                             <td colspan="6">
-                                <div id="p_ok6" class="card-view">
+                                <div id="p_ok_step6_inp" class="card-view">
                                     <span class="title">Success</span>
                                     <span id="spanSuccessStep6" class="value"><c:out value='${step6.step6_ok}'/></span>
                                 </div>
@@ -372,16 +374,16 @@
                 <hr class="col-lg-12"></hr>
 
                 <div id="headerStep7_involved" class="post-preview">
-                    <h4 class="post-meta">Step 7 : Check if coordinates are equivalent to ISO2 code</h4>
+                    <h4 class="post-meta">Step 7 : Iso2 code was checked</h4>
                 </div>
                 <div id="headerStep7_NotInvolved" class="post-preview">
-                    <h4 class="post-meta">Step 7 : Check if coordinates are equivalent to ISO2 code isn't involved in process</h4>
+                    <h4 class="post-meta">Step 7 : Iso2 code checking isn't involved in process</h4>
                 </div>
                 <div class="fixed-table-body">
                     <table data-toggle="table" data-card-view="true" class="table table-hover" style="margin-top: 0px;" id=divStep7>
                         <tr data-index=0 />
                             <td colspan="6">
-                                <div id="p_ok7" class="card-view">
+                                <div id="p_ok_step7_inp" class="card-view">
                                     <span class="title">Success</span>
                                     <span id="spanSuccessStep7" class="value"><c:out value='${step7.step7_ok}'/></span>
                                 </div>
@@ -401,18 +403,21 @@
                    <table data-toggle="table" data-card-view="true" class="table table-hover" style="margin-top: 0px;" id=divStep8>
                         <tr data-index=0 />
                             <td colspan="6">
-                                <div id="p_ok8" class="card-view">
+                                <div id="p_ok_step8_inp" class="card-view">
                                     <span class="title">Success</span>
                                     <span id="spanSuccessStep8" class="value"><c:out value='${step8.step8_ok}'/></span>
                                 </div>
+                                <!-- 
                                 <div class="card-view">
                                     <span class="title">Occurrences number</span>
                                     <span class="value"><c:out value='${step8.nbFound}'/></span>
                                 </div>
+                                
                                  <div class="card-view">
                                     <span class="title">Download link</span>
                                     <span class="value"><a href=<c:out value='${step8.pathWrongRaster}'/>>Wrong occurences for raster cells</a></span>
                                 </div>
+                                 -->
                                 <div class="card-view">
                                     <span class="title">Download link</span>
                                     <span class="value"><a href=<c:out value='${step8.pathMatrixResultRaster}'/>>Matrix results file</a></span>
@@ -438,7 +443,7 @@
                         <tbody>
                             <tr data-index=0 />
                                 <td colspan="6">
-                                    <div id="p_ok9" class="card-view">
+                                    <div id="p_ok_step9_inp" class="card-view">
                                         <span class="title">Success</span>
                                         <span id="spanSuccessStep9" class="value">${step9.step9_ok}</span>
                                     </div>
