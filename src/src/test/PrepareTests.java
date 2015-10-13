@@ -10,25 +10,17 @@ package src.test;
  * ExampleWebTestCase.java
  * ExampleWebTestCase
  */
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+
+import org.junit.Test;
+import src.beans.Initialise;
+import src.model.CSVFile;
+import src.model.MappingDwC;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.UUID;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import src.beans.Initialise;
-import src.model.CSVFile;
-import src.model.MappingDwC;
 
 public class PrepareTests {
 

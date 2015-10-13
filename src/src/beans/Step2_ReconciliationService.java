@@ -4,11 +4,9 @@
  */
 package src.beans;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import src.model.MappingDwC;
 import src.model.ReconciliationService;
+
+import java.util.HashMap;
 
 /**
  * src.beans

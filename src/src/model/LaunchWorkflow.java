@@ -5,26 +5,14 @@
  */
 package src.model;
 
-import java.io.BufferedReader;
+import src.beans.*;
+
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
-import src.beans.Finalisation;
-import src.beans.Initialise;
-import src.beans.Step1_MappingDwc;
-import src.beans.Step2_ReconciliationService;
-import src.beans.Step3_CheckCoordinates;
-import src.beans.Step4_CheckGeoIssue;
-import src.beans.Step5_IncludeSynonym;
-import src.beans.Step6_CheckTDWG;
-import src.beans.Step7_CheckISo2Coordinates;
-import src.beans.Step8_CheckCoordinatesRaster;
-import src.beans.Step9_EstablishmentMeans;
 
 /**
  * src.model

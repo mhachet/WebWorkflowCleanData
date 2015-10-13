@@ -4,20 +4,15 @@
  */
 package src.test;
 
-import static org.junit.Assert.*;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import src.model.CSVFile;
 import src.model.MappingDwC;
 import src.model.Treatment;
-import junitx.framework.FileAssert;
+
+import java.io.File;
+import java.util.ArrayList;
+
+import static org.junit.Assert.fail;
 /**
  * src.test
  * 

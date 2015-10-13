@@ -4,12 +4,6 @@
  */
 package src.beans;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import src.model.DarwinCore;
-
-
 /**
  * src.beans
  * 

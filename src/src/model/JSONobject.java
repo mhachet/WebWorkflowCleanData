@@ -3,15 +3,13 @@
  */
 package src.model;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-
-import org.geotools.filter.expression.ThisPropertyAccessorFactory;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 /**
  * src.model

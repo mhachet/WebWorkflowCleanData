@@ -4,14 +4,9 @@
  */
 package src.test;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-
-import org.junit.AfterClass;
 import org.junit.Test;
 
-import src.model.ConnectionDatabase;
+import static org.junit.Assert.fail;
 
 /**
  * src.test

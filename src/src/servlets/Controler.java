@@ -5,44 +5,24 @@
  */
 package src.servlets;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.UUID;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
+import src.beans.*;
+import src.model.*;
 
-import src.beans.Finalisation;
-import src.beans.Initialise;
-import src.beans.Step1_MappingDwc;
-import src.beans.Step2_ReconciliationService;
-import src.beans.Step3_CheckCoordinates;
-import src.beans.Step4_CheckGeoIssue;
-import src.beans.Step5_IncludeSynonym;
-import src.beans.Step6_CheckTDWG;
-import src.beans.Step7_CheckISo2Coordinates;
-import src.beans.Step8_CheckCoordinatesRaster;
-import src.beans.Step9_EstablishmentMeans;
-import src.model.CSVFile;
-import src.model.LaunchWorkflow;
-import src.model.MappingDwC;
-import src.model.MappingReconcilePreparation;
-import src.model.ReconciliationService;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * src.servlets

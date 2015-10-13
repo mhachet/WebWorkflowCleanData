@@ -3,12 +3,10 @@
  */
 package src.beans;
 
+import src.model.MappingReconcilePreparation;
+
 import java.io.File;
 import java.util.ArrayList;
-
-import src.model.MappingDwC;
-import src.model.MappingReconcilePreparation;
-import src.model.ReconciliationService;
 
 /**
  * src.beans
