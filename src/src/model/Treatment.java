@@ -100,6 +100,13 @@ public class Treatment {
 		mappingDWC.setMappedFile(mappedFile);
 	}
 
+	/**
+	 * change name from reconcile service
+	 * 
+	 * @param reconcileService
+	 * @param referenceFileReconcile
+	 * @param idFile
+	 */
 	public void reconcileService(ReconciliationService reconcileService, CSVFile referenceFileReconcile, int idFile){
 
 		String tagReconcile = reconcileService.getReconcileTagBased();
@@ -221,7 +228,7 @@ public class Treatment {
 	 * @return void
 	 */
 	public void createTableDarwinCoreInput(String insertFileSQL){
-		System.out.println("insertFileSQL : " + insertFileSQL);
+		//System.out.println("insertFileSQL : " + insertFileSQL);
 		ConnectionDatabase newConnection = new ConnectionDatabase();
 		String choiceStatement = "execute";
 		ArrayList<String> messages = new ArrayList<String>();
@@ -262,6 +269,11 @@ public class Treatment {
 		this.setNbSynonymInvolved(treatmentSynonyms.getNbSynonymInvolved());
 	}
 
+	/**
+	 * Find tdwg level 4 for occurrences
+	 * 
+	 * @return boolean
+	 */
 	public boolean tdwgCodeOption(){
 		TdwgTreatment tdwg4Treatment = new TdwgTreatment();
 		tdwg4Treatment.setDIRECTORY_PATH(this.getDIRECTORY_PATH());
@@ -275,6 +287,11 @@ public class Treatment {
 		return sucessTdwgTreatment;
 	}
 
+	/**
+	 * process of geo checking 
+	 * 
+	 * @return GeographicTreatment
+	 */
 	public GeographicTreatment checkGeographicOption(){
 		GeographicTreatment geoTreatment = new GeographicTreatment(this.getFileDarwinCore());
 
@@ -317,6 +334,12 @@ public class Treatment {
 	}
 
 
+	/**
+	 * process of establishmentMeans option
+	 * 
+	 * @param listEstablishmentChecked
+	 * @return EstablishmentTreatment
+	 */
 	public EstablishmentTreatment establishmentMeansOption(ArrayList<String> listEstablishmentChecked){
 		EstablishmentTreatment establishTreatment = new EstablishmentTreatment(listEstablishmentChecked);
 		establishTreatment.setDIRECTORY_PATH(this.getDIRECTORY_PATH());

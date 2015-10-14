@@ -66,9 +66,9 @@ public class TdwgTreatment {
 				GeometryFactory geometryFactory = new GeometryFactory();
 				Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
 				/*System.out.println("--------------------------------------------------------------");
-		System.out.println("---------------- Check point in TDWG4 code -------------------");
-		System.out.println("Lat : " + latitude + "\tLong : " + longitude);
-		System.out.print("iso2 : " + iso2);*/
+				System.out.println("---------------- Check point in TDWG4 code -------------------");
+				System.out.println("Lat : " + latitude + "\tLong : " + longitude);
+				System.out.print("iso2 : " + iso2);*/
 				String tdwg4Code = "";
 				try {
 					tdwg4Code = this.tdwg4ContainedPoint(point, iso2.replaceAll("\"", ""));

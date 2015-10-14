@@ -109,7 +109,7 @@
                                 <div id="divAdd_0" class="file-field input-field col-lg-3">
                                     <div class="btn">
                                           <span>Browse</span>
-                                          <input id="inp_0" type="file" name="inp_0" onChange="loadInputFile('0')">
+                                          <input id="inp_0" type="file" name="inp_0" onChange="loadInputFile('0')" value="false">
                                     </div>
                                     <div class="file-path-wrapper">
                                         <input id="text_inp_0" class="file-path validate" type="text">
@@ -206,7 +206,7 @@
 			         <ul class="pager">
                 <!--<div class="btn-group btn-group-justified" role="group">-->
                     <div class="col-lg-12">
-                    <button type="submit" id="workflowLaunch" name="workflowLaunch" class="waves-effect waves-light btn-large card-panel grey darken-2 font-button"><!--onClick="activeRunning()"-->
+                    <button type="submit" id="workflowLaunch" name="workflowLaunch" class="waves-effect waves-light btn-large card-panel grey darken-2 font-button" onClick="activeRunning()">
                         Start workflow
                     </button>
                     </div>

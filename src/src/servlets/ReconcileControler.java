@@ -37,14 +37,50 @@ import com.mysql.fabric.xmlrpc.base.Array;
 @WebServlet(name = "ReconcileControler")
 public class ReconcileControler extends HttpServlet {
 
-	private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/WebContent/output/"; 
-	private String RESSOURCES_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/";
-
+	//private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/WebContent/output/"; 
+	//private String RESSOURCES_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/";
+	private String DIRECTORY_PATH = "";
+	private String RESSOURCES_PATH = "";
 
 	public ReconcileControler() {
 
 	}
 
+	public void init() throws ServletException{
+		// Do required initialization
+		File currentFile = new File("");
+		String currentPath = currentFile.getAbsolutePath();
+		System.out.println("currentPathReconcile : " + currentPath);
+		
+		try{
+			BufferedReader buff = new BufferedReader(new FileReader(currentPath + "/.properties"));
+			if(currentPath.indexOf("eclipse") != -1){
+				currentPath = "";
+			}
+			try {
+				String line;
+				int count = 0;
+				while ((line = buff.readLine()) != null) {
+					if(count == 0){
+						this.setDIRECTORY_PATH(currentPath + line);
+						System.out.println("directoryPathReconcile : " + this.getDIRECTORY_PATH());
+					}
+					else{
+						this.setRESSOURCES_PATH(currentPath + line);
+						System.out.println("ressourcePathReconcile : " + this.getRESSOURCES_PATH());
+					}
+					count ++;
+					
+				}
+			} finally {
+				buff.close();
+			}
+		} catch (IOException ioe) {
+			System.out.println("Erreur --" + ioe.toString());
+		}
+
+	}
+	
 	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 		
 		
@@ -166,6 +202,12 @@ public class ReconcileControler extends HttpServlet {
 
 	}
 
+	/**
+	 * Find extension between csv or txt only
+	 * @param nbInput
+	 * @param uuid
+	 * @return String
+	 */
 	protected String getExtension(String nbInput, String uuid){
 		String extension = "";
 		File csvFile = new File(DIRECTORY_PATH + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + ".csv");
@@ -181,6 +223,11 @@ public class ReconcileControler extends HttpServlet {
 		return extension;
 	}
 	
+	/**
+	 * get the first line of the file
+	 * @param file
+	 * @return String
+	 */
 	protected String getFirstLine(File file){
 		String firstLine = "";
 
@@ -210,6 +257,14 @@ public class ReconcileControler extends HttpServlet {
 		return firstLine;
 	}
 	
+	/**
+	 * get id of all checked columns
+	 * 
+	 * @param firstline
+	 * @param separator
+	 * @param columnsCheck
+	 * @return ArrayList<Integer>
+	 */
 	public ArrayList<Integer> getColumnsIdReconcile(String firstline, String separator, String columnsCheck){
 		ArrayList<Integer> columnsReconcile = new ArrayList<>();
 		ArrayList<String> columns = new ArrayList(Arrays.asList(firstline.split(separator)));
@@ -226,6 +281,14 @@ public class ReconcileControler extends HttpServlet {
 		return columnsReconcile;
 	}
 	
+	/**
+	 * get columns and line from id columns
+	 * 
+	 * @param idColumns
+	 * @param contentFile
+	 * @param separator
+	 * @return String
+	 */
 	public String getSelectedLines(ArrayList<Integer> idColumns, ArrayList<String> contentFile, String separator){
 		String newContentFile = "";
 		
@@ -245,4 +308,38 @@ public class ReconcileControler extends HttpServlet {
 		return newContentFile;
 		
 	}
+
+	/**
+	 * 
+	 * @return String
+	 */
+	public String getDIRECTORY_PATH() {
+		return DIRECTORY_PATH;
+	}
+
+	/**
+	 * 
+	 * @param dIRECTORY_PATH
+	 */
+	public void setDIRECTORY_PATH(String dIRECTORY_PATH) {
+		DIRECTORY_PATH = dIRECTORY_PATH;
+	}
+
+	/**
+	 * 
+	 * @return String
+	 */
+	public String getRESSOURCES_PATH() {
+		return RESSOURCES_PATH;
+	}
+
+	/**
+	 * 
+	 * @param rESSOURCES_PATH
+	 */
+	public void setRESSOURCES_PATH(String rESSOURCES_PATH) {
+		RESSOURCES_PATH = rESSOURCES_PATH;
+	}
+	
+	
 }

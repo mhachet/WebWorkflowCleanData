@@ -62,18 +62,18 @@ public class ConnectionDatabase {
 			connexion = DriverManager.getConnection( url, utilisateur, motDePasse );
 			messages.add("Connexion réussie !");
 
-			/* Création de l'objet gérant les requêtes */
+			/* Create managing object of request */
 			statement = connexion.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
 			messages.add( "Objet requête créé !" );
 
-			//méthodes génériques pour n'importe quelle expression SQL - retourne un boolean : valant true si l'instruction renvoie un ResultSet, false sinon
+			//global method for any SQL script - return a boolean : true if the instruction return ResultSet, false else
 			if(choiceStatement == "execute"){
 				setResultat(statement.execute(sql));
 				messages.add(sql);
 				//messages.add(resultat.toString());
 			}
-			// SELECT - retourne ResultSet : contenant les résultats TDWG=
+			// SELECT - return ResultSet, with results : TDWG=
 			else if(choiceStatement == "executeQuery"){
 				resultSet = statement.executeQuery(sql);
 				messages.add(sql);
@@ -82,9 +82,10 @@ public class ConnectionDatabase {
 				this.setResultatSelect(resultMeta);
 				resultSet.close();
 			}
-			//écriture ou suppression sur la BD (requêtes de type INSERT, UPDATE, DELETE, ...)
-			//indiquant le nombre de tuples (lignes) modifiés pour un INSERT, UPDATE et DELETE, 
-			//ou alors 0 pour les instructions ne retournant rien (CREATE par exemple)
+			/* writing or deleting on DB (for INSERT, UPDATE, DELETE, ...)
+			 * give lines number edited by INSERT, UPDATE et DELETE
+			 * or 0 for no return methods like CREATE
+			 */
 			else if(choiceStatement == "executeUpdate"){
 				i = statement.executeUpdate(sql);
 				messages.add(sql);
@@ -100,6 +101,13 @@ public class ConnectionDatabase {
 		return messages;
 	}
 
+	/**
+	 * Get lines of Clean table from idFile
+	 * 
+	 * @param idFile
+	 * @param nbSessionRandom
+	 * @return ArrayList<String>
+	 */
 	public ArrayList<String> getCleanTableFromIdFile(int idFile, String nbSessionRandom){
 		this.newConnection("executeQuery", "SELECT abstract_,acceptedNameUsage_,acceptedNameUsageID_,accessRights_,accrualMethod_,accrualPeriodicity_,accrualPolicy_,alternative_,associatedMedia_,associatedOccurrences_,associatedOrganisms_,associatedReferences_,associatedSequences_,associatedTaxa_,audience_,available_,basisOfRecord_,bed_,behavior_,bibliographicCitation_,catalogNumber_,class_,classKey_,collectionCode_,collectionID_,conformsTo_,continent_,contributor_,coordinateAccuracy_,coordinatePrecision_,coordinateUncertaintyInMeters_,country_,countryCode_,county_,coverage_,created_,creator_,dataGeneralizations_,datasetID_,datasetKey_,datasetName_,date_,dateAccepted_,dateCopyrighted_,dateIdentified_,dateSubmitted_,day_,decimalLatitude_,decimalLongitude_,depth_,depthAccuracy_,description_,disposition_,distanceAboveSurface_,distanceAboveSurfaceAccuracy_,dynamicProperties_,earliestAgeOrLowestStage_,earliestEonOrLowestEonothem_,earliestEpochOrLowestSeries_,earliestEraOrLowestErathem_,earliestPeriodOrLowestSystem_,educationLevel_,elevation_,elevationAccuracy_,endDayOfYear_,establishmentMeans_,event_,eventDate_,eventID_,eventRemarks_,eventTime_,extent_,family_,familyKey_,fieldNotes_,fieldNumber_,footprintSpatialFit_,footprintSRS_,footprintWKT_,format_,formation_,gbifID_,genericName_,genus_,genusKey_,geodeticDatum_,geologicalContext_,geologicalContextID_,georeferencedBy_,georeferencedDate_,georeferenceProtocol_,georeferenceRemarks_,georeferenceSources_,georeferenceVerificationStatus_,group_,habitat_,hasCoordinate_,hasFormat_,hasGeospatialIssues_,hasPart_,hasVersion_,higherClassification_,higherGeography_,higherGeographyID_,highestBiostratigraphicZone_,identification_,identificationID_,identificationQualifier_,identificationReferences_,identificationRemarks_,identificationVerificationStatus_,identifiedBy_,identifier_,idFile_,individualCount_,individualID_,informationWithheld_,infraspecificEpithet_,institutionCode_,institutionID_,instructionalMethod_,isFormatOf_,island_,islandGroup_,isPartOf_,isReferencedBy_,isReplacedBy_,isRequiredBy_,issue_,issued_,isVersionOf_,kingdom_,kingdomKey_,language_,lastCrawled_,lastInterpreted_,lastParsed_,latestAgeOrHighestStage_,latestEonOrHighestEonothem_,latestEpochOrHighestSeries_,latestEraOrHighestErathem_,latestPeriodOrHighestSystem_,license_,lifeStage_,lithostratigraphicTerms_,livingSpecimen_,locality_,locationAccordingTo_,locationID_,locationRemarks_,lowestBiostratigraphicZone_,machineObservation_,materialSample_,materialSampleID_,maximumDepthinMeters_,maximumDistanceAboveSurfaceInMeters_,maximumElevationInMeters_,measurementAccuracy_,measurementDeterminedBy_,measurementDeterminedDate_,measurementID_,measurementMethod_,measurementOrFact_,measurementRemarks_,measurementType_,measurementUnit_,mediator_,mediaType_,medium_,member_,minimumDepthinMeters_,minimumDistanceAboveSurfaceInMeters_,minimumElevationInMeters_,modified_,month_,municipality_,nameAccordingTo_,nameAccordingToID_,namePublishedIn_,namePublishedInID_,namePublishedInYear_,nomenclaturalCode_,nomenclaturalStatus_,occurrence_,occurrenceDetails_,occurrenceID_,occurrenceRemarks_,occurrenceStatus_,order_,orderKey_,organism_,organismID_,organismName_,organismRemarks_,organismScope_,originalNameUsage_,originalNameUsageID_,otherCatalogNumbers_,ownerInstitutionCode_,parentNameUsage_,parentNameUsageID_,phylum_,phylumKey_,pointRadiusSpatialFit_,preparations_,preservedSpecimen_,previousIdentifications_,protocol_,provenance_,publisher_,publishingCountry_,recordedBy_,recordNumber_,references_,relatedResourceID_,relationshipAccordingTo_,relationshipEstablishedDate_,relationshipRemarks_,relation_,replaces_,reproductiveCondition_,requires_,resourceID_,resourceRelationship_,resourceRelationshipID_,rights_,rightsHolder_,samplingEffort_,samplingProtocol_,scientificName_,scientificNameAuthorship_,scientificNameID_,sex_,source_,spatial_,species_,speciesKey_,specificEpithet_,startDayOfYear_,stateProvince_,subgenus_,subgenusKey_,subject_,tableOfContents_,taxon_,taxonConceptID_,taxonID_,taxonKey_,taxonomicStatus_,taxonRank_,taxonRemarks_,temporal_,title_,type_,typeStatus_,typifiedName_,valid_,verbatimCoordinates_,verbatimCoordinateSystem_,verbatimDate_,verbatimDepth_,verbatimElevation_,verbatimEventDate_,verbatimLatitude_,verbatimLocality_,verbatimLongitude_,verbatimSRS_,verbatimTaxonRank_,vernacularName_,waterBody_,year_ FROM Workflow.Clean_" + nbSessionRandom + " WHERE idFile_=" + idFile + " AND UUID_=\"" + nbSessionRandom + "\";");
 
@@ -177,7 +185,7 @@ public class ConnectionDatabase {
 	}
 
 	/**
-	 * Format request resultat
+	 * Format request result
 	 * 
 	 * @param resultMeta
 	 * @throws SQLException

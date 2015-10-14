@@ -46,66 +46,84 @@ function addField(compteur, idAdd, typeInput) {
 	inp.setAttribute('name', typeInput + "_" + nb_inp);
 
 	if(typeInput == "inp"){
-		var globalInput = document.createElement("div");
-		globalInput.setAttribute('class', "col-lg-12 global");
-		globalInput.setAttribute('id', "globalInput_" + nb_inp);
+		if(nb_inp != 0){
+			var inputBefore = document.getElementById("inp_" + (nb_inp - 1));
+			var uploadedInputBefore = inputBefore.getAttribute('value');
+			console.log("inp_" + (nb_inp - 1) + "  : " + uploadedInputBefore);
+			if(uploadedInputBefore == 'false'){
+				
+				alert("Upload file before add a new file, please !");
+			}
+			else{
+				//var uploaded = inputBefore.value;
+				console.log(inputBefore);
+				var globalInput = document.createElement("div");
+				globalInput.setAttribute('class', "col-lg-12 global");
+				globalInput.setAttribute('id', "globalInput_" + nb_inp);
 
-		this.createInputSpecial(nb_inp, typeInput, divAddLoad);
+				this.createInputSpecial(nb_inp, typeInput, divAddLoad);
 
+				
+				var divUpload = this.createDivUpload(nb_inp);
+				var divCSV = this.createDivCSV(nb_inp);
+				
+				var divLoad = document.createElement('div');
+				divLoad.setAttribute('id', "divLoad_" + nb_inp);
+				divLoad.setAttribute('class', "col-lg-2 marges");
+
+				var divReconcile = document.createElement('div');
+				divReconcile.setAttribute('id', "divReconcile_" + nb_inp);
+				divReconcile.setAttribute('class', "col-lg-3 marges");
+				//divReconcile.setAttribute('role', "group");
+
+				var bloc_inputs = document.getElementById('bloc-inputs');
+
+				// add all new elements to the formulary
+				var divMapping = document.createElement('div');
+				divMapping.setAttribute('id', "divMapping_" + nb_inp);
+				divMapping.setAttribute('class', "col-lg-12");
+
+				var divSubmitMapping = document.createElement('div');
+				divSubmitMapping.setAttribute('id', "divSubmitMapping_" + nb_inp);
+
+
+				var divReconciliationCheck = document.createElement('div');
+				divReconciliationCheck.setAttribute('id', "divReconciliationCheck_" + nb_inp);
+				divReconciliationCheck.setAttribute('class', "col-lg-12");
+
+				var divSubmitReconcile = document.createElement('div');
+				divSubmitReconcile.setAttribute('id', "divSubmitReconcile_" + nb_inp);
+				divSubmitReconcile.setAttribute('class', "col-lg-12 center");
+
+				var divTableReconcile = document.createElement('div');
+				divTableReconcile.setAttribute('id', "divTableReconcile_" + nb_inp);
+				divTableReconcile.setAttribute('class', "col-lg-12 dataTable");
+				divTableReconcile.style.display = "inline-block";
+
+				
+				divAddLoad.appendChild(divUpload)
+				divAddLoad.appendChild(divCSV);
+				
+				divAddLoad.appendChild(divLoad);
+				divAddLoad.appendChild(divReconcile);
+
+				bloc_inputs.appendChild(globalInput);
+				globalInput.appendChild(divAddLoad);	
+
+				globalInput.appendChild(divMapping);
+				globalInput.appendChild(divSubmitMapping);
+				divSubmitMapping.setAttribute('class', "col-lg-12 center");
+
+				globalInput.appendChild(divTableReconcile);
+				globalInput.appendChild(divReconciliationCheck);
+				globalInput.appendChild(divSubmitReconcile);
+				
+				//increment input counter
+				document.getElementById(compteur).value ++;
+			}
+			
+		}
 		
-		var divUpload = this.createDivUpload(nb_inp);
-		var divCSV = this.createDivCSV(nb_inp);
-		
-		var divLoad = document.createElement('div');
-		divLoad.setAttribute('id', "divLoad_" + nb_inp);
-		divLoad.setAttribute('class', "col-lg-2 marges");
-
-		var divReconcile = document.createElement('div');
-		divReconcile.setAttribute('id', "divReconcile_" + nb_inp);
-		divReconcile.setAttribute('class', "col-lg-3 marges");
-		//divReconcile.setAttribute('role', "group");
-
-		var bloc_inputs = document.getElementById('bloc-inputs');
-
-		// add all new elements to the formulary
-		var divMapping = document.createElement('div');
-		divMapping.setAttribute('id', "divMapping_" + nb_inp);
-		divMapping.setAttribute('class', "col-lg-12");
-
-		var divSubmitMapping = document.createElement('div');
-		divSubmitMapping.setAttribute('id', "divSubmitMapping_" + nb_inp);
-
-
-		var divReconciliationCheck = document.createElement('div');
-		divReconciliationCheck.setAttribute('id', "divReconciliationCheck_" + nb_inp);
-		divReconciliationCheck.setAttribute('class', "col-lg-12");
-
-		var divSubmitReconcile = document.createElement('div');
-		divSubmitReconcile.setAttribute('id', "divSubmitReconcile_" + nb_inp);
-		divSubmitReconcile.setAttribute('class', "col-lg-12 center");
-
-		var divTableReconcile = document.createElement('div');
-		divTableReconcile.setAttribute('id', "divTableReconcile_" + nb_inp);
-		divTableReconcile.setAttribute('class', "col-lg-12 dataTable");
-		divTableReconcile.style.display = "inline-block";
-
-		
-		divAddLoad.appendChild(divUpload)
-		divAddLoad.appendChild(divCSV);
-		
-		divAddLoad.appendChild(divLoad);
-		divAddLoad.appendChild(divReconcile);
-
-		bloc_inputs.appendChild(globalInput);
-		globalInput.appendChild(divAddLoad);	
-
-		globalInput.appendChild(divMapping);
-		globalInput.appendChild(divSubmitMapping);
-		divSubmitMapping.setAttribute('class', "col-lg-12 center");
-
-		globalInput.appendChild(divTableReconcile);
-		globalInput.appendChild(divReconciliationCheck);
-		globalInput.appendChild(divSubmitReconcile);
 
 
 	}
@@ -126,10 +144,12 @@ function addField(compteur, idAdd, typeInput) {
 		this.createInputSpecial(nb_header, "header", cellInputHeader);
 
 		document.getElementById("compteur_header").value ++;
+		
+		//increment input counter
+		document.getElementById(compteur).value ++;
 	}	
 
-	//increment input counter
-	document.getElementById(compteur).value ++;
+	
 }
 
 function createInputSpecial(nbInput, typeInput, container){
@@ -145,6 +165,7 @@ function createInputSpecial(nbInput, typeInput, container){
 	inputLoad.setAttribute('type', 'file');
 	inputLoad.setAttribute('id', typeInput + "_" + nbInput);
 	inputLoad.setAttribute('name', typeInput + "_" + nbInput);
+	inputLoad.setAttribute('value', "false");//boolean for valid or not upload
 	divBtn.appendChild(inputLoad);
 
 	var divFilePathWrapper = document.createElement('div');
@@ -451,8 +472,9 @@ function cancelInputFile(nb_input, action){
 	console.log("text_inp_" + nb_input);
 	var sampleText = textinput.value;
 
-	var sampleFile = document.getElementById("inp_" + nb_input).files[0];
-
+	var inputFile = document.getElementById("inp_" + nb_input);
+	var sampleFile = inputFile.files[0];
+	
 	var filesize = sampleFile.size;
 
 	if(sampleText != ""){
@@ -524,6 +546,8 @@ function cancelInputFile(nb_input, action){
 	if(action == "cancel"){
 		var inputText = document.getElementById("text_inp_" + nb_input);
 		inputText.value = "";
+		
+		inputFile.setAttribute('value', false);
 	}
 	
 	
@@ -625,7 +649,8 @@ function uploadInputFile(nb_input){
 			if (this.status == 200) {
 				
 				divAddLoad.removeChild(divLoadingIcon);
-				
+				var inputLoad = document.getElementById("inp_" + nb_input);
+				inputLoad.setAttribute('value', true);//boolean for valid upload
 				
 				actionSeparatorCSV(nb_input, "upload");
 				actionMappingButton(nb_input, "upload");

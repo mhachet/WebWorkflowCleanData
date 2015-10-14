@@ -64,7 +64,7 @@ public class DarwinCore extends CSVFile{
 		messages.add("\n--- Select id line from clean ---\n");
 
 		String sqlID= "SELECT * FROM Workflow.Clean_" + this.getNbSessionRandom() + " WHERE UUID_=\"" + this.getNbSessionRandom() + "\";";
-		System.out.println(sqlID);
+		//System.out.println(sqlID);
 		//--- Create DarwinCoreInput table ---inputFile_
 		messages.addAll(newConnection.newConnection("executeQuery", sqlID));
 		ArrayList<String> resultats = newConnection.getResultatSelect();

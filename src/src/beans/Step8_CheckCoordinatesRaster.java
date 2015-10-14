@@ -4,6 +4,10 @@
  */
 package src.beans;
 
+import java.util.HashMap;
+
+import com.mongodb.util.Hash;
+
 /**
  * src.beans
  * 
@@ -12,11 +16,12 @@ package src.beans;
  */
 public class Step8_CheckCoordinatesRaster {
 
-    private boolean step8_ok = true;
+    private boolean step8_ok;
     private boolean involved = false;
     private int nbFound = 0;
     private String pathWrongRaster = "";
     private String pathMatrixResultRaster = "";
+    private HashMap<String, Boolean> processRaster = new HashMap<>();
     
     public Step8_CheckCoordinatesRaster(){
 	
@@ -61,5 +66,13 @@ public class Step8_CheckCoordinatesRaster {
     public void setPathMatrixResultRaster(String pathMatrixResultRaster) {
         this.pathMatrixResultRaster = pathMatrixResultRaster;
     }
+
+	public HashMap<String, Boolean> getProcessRaster() {
+		return processRaster;
+	}
+
+	public void setProcessRaster(HashMap<String, Boolean> processRaster) {
+		this.processRaster = processRaster;
+	}
     
 }

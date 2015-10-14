@@ -2,11 +2,7 @@
 db="Workflow"
 user="mhachet"
 pass="ledzeppelin"
-directory="/home/mhachet/workspace/WebWorkflowCleanData/"
-
-
-#find  $directory"WebContent/output/temp/" -name "*" -type d -mtime +3 -exec rm -rf  {} \; 
-rm -R $directory"WebContent/output/temp/"
+directory="/var/lib/tomcat7/webapps/WebWorkflowCleanData/"
 
 mysql -u$user -p$pass -e "SHOW TABLES FROM $db" >$directory"src/resources/showTable.txt"
 

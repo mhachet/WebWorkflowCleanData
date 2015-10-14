@@ -37,7 +37,8 @@ public class RasterTreatment {
 	private int nbWrongOccurrences;
 	private File matrixFileValidCells;
 	private File wrongRasterFile;
-
+	private HashMap<String, Boolean> checkProcess;
+	
 	public RasterTreatment(ArrayList<File> rasterFiles, Treatment dataTreatment){
 		this.rasterFiles = rasterFiles;
 		this.dataTreatment = dataTreatment;
@@ -70,7 +71,7 @@ public class RasterTreatment {
 
 		// delete from Clean table, all data not included
 		this.deleteWrongCellsFromClean(listNotValidData);
-		
+
 
 
 		this.setNbWrongOccurrences(listNotValidData.size());
@@ -81,6 +82,7 @@ public class RasterTreatment {
 
 		return matrixFileValidCells;
 	}
+	
 	/**
 	 * 
 	 * Check the number of raster file, necessary 1
@@ -101,6 +103,8 @@ public class RasterTreatment {
 				hashMapValidOrNot.put(id, booleanRasterFiles);
 			}
 		}
+		
+		checkProcess = new HashMap<>();
 	}
 
 	/**
@@ -128,7 +132,7 @@ public class RasterTreatment {
 			new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").mkdirs();
 		}
 		File dataInputFileRaster = new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/dataInputFileRaster.csv");			
-		System.out.println("dataInputFileRaster : " + dataInputFileRaster.getAbsolutePath());
+		//System.out.println("dataInputFileRaster : " + dataInputFileRaster.getAbsolutePath());
 		ArrayList<Integer> listValidData = new ArrayList<>();
 		ArrayList<Integer> idForOneRaster = new ArrayList<>();
 
@@ -174,6 +178,7 @@ public class RasterTreatment {
 			new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").mkdirs();
 		}
 		File validRaster = new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/validRaster.txt");
+		File errorRaster = new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/errorRaster.txt");
 		try {
 
 			FileWriter dataInputWriterTemp = new FileWriter(dataInputFileRaster, false);
@@ -187,14 +192,15 @@ public class RasterTreatment {
 			dataWriter.close();
 
 			FileOutputStream fos = new FileOutputStream(validRaster);
+			FileOutputStream fosError = new FileOutputStream(errorRaster);
 			Runtime rt = Runtime.getRuntime();
 			String [] cmdarray = {"Rscript", scriptRaster, DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/", dataRasterFile.getAbsolutePath(), dataInputFileRaster.getAbsolutePath()};
-
+			System.out.println("Rscript " +  scriptRaster + " " + DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/ " + dataRasterFile.getAbsolutePath() + " " + dataInputFileRaster.getAbsolutePath());
 			Process proc = rt.exec(cmdarray);
 			// any error message?
 			// any streamGobble is a thread
-			StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");            
-
+			StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR", fosError);            
+			
 			// any output?
 			// new thread
 			StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream(), "OUTPUT", fos);
@@ -206,15 +212,68 @@ public class RasterTreatment {
 			// any error???
 			int exitVal;
 			exitVal = proc.waitFor();
+
 		} catch (Throwable t){
 			t.printStackTrace();
 		}
-
-		ArrayList<Integer> listValidData = this.getValidIDCells(validRaster);
-
+		boolean errorProcess = this.errorDuringProcess(errorRaster);
+		System.out.println("error process : " + errorProcess);
+		
+		this.getCheckProcess().put(dataRasterFile.getName(), errorProcess);
+		
+		ArrayList<Integer> listValidData= null; 
+		
+		if(!errorProcess){
+			listValidData = this.getValidIDCells(validRaster);
+		}
+		else{
+			listValidData = new ArrayList<>();
+		}
+		
+		
 		return listValidData;
 	}
 
+	/**
+	 * Check if a error happened during R script process
+	 * 
+	 * @param errorRaster
+	 * @return boolean
+	 */
+	public boolean errorDuringProcess(File errorRaster){
+		String errorInfo = "aucun package nommé";
+		String errorInfoBis = "Exécution arrêtée";
+		boolean error = false;
+		InputStream ips = null;
+		try {
+			ips = new FileInputStream(errorRaster);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		InputStreamReader ipsr = new InputStreamReader(ips);
+		BufferedReader br = new BufferedReader(ipsr);
+		String line;
+		String [] arraySplit;
+		try {
+			while ((line = br.readLine()) != null){
+				if(line.contains(errorInfo)){
+					error = true;
+				}
+				else if(line.contains(errorInfoBis)){
+					error = true;
+				}
+			}
+			br.close(); 
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return error;
+		
+	}
+	
 	/**
 	 * 
 	 * Retrieve all valid "id_" (included in a raster cell)
@@ -336,11 +395,11 @@ public class RasterTreatment {
 					if(i != 0){
 						line += resultatSelect.get(i).replace("_", "");
 					}
-					
+
 				}
 			}
 			for (Entry<String, Boolean> probaBisEntry : probaBis.entrySet()){
-				
+
 				// TRUE : id valide dans le raster ou FALSE : id non valide dans le raster
 				boolean value = probaBisEntry.getValue();
 				if(nbRasterFile < rasterFiles.size()){
@@ -404,8 +463,8 @@ public class RasterTreatment {
 		 * First, retrieve wrong data, not included in a raster cell.
 		 */
 		if(notValidData.size() > 0){
-			
-		
+
+
 			String sqlIdDelete = "SELECT * FROM Workflow.Clean_" + this.getDataTreatment().getNbSessionRandom() + " WHERE (";
 			for(int j = 0 ; j < notValidData.size() ; j++){
 				int id_ = notValidData.get(j);
@@ -418,12 +477,12 @@ public class RasterTreatment {
 				}
 			}
 			sqlIdDelete += ") AND UUID_=\"" + this.getDataTreatment().getNbSessionRandom() + "\";";
-	
-	
-	
+
+
+
 			// retrieve data aren't in cells in a csv file
 			ConnectionDatabase newConnectionSelect = new ConnectionDatabase();
-	
+
 			ArrayList<String> messagesSelect = new ArrayList<String>();
 			messagesSelect.add("\n--- Select point aren't included in cells ---");
 			messagesSelect.add(sqlIdDelete);
@@ -439,7 +498,7 @@ public class RasterTreatment {
 				File wrongRasterFile = dataTreatment.createFileCsv(resultatSelect, "/wrong_raster_" + this.dataTreatment.getNbSessionRandom() + ".csv", "wrong");
 				this.setWrongRasterFile(wrongRasterFile);
 			}
-	
+
 			for(int j = 0 ; j < messagesSelect.size() ; j++){
 				System.out.println(messagesSelect.get(j));
 			}
@@ -450,7 +509,7 @@ public class RasterTreatment {
 				new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/wrong/").mkdirs();
 			}
 			File wrongRasterFile = dataTreatment.createFileCsv(new ArrayList<String>(), "/wrong_raster_" + this.dataTreatment.getNbSessionRandom() + ".csv", "wrong");
-			
+
 			this.setWrongRasterFile(wrongRasterFile);
 		}
 
@@ -481,69 +540,149 @@ public class RasterTreatment {
 
 	}
 
+	/**
+	 * 
+	 * @return ArrayList<File>
+	 */
 	public ArrayList<File> getRasterFiles() {
 		return rasterFiles;
 	}
 
+	/**
+	 * 
+	 * @param rasterFiles
+	 */
 	public void setRasterFiles(ArrayList<File> rasterFiles) {
 		this.rasterFiles = rasterFiles;
 	}
 
+	/**
+	 * 
+	 * @return HashMap<Integer, HashMap<String, Boolean>>
+	 */
 	public HashMap<Integer, HashMap<String, Boolean>> getHashMapValidOrNot() {
 		return hashMapValidOrNot;
 	}
 
+	/**
+	 * 
+	 * @param hashMapValidOrNot
+	 */
 	public void setHashMapValidOrNot(
 			HashMap<Integer, HashMap<String, Boolean>> hashMapValidOrNot) {
 		this.hashMapValidOrNot = hashMapValidOrNot;
 	}
 
+	/**
+	 * 
+	 * @return Treatment
+	 */
 	public Treatment getDataTreatment() {
 		return dataTreatment;
 	}
 
+	/**
+	 * 
+	 * @param dataTreatment
+	 */
 	public void setDataTreatment(Treatment dataTreatment) {
 		this.dataTreatment = dataTreatment;
 	}
 
+	/**
+	 * 
+	 * @return String
+	 */
 	public String getDIRECTORY_PATH() {
 		return DIRECTORY_PATH;
 	}
 
+	/**
+	 * 
+	 * @param dIRECTORY_PATH
+	 */
 	public void setDIRECTORY_PATH(String dIRECTORY_PATH) {
 		DIRECTORY_PATH = dIRECTORY_PATH;
 	}
 
+	/**
+	 * 
+	 * @return int
+	 */
 	public int getNbWrongOccurrences() {
 		return nbWrongOccurrences;
 	}
 
+	/**
+	 * 
+	 * @param nbWrongOccurrences
+	 */
 	public void setNbWrongOccurrences(int nbWrongOccurrences) {
 		this.nbWrongOccurrences = nbWrongOccurrences;
 	}
 
+	/**
+	 * 
+	 * @return String
+	 */
 	public String getRESSOURCES_PATH() {
 		return RESSOURCES_PATH;
 	}
 
+	/**
+	 * 
+	 * @param rESSOURCES_PATH
+	 */
 	public void setRESSOURCES_PATH(String rESSOURCES_PATH) {
 		RESSOURCES_PATH = rESSOURCES_PATH;
 	}
 
+	/**
+	 * 
+	 * @return File
+	 */
 	public File getMatrixFileValidCells() {
 		return matrixFileValidCells;
 	}
 
+	/**
+	 * 
+	 * @param matrixFileValidCells
+	 */
 	public void setMatrixFileValidCells(File matrixFileValidCells) {
 		this.matrixFileValidCells = matrixFileValidCells;
 	}
 
+	/**
+	 * 
+	 * @return File
+	 */
 	public File getWrongRasterFile() {
 		return wrongRasterFile;
 	}
 
+	/**
+	 * 
+	 * @param wrongRasterFile
+	 */
 	public void setWrongRasterFile(File wrongRasterFile) {
 		this.wrongRasterFile = wrongRasterFile;
 	}
 
+	/**
+	 * 
+	 * @return HashMap<String, Boolean>
+	 */
+	public HashMap<String, Boolean> getCheckProcess() {
+		return checkProcess;
+	}
+
+	/**
+	 * 
+	 * @param checkProcess
+	 */
+	public void setCheckProcess(HashMap<String, Boolean> checkProcess) {
+		this.checkProcess = checkProcess;
+	}
+	
 }

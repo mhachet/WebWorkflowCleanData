@@ -367,6 +367,7 @@ function deleteMapping(nbInput){
 }
 
 function activeRunning(){
+	var checkInputs = checkingInputs();
 	var divRunning = document.getElementById('running');   
 	//var submitButton = document.getElementById('workflowLaunch');
 	//console.log("running");
@@ -375,5 +376,12 @@ function activeRunning(){
 	divRunning.style.display = 'block';
 	divBody.style.display = 'none';
 	//});
+}
 
+function findNbInputs(){
+	
+}
+function checkingInputs(){
+	var all_ok = new Boolean(true);
+	
 }

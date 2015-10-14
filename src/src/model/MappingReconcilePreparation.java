@@ -82,26 +82,50 @@ public class MappingReconcilePreparation {
         this.idFile = idFile;
     }
 
+    /**
+     * 
+     * @return String
+     */
     public String getOriginalName() {
         return originalName;
     }
 
+    /**
+     * 
+     * @param originalName
+     */
     public void setOriginalName(String originalName) {
         this.originalName = originalName;
     }
 
+    /**
+     * 
+     * @return String
+     */
     public String getOriginalExtension() {
         return originalExtension;
     }
 
+    /**
+     * 
+     * @param originalExtension
+     */
     public void setOriginalExtension(String originalExtension) {
         this.originalExtension = originalExtension;
     }
 
+    /**
+     * 
+     * @return boolean
+     */
 	public boolean isValid() {
 		return isValid;
 	}
 
+	/**
+	 * 
+	 * @param isValid
+	 */
 	public void setValid(boolean isValid) {
 		this.isValid = isValid;
 	}

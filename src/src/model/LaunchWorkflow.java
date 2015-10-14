@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import src.beans.Finalisation;
 import src.beans.Initialise;
@@ -107,7 +108,7 @@ public class LaunchWorkflow {
 			boolean rasterFilesIsValid = this.isValidRasterFiles();
 			if(rasterFilesIsValid){
 				this.launchRasterOption();	
-				step8.setStep8_ok(true);
+				//step8.setStep8_ok(true);
 			}
 			else{
 				step8.setStep8_ok(false);
@@ -123,7 +124,7 @@ public class LaunchWorkflow {
 
 		this.writeFinalOutput();
 
-		//this.dataTreatment.deleteTables();
+		this.dataTreatment.deleteTables();
 	}
 
 	/**
@@ -317,13 +318,13 @@ public class LaunchWorkflow {
 			String headerName = header.getName();
 
 			/*if(!headerName.contains("hdr")){
-		System.out.println("false 2 " + headerName);
-		isValid = false;
-	    }
-	    else if(!extensionHeader.equals(".hdr")){
-		System.out.println("false 3");
-		isValid = false;
-	    }*/
+			System.out.println("false 2 " + headerName);
+			isValid = false;
+		    }
+		    else if(!extensionHeader.equals(".hdr")){
+			System.out.println("false 3");
+			isValid = false;
+		    }*/
 
 
 
@@ -375,12 +376,21 @@ public class LaunchWorkflow {
 		RasterTreatment rasterTreatment = this.dataTreatment.checkWorldClimCell(this.initialisation.getInputRastersList());
 		finalisation.setMatrixFileValidCells(rasterTreatment.getMatrixFileValidCells());
 		finalisation.setPathMatrixFile(rasterTreatment.getMatrixFileValidCells().getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), ""));
+		HashMap<String, Boolean> errorProcessRaster = rasterTreatment.getCheckProcess();
+		step8.setProcessRaster(errorProcessRaster);
+		for(Entry<String, Boolean> entry : errorProcessRaster.entrySet()) {
+			String filenameRaster = entry.getKey();
+		    boolean errorProcess = entry.getValue();
+		    if(errorProcess){
+		    	step8.setStep8_ok(false);
+		    }
+		}
 		step8.setPathWrongRaster(rasterTreatment.getWrongRasterFile().getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), ""));
 		step8.setPathMatrixResultRaster(rasterTreatment.getMatrixFileValidCells().getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), ""));
-		System.out.println("pathWrongRaster : " + step8.getPathWrongRaster());
-		System.out.println("pathmatrixresult : " + step8.getPathMatrixResultRaster());
+		//System.out.println("pathWrongRaster : " + step8.getPathWrongRaster());
+		//System.out.println("pathmatrixresult : " + step8.getPathMatrixResultRaster());
 		step8.setNbFound(rasterTreatment.getNbWrongOccurrences());
-	}//wrong_raster
+	}
 
 	/**
 	 * Launch establishmentMeans option
@@ -403,7 +413,9 @@ public class LaunchWorkflow {
 	}*/
 	}
 
-
+	/**
+	 * Write clean file(s)
+	 */
 	public void writeFinalOutput(){
 		ArrayList<File> listFinalOutput = new ArrayList<>();
 		ArrayList<String> listPathsOutput = new ArrayList<>();
@@ -434,7 +446,7 @@ public class LaunchWorkflow {
 
 	/**
 	 *  
-	 * @return TreatmentData
+	 * @return TreatmentData//output/
 	 */
 	public Treatment getDataTreatment() {
 		return dataTreatment;
