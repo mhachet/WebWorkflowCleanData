@@ -122,9 +122,6 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <excludes>
-                    <exclude>**/*json</exclude>
-                </excludes>
             </resource>
         </resources>
     </build>
