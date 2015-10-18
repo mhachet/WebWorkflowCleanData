@@ -6,7 +6,6 @@ package src.beans;
 
 import java.util.HashMap;
 
-import com.mongodb.util.Hash;
 
 /**
  * src.beans
