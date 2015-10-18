@@ -22,15 +22,51 @@ import java.util.zip.ZipInputStream;
 public class UploadControler  extends HttpServlet{
 
 
-	private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/WebContent/output/"; 
-	private String RESSOURCES_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/";
+	//private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/WebContent/output/"; 
+	//private String RESSOURCES_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/";
 
-
+	private String DIRECTORY_PATH = "";
+	private String RESSOURCES_PATH = "";
+	
 	public UploadControler(){
 
 
 	}
 
+	public void init() throws ServletException{
+		// Do required initialization
+		File currentFile = new File("");
+		String currentPath = currentFile.getAbsolutePath();
+		System.out.println("currentPathUpload : " + currentPath);
+		
+		try{
+			BufferedReader buff = new BufferedReader(new FileReader(currentPath + "/.properties"));
+			if(currentPath.indexOf("eclipse") != -1){
+				currentPath = "";
+			}
+			try {
+				String line;
+				int count = 0;
+				while ((line = buff.readLine()) != null) {
+					if(count == 0){
+						this.setDIRECTORY_PATH(currentPath + line);
+						System.out.println("directoryPathUpload : " + this.getDIRECTORY_PATH());
+					}
+					else{
+						this.setRESSOURCES_PATH(currentPath + line);
+						System.out.println("ressourcePathUpload : " + this.getRESSOURCES_PATH());
+					}
+					count ++;
+					
+				}
+			} finally {
+				buff.close();
+			}
+		} catch (IOException ioe) {
+			System.out.println("Erreur --" + ioe.toString());
+		}
+
+	}
 
 	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {		
 		int count = 0;
@@ -115,6 +151,12 @@ public class UploadControler  extends HttpServlet{
 	}
 
 
+	/**
+	 * get the file contained
+	 * 
+	 * @param file
+	 * @return String
+	 */
 	protected String getFileContained(File file){
 		String contained = "";
 
@@ -139,6 +181,11 @@ public class UploadControler  extends HttpServlet{
 	}
 
 
+	/**
+	 * get the first line of the file
+	 * @param file
+	 * @return String
+	 */
 	protected String getFirstLine(File file){
 		String firstLine = "";
 
@@ -169,6 +216,14 @@ public class UploadControler  extends HttpServlet{
 	}
 
 
+	/**
+	 * unzip zip file
+	 * @param zipfile
+	 * @param folder
+	 * @return String filename of unzip file
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
 	public String unzip(File zipfile, String folder) throws FileNotFoundException, IOException{
 		
 		ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipfile.getCanonicalFile())));
@@ -215,7 +270,41 @@ public class UploadControler  extends HttpServlet{
 		return dezipFilename;
 	}
 
+	/**
+	 * 
+	 * @return String
+	 */
+	public String getDIRECTORY_PATH() {
+		return DIRECTORY_PATH;
+	}
+
+	/**
+	 * 
+	 * @param dIRECTORY_PATH
+	 */
+	public void setDIRECTORY_PATH(String dIRECTORY_PATH) {
+		DIRECTORY_PATH = dIRECTORY_PATH;
+	}
+
+	/**
+	 * 
+	 * @return String
+	 */
+	public String getRESSOURCES_PATH() {
+		return RESSOURCES_PATH;
+	}
+
+	/**
+	 * 
+	 * @param rESSOURCES_PATH
+	 */
+	public void setRESSOURCES_PATH(String rESSOURCES_PATH) {
+		RESSOURCES_PATH = rESSOURCES_PATH;
+	}
+
+	
 }
+
 
 /*
  ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipfile.getCanonicalFile())));

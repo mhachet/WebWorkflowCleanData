@@ -19,7 +19,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
@@ -33,9 +35,11 @@ import java.util.Map.Entry;
 @WebServlet(name = "Controler")
 public class Controler extends HttpServlet {
 
-	private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/WebContent/output/"; 
-	private String RESSOURCES_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/";
-
+	//private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/WebContent/output/"; 
+	//private String RESSOURCES_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/";
+	private String DIRECTORY_PATH = "";
+	private String RESSOURCES_PATH = "";
+	
 	private Initialise initialisation;
 	private String nbSessionRandom;
 	private Finalisation finalisation;
@@ -61,6 +65,37 @@ public class Controler extends HttpServlet {
 
 	public void init() throws ServletException{
 		// Do required initialization
+		File currentFile = new File("");
+		String currentPath = currentFile.getAbsolutePath();
+		System.out.println("currentPathControler : " + currentPath);
+		
+		try{
+			BufferedReader buff = new BufferedReader(new FileReader(currentPath + "/.properties"));
+			if(currentPath.indexOf("eclipse") != -1){
+				currentPath = "";
+			}
+			try {
+				String line;
+				int count = 0;
+				while ((line = buff.readLine()) != null) {
+					if(count == 0){
+						this.setDIRECTORY_PATH(currentPath + line);
+						System.out.println("directoryPathControler : " + this.getDIRECTORY_PATH());
+					}
+					else{
+						this.setRESSOURCES_PATH(currentPath + line);
+						System.out.println("ressourcePathControler : " + this.getRESSOURCES_PATH());
+					}
+					count ++;
+					
+				}
+			} finally {
+				buff.close();
+			}
+		} catch (IOException ioe) {
+			System.out.println("Erreur --" + ioe.toString());
+		}
+
 	}
 
 	/**
@@ -185,8 +220,8 @@ public class Controler extends HttpServlet {
 			String reconcileActive = "reconcileActive_";
 			String tableReconcile = "tableReconcile_";
 
-			
-			
+
+
 			String fieldName = item.getFieldName();
 			//System.out.println("fieldName : " + fieldName + " item : " + item.getString());
 			if(fieldName.contains("formulaire")){
@@ -331,7 +366,7 @@ public class Controler extends HttpServlet {
 			else if(fieldName.contains(reconcileActive)){
 				String [] tableauField =  fieldName.split("_");
 				int idReconcile = Integer.parseInt(tableauField[tableauField.length-1]);
-				System.out.println("fieldName : " + fieldName + "  " + reconcileActive + " value : " + item.getString());
+				//System.out.println("fieldName : " + fieldName + "  " + reconcileActive + " value : " + item.getString());
 				for(int i = 0 ; i < listMappingReconcileDWC.size() ; i++ ){
 					int idFile = listMappingReconcileDWC.get(i).getIdFile();
 					if(idFile == (idReconcile)){
@@ -342,7 +377,7 @@ public class Controler extends HttpServlet {
 							reconciliationService.setLinesConnectedNewName(linesConnectedNewName);
 							reconciliationService.setFilename(listMappingReconcileDWC.get(i).getOriginalName());
 							listReconcileFiles.add(reconciliationService);
-							System.out.println("in reconcileActive : " + reconciliationService.getLinesConnectedNewName());
+							//System.out.println("in reconcileActive : " + reconciliationService.getLinesConnectedNewName());
 						}
 						else{
 							reconciliationService.setReconcile(false);
@@ -365,21 +400,21 @@ public class Controler extends HttpServlet {
 				}
 			}
 			else if(fieldName.contains("group_")){
-				System.out.println("fieldName : " + fieldName);
+				//System.out.println("fieldName : " + fieldName);
 				String [] tableauField =  fieldName.split("_");
 				String value = item.getString();
 				for(int t = 0; t < tableauField.length ; t++){
 					System.out.println("tableau : " + tableauField[t]);
 				}
 
-				System.out.println("valueradio : " + value);
+				//System.out.println("valueradio : " + value);
 				int idFile = Integer.parseInt(tableauField[tableauField.length-2]);
 				int idLine = Integer.parseInt(tableauField[tableauField.length-1]);
 				//System.out.println(idLine);
 				ReconciliationService reconciliationService = listReconcileFiles.get(idFile);
 				if(reconciliationService.isReconcile()){
 					HashMap<Integer, String> linesConnnectedNewName = reconciliationService.getLinesConnectedNewName();
-					System.out.println("in group : " + linesConnnectedNewName);
+					//System.out.println("in group : " + linesConnnectedNewName);
 					linesConnnectedNewName.put(idLine, value);
 				}
 
@@ -408,7 +443,7 @@ public class Controler extends HttpServlet {
 
 			}
 			else{
-				System.out.println("fieldName : " + fieldName);
+				//System.out.println("fieldName : " + fieldName);
 			}
 
 
@@ -436,7 +471,7 @@ public class Controler extends HttpServlet {
 
 
 		}
-		
+
 		this.initialisation.setNbInput(nbFilesInput);
 
 		this.initialisation.setListMappingReconcileFiles(listMappingReconcileDWC);
@@ -450,7 +485,7 @@ public class Controler extends HttpServlet {
 	public void destroy(){
 		// do nothing.
 	}
-	
+
 	/**
 	 * 
 	 * @return String
@@ -466,6 +501,23 @@ public class Controler extends HttpServlet {
 	 */
 	public void setDIRECTORY_PATH(String dIRECTORY_PATH) {
 		DIRECTORY_PATH = dIRECTORY_PATH;
+	}
+	
+	/**
+	 * 
+	 * @return String
+	 */
+	public String getRESSOURCES_PATH() {
+		return RESSOURCES_PATH;
+	}
+
+	/**
+	 * 
+	 * @param rESSOURCES_PATH
+	 * @return void
+	 */
+	public void setRESSOURCES_PATH(String rESSOURCES_PATH) {
+		RESSOURCES_PATH = rESSOURCES_PATH;
 	}
 
 	/**

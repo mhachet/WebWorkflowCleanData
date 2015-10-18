@@ -37,10 +37,18 @@ public class GeographicTreatment {
 	private File wrongCoordinatesFile;
 	private File wrongPolygonFile;
 
+	/**
+	 * 
+	 * @param darwinCore
+	 */
 	public GeographicTreatment(DarwinCore darwinCore){
 		this.darwinCore = darwinCore;
 	}
 
+	/**
+	 * 
+	 * @return ArrayList<String>
+	 */
 	public ArrayList<String> geoGraphicTreatment(){
 		ArrayList<String> infosSummary = new ArrayList<>();
 
@@ -100,14 +108,14 @@ public class GeographicTreatment {
 				GeometryFactory geometryFactory = new GeometryFactory();
 				Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
 				/*System.out.println("--------------------------------------------------------------");
-		System.out.println("------------------ Check point in polygon --------------------");
-		System.out.println("Lat : " + latitude + "\tLong : " +  longitude);
-		System.out.println("id_ : " + id_ + "\tgbifID : " + gbifId_ + "\tIso3 : " + iso3 + "\tiso2 : " + iso2);
+				System.out.println("------------------ Check point in polygon --------------------");
+				System.out.println("Lat : " + latitude + "\tLong : " +  longitude);
+				System.out.println("id_ : " + id_ + "\tgbifID : " + gbifId_ + "\tIso3 : " + iso3 + "\tiso2 : " + iso2);
 				 */
 				boolean isContained = this.polygonContainedPoint(point, geoJsonFile);
 				/*
-		System.out.println("The point is contained in the polygone : " + isContained);
-		System.out.println("--------------------------------------------------------------\n");
+				System.out.println("The point is contained in the polygone : " + isContained);
+				System.out.println("--------------------------------------------------------------\n");
 				 */
 				if(!isContained){
 					nbWrongIso2 ++;
