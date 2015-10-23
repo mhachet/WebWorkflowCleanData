@@ -10,12 +10,12 @@
 		<welcome-file>finalWorkflow.jsp</welcome-file>
 	</welcome-file-list>
 	<servlet>
-		<servlet-name>Controler</servlet-name>
-		<servlet-class>src.servlets.Controler</servlet-class>
+		<servlet-name>MainControler</servlet-name>
+		<servlet-class>src.servlets.MainControler</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>Controler</servlet-name>
-		<url-pattern>/controler</url-pattern>
+		<servlet-name>MainControler</servlet-name>
+		<url-pattern>/mainControler</url-pattern>
 	</servlet-mapping>
 	
 	<servlet>

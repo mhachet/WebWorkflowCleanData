@@ -50,8 +50,7 @@
 		<!-- /.navbar-collapse -->
 	</div>
 	<!-- /.container --> </nav>
-	<header class="intro-header"
-		style="background-image: url('images/IMG_1792.JPG')">
+	<header class="intro-header" style="background-image: url('images/IMG_1792.JPG')">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 col-lg-offset-2 col-md-10 col-md-offset-1">
@@ -66,45 +65,29 @@
 	<div class="container">
 		<div id="divBody" class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <p>Want to get in touch with me? Fill out the form below to send me a message and I will try to get back to you within 24 hours!</p>
-                    <!-- Contact Form - Enter your email address on line 19 of the mail/contact_me.php file to make this form work. -->
-                    <!-- WARNING: Some web hosts do not allow emails to be sent through forms to common mail hosts like Gmail or Yahoo. It's recommended that you use a private domain email address! -->
-                    <!-- NOTE: To use the contact form, your site must be on a live web host with PHP! The form will not work locally! -->
-                 <form method="post" action="http://localhost/contact.php" name="sentMessage" id="contactForm" novalidate="">
-                    <div class="row control-group">
-                        <div class="form-group col-xs-12 floating-label-form-group controls">
-                            <label for="name">Name</label>
-                            <input placeholder="Name" name="name" id="name" required="" data-validation-required-message="Please enter your name." type="text" class="form-control contact" >
-                            <p class="help-block text-danger"></p>
-                        </div>
-                    </div>
-                    <div class="row control-group">
-                        <div class="form-group col-xs-12 floating-label-form-group controls">
-                            <label for="email">Email Address</label>
-                            <input class="form-control" placeholder="Email Address" name="email" id="email" required="" data-validation-required-message="Please enter your email address." type="email">
-                            <p class="help-block text-danger"></p>
-                        </div>
-                    </div>
-                    <div class="row control-group">
-                        <div class="form-group col-xs-12 floating-label-form-group controls">
-                            <label for="message">Message</label>
-                            <textarea rows="5" class="form-control" placeholder="Message" name="message" id="message" required="" data-validation-required-message="Please enter a message."></textarea>
-                            <p class="help-block text-danger"></p>
-                        </div>
-                    </div>
-                    <br>
-                    <div id="success">
-                     </div>
-                    <div class="row">
-                        <div class="form-group col-lg-12" style="text-align:center">
-                            <button type="submit" class="btn btn-primary">Send</button>
-                        </div>
-                    </div>
-                </form>
+				<?php
+				if (isset ( $_POST ) && isset ( $_POST ['name'] ) && isset ( $_POST ['email'] ) && isset ( $_POST ['message'] )) {
+					if (! empty ( $_POST ['name'] ) && ! empty ( $_POST ['email'] ) && ! empty ( $_POST ['message'] )) {
+						$destinataire = "mhachet@mnhn.fr";
+						$sujet = "Contact request";
+						$message = "Name : " . $_POST ['name'] . "\r\n";
+						$message = "email : " . $_POST ['email'] . "\r\n";
+						$message = "Message : " . $_POST ['message'] . "\r\n";
+						$entete = 'From: ' . $_POST ['email'] . "\r\n" . 'Reply-To: ' . $_POST ['email'] . "\r\n" . 'X-Mailer: PHP/' . phpversion ();
+						echo "<div class='col-lg-6'>";
+						if (mail ( $destinataire, $sujet, $message, $entete )) {
+							echo "<p>Thank you for your message. It has been sent to our team.</p>";
+						} else {
+							echo "<p>Sorry ... An error occured when submitting the form by email.</p>";
+						}
+						echo "</div>";
+					}
+				}
+				?>
             </div>
         </div>
 	<hr></hr>
-<!-- Footer -->
+	<!-- Footer -->
     <footer>
         <div class="container">
             <div class="row">
@@ -143,8 +126,8 @@
     </footer>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-	<script src="bootstrap/js/bootstrap.min.js"></script>
-	<script src="js/jquery.watable.js"></script>
+	<script src="../bootstrap/js/bootstrap.min.js"></script>
+	<script src="../js/jquery.watable.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript"></script>
     <script type="text/javascript" src="js/functionsFinal.js"></script>

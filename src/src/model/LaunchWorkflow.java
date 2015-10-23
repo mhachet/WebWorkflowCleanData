@@ -108,11 +108,16 @@ public class LaunchWorkflow {
 			boolean rasterFilesIsValid = this.isValidRasterFiles();
 			if(rasterFilesIsValid){
 				this.launchRasterOption();	
-				//step8.setStep8_ok(true);
 			}
 			else{
-				step8.setStep8_ok(false);
+				File defaultRaster = new File(this.dataTreatment.getRESSOURCES_PATH() + "test/inputs_data/tmean1.bil");
+				this.initialisation.getInputRastersList().add(defaultRaster);
+				File defaultHeader = new File(this.dataTreatment.getRESSOURCES_PATH() + "test/inputs_data/tmean1.hdr");
+				this.initialisation.getHeaderRasterList().add(defaultHeader);
+				this.launchRasterOption();
+				//step8.setStep8_ok(false);
 			}
+			
 		}
 
 		//System.out.println("establishment : " + this.initialisation.getEstablishmentList());accessRight
@@ -158,7 +163,7 @@ public class LaunchWorkflow {
 				step1.setInvolved(isMapping);
 				
 				this.dataTreatment.mappingDwC(mappingDwc, idFile);
-				String pathMappedFile = mappingDwc.getMappedFile().getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(),"");
+				String pathMappedFile = mappingDwc.getMappedFile().getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(),""); //change to 'output/'
 
 				mappingDwc.setFilepath(pathMappedFile);
 			}
@@ -175,7 +180,7 @@ public class LaunchWorkflow {
 				else{
 					this.dataTreatment.reconcileService(reconcileService, mappingDwc.getNoMappedFile(), idFile);
 				}
-				String pathReconcileFile = reconcileService.getReconcileFile().getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(),"");
+				String pathReconcileFile = reconcileService.getReconcileFile().getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(),""); //change to 'output/'
 				reconcileService.setFilepath(pathReconcileFile);
 				
 				
@@ -218,19 +223,19 @@ public class LaunchWorkflow {
 
 		File wrongCoordinatesFile = geoTreatment.getWrongCoordinatesFile();
 		finalisation.setWrongCoordinatesFile(wrongCoordinatesFile);
-		finalisation.setPathWrongCoordinatesFile(wrongCoordinatesFile.getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), ""));	
+		finalisation.setPathWrongCoordinatesFile(wrongCoordinatesFile.getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), "")); //change to 'output/'	
 		step3.setNbFound(geoTreatment.getNbWrongCoordinates());
 		step3.setPathWrongCoordinates(finalisation.getPathWrongCoordinatesFile());
 
 		File wrongGeospatial = geoTreatment.getWrongGeoFile();
 		finalisation.setWrongGeospatial(wrongGeospatial);
-		finalisation.setPathWrongGeospatial(wrongGeospatial.getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), ""));
+		finalisation.setPathWrongGeospatial(wrongGeospatial.getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), "")); //change to 'output/'
 		step4.setNbFound(geoTreatment.getNbWrongGeospatialIssues());
 		step4.setPathWrongGeoIssue(finalisation.getPathWrongGeospatial());
 
 		File wrongPolygon = geoTreatment.getWrongPolygonFile();
 		finalisation.setWrongPolygon(wrongPolygon);
-		finalisation.setPathWrongPolygon(wrongPolygon.getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), ""));
+		finalisation.setPathWrongPolygon(wrongPolygon.getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), "")); //change to 'output/'
 		step7.setNbFound(geoTreatment.getNbWrongIso2());
 		step7.setPathWrongIso2(finalisation.getPathWrongPolygon());
 	}
@@ -375,7 +380,7 @@ public class LaunchWorkflow {
 
 		RasterTreatment rasterTreatment = this.dataTreatment.checkWorldClimCell(this.initialisation.getInputRastersList());
 		finalisation.setMatrixFileValidCells(rasterTreatment.getMatrixFileValidCells());
-		finalisation.setPathMatrixFile(rasterTreatment.getMatrixFileValidCells().getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), ""));
+		finalisation.setPathMatrixFile(rasterTreatment.getMatrixFileValidCells().getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), "")); //change to 'output/'
 		HashMap<String, Boolean> errorProcessRaster = rasterTreatment.getCheckProcess();
 		step8.setProcessRaster(errorProcessRaster);
 		for(Entry<String, Boolean> entry : errorProcessRaster.entrySet()) {
@@ -384,9 +389,12 @@ public class LaunchWorkflow {
 		    if(errorProcess){
 		    	step8.setStep8_ok(false);
 		    }
+		    else{
+		    	step8.setStep8_ok(true);
+		    }
 		}
-		step8.setPathWrongRaster(rasterTreatment.getWrongRasterFile().getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), ""));
-		step8.setPathMatrixResultRaster(rasterTreatment.getMatrixFileValidCells().getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), ""));
+		step8.setPathWrongRaster(rasterTreatment.getWrongRasterFile().getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), "")); //change to 'output/'
+		step8.setPathMatrixResultRaster(rasterTreatment.getMatrixFileValidCells().getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), "")); //change to 'output/'
 		//System.out.println("pathWrongRaster : " + step8.getPathWrongRaster());
 		//System.out.println("pathmatrixresult : " + step8.getPathMatrixResultRaster());
 		step8.setNbFound(rasterTreatment.getNbWrongOccurrences());
@@ -404,9 +412,9 @@ public class LaunchWorkflow {
 			step9.setNbFound(noEstablishment.size());
 			File wrongEstablishmentMeans = establishTreatment.getWrongEstablishmentMeansFile();
 			finalisation.setWrongEstablishmentMeans(wrongEstablishmentMeans);
-			finalisation.setPathWrongEstablishmentMeans(wrongEstablishmentMeans.getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), ""));
+			finalisation.setPathWrongEstablishmentMeans(wrongEstablishmentMeans.getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), "")); //change to 'output/'
 			step9.setStep9_ok(true);
-			step9.setPathWrongEstablishmentMeans(wrongEstablishmentMeans.getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), ""));
+			step9.setPathWrongEstablishmentMeans(wrongEstablishmentMeans.getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), "")); //change to 'output/'
 		}
 		/*else{
 	    step9.setStep9_ok(false);
@@ -436,7 +444,7 @@ public class LaunchWorkflow {
 			File cleanOutput = this.dataTreatment.createFileCsv(resultCleanTable, nameFile, "final_results");
 
 			listFinalOutput.add(cleanOutput);
-			String pathFile = cleanOutput.getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(),"");
+			String pathFile = cleanOutput.getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(),""); //change to 'output/'
 			listPathsOutput.add(pathFile);
 		}
 

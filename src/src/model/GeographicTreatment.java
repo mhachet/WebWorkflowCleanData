@@ -392,7 +392,7 @@ public class GeographicTreatment {
 
 
 	public String getDIRECTORY_PATH() {
-		return DIRECTORY_PATH;
+		return DIRECTORY_PATH;//hasGeospatialIssues
 	}
 
 	public void setDIRECTORY_PATH(String dIRECTORY_PATH) {

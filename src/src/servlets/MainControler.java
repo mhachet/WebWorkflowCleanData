@@ -52,8 +52,8 @@ import src.model.ReconciliationService;
  * LaunchWorkflow
  */
 
-@WebServlet(name = "Controler")
-public class Controler extends HttpServlet {
+@WebServlet(name = "MainControler")
+public class MainControler extends HttpServlet {
 
 	//private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/WebContent/output/"; 
 	//private String RESSOURCES_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/";
@@ -77,9 +77,9 @@ public class Controler extends HttpServlet {
 	/**
 	 * 
 	 * src.servlets
-	 * Controler
+	 * MainControler
 	 */
-	public Controler(){
+	public MainControler(){
 
 	}
 
@@ -305,37 +305,45 @@ public class Controler extends HttpServlet {
 				nbFilesInput ++;
 			}
 			else if(fieldName.equals(raster)){
-				//System.out.println("if raster : " + item);
+				System.out.println("if raster : " + item);
 				initialisation.setRaster(true);
 
 				String fileExtensionName = item.getName();
 				fileExtensionName = FilenameUtils.getExtension(fileExtensionName);
 				String fileName = item.getName();
-				File file = new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/data/" + fileName);
-				try {
-					item.write(file);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if(fileName != ""){
+					File file = new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/data/" + fileName);
+					try {
+						item.write(file);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					this.initialisation.getInputRastersList().add(file);
+					nbFilesRaster ++;
 				}
-				this.initialisation.getInputRastersList().add(file);
-				nbFilesRaster ++;
+				
 			}
 			else if(fieldName.equals(headerRaster)){
-				//System.out.println("if header : " + item);
+				System.out.println("if header : " + item);
 
 				String fileExtensionName = item.getName();
 				fileExtensionName = FilenameUtils.getExtension(fileExtensionName);
 				String fileName = item.getName();
-				File file = new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/data/" + fileName);
-				try {
-					item.write(file);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if(fileName != ""){
+					File file = new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/data/" + fileName);
+					try {
+						item.write(file);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					this.initialisation.getHeaderRasterList().add(file);
+					nbFilesHeader ++;
 				}
-				this.initialisation.getHeaderRasterList().add(file);
-				nbFilesHeader ++;
+			}
+			else if(fieldName.equals("raster")){
+				initialisation.setRaster(true);
 			}
 			else if(fieldName.equals(synonyms)){
 				initialisation.setSynonym(true);		
