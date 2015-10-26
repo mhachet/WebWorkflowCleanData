@@ -8,6 +8,7 @@
 <link rel="stylesheet"	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 <link
 	href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
 <link
 	href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"
 	rel="stylesheet" type="text/css">
@@ -64,21 +65,34 @@
 	</header>
 	<div class="container">
 		<div id="divBody" class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
 				<?php
-				if (isset ( $_POST ) && isset ( $_POST ['name'] ) && isset ( $_POST ['email'] ) && isset ( $_POST ['message'] )) {
+				if (isset ( $_POST ) && isset ( $_POST ['name'] ) && isset ( $_POST ['email'] ) && isset ( $_POST ['object'] ) && isset ( $_POST ['message'] )) {
 					if (! empty ( $_POST ['name'] ) && ! empty ( $_POST ['email'] ) && ! empty ( $_POST ['message'] )) {
 						$destinataire = "mhachet@mnhn.fr";
-						$sujet = "Contact request";
-						$message = "Name : " . $_POST ['name'] . "\r\n";
-						$message = "email : " . $_POST ['email'] . "\r\n";
-						$message = "Message : " . $_POST ['message'] . "\r\n";
-						$entete = 'From: ' . $_POST ['email'] . "\r\n" . 'Reply-To: ' . $_POST ['email'] . "\r\n" . 'X-Mailer: PHP/' . phpversion ();
-						echo "<div class='col-lg-6'>";
-						if (mail ( $destinataire, $sujet, $message, $entete )) {
-							echo "<p>Thank you for your message. It has been sent to our team.</p>";
+						$sujet = "Contact request from " . $_POST ['name'] . " - " . $_POST ['object'];
+						$message = "Name : " . $_POST ['name'] . "<br>";
+						$message .= "email : " . $_POST ['email'] . "<br>";
+						$message .= "Message : <br><br>" .  str_replace("\r\n", "<br>", wordwrap($_POST ['message'], 70, "<br>"));
+						$header = 'From: ' . $_POST ['email'] . "\r\n" . 'Reply-To: ' . $_POST ['email'] . "\r\n" . "Content-type: text/html; charset=UTF-8" ;
+						echo "<div class='col-lg-12'>";
+						if (mail ( $destinataire, $sujet, $message, $header )) {
+							echo "<h3>Thank you for your message. It has been sent to our team.</h3>";
+							echo "<hr class='col-lg-12'</hr>";
+							echo "<div class='col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1'>";
+							echo "<h4 class='contactRequest'>Your message sent</h4>";
+							echo "<blockquote>";
+                            echo "<p>" . str_replace("\r\n", "<br>", $_POST ['message']) . "<p>";
+                        	echo "</blockquote>";
+                        	echo "</div>";
 						} else {
-							echo "<p>Sorry ... An error occured when submitting the form by email.</p>";
+							echo "<h3>Sorry ... An error occured when submitting the form by email.</h3>";
+							echo "<hr class='col-lg-12'</hr>";
+							echo "<h4 class='contactRequest'>Your message sent</h4>";
+							echo "<blockquote>";
+                            echo "<p>" . str_replace("\r\n", "<br>", $_POST ['message']) . "<p>";
+                        	echo "</blockquote>";
+                        	echo "</div>";
 						}
 						echo "</div>";
 					}

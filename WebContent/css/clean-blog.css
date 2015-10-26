@@ -776,6 +776,22 @@ input[type=radio]{
 	margin-bottom: 15px;
 	padding:15px;
 }
+
+.contactRequest{
+	box-sizing: border-box;
+	color: #808080;
+	font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-size: 34.2px;
+	font-style: italic;
+	font-weight: 800;
+	line-height: 37.6167px;
+	margin-bottom: 13.6833px;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 17.1px;
+	text-align: justify;
+	
+}
 /*
 .col-md-6{
 	  display:inline-block;
