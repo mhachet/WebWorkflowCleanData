@@ -206,7 +206,7 @@ public class RasterTreatment {
 			t.printStackTrace();
 		}
 		boolean errorProcess = this.errorDuringProcess(errorRaster);
-		System.out.println("error process : " + errorProcess);
+		//System.out.println("error process : " + errorProcess);
 		
 		this.getCheckProcess().put(dataRasterFile.getName(), errorProcess);
 		
@@ -279,6 +279,7 @@ public class RasterTreatment {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
+		File outputRaster = new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/outputRaster.csv");
 		InputStreamReader ipsr=new InputStreamReader(ips);
 		BufferedReader br=new BufferedReader(ipsr);
 		String ligne;
@@ -290,9 +291,13 @@ public class RasterTreatment {
 				if(count > 0){
 					arraySplit = ligne.split(" ");
 					if(ligne.contains("<0 rows>")){
-						System.out.println("array : " + ligne);
+						//System.out.println("array : " + ligne);
 					}
 					else{
+						/*for(int i=0; i < arraySplit.length; i++){
+							System.out.println("array : " + arraySplit[i]);
+						}*/
+						
 						listValidData.add(Integer.parseInt(arraySplit[1]));
 					}
 				}
@@ -326,8 +331,8 @@ public class RasterTreatment {
 		if(!new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/data/").exists()){
 			new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/data/").mkdirs();
 		}
-		if(!new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/data/rasterAnalyse/").exists()){
-			new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/data/rasterAnalyse/").mkdirs();
+		if(!new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").exists()){
+			new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").mkdirs();
 		}
 		File matrix = new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/cells_proba_raster_" + dataTreatment.getNbSessionRandom() + ".csv");
 		FileWriter writer = null;
@@ -339,21 +344,32 @@ public class RasterTreatment {
 		}
 		String heading = "";
 		boolean firstLine = true;
+		//System.out.println("raster files size : " + rasterFiles.size());
 		for (Entry<Integer, HashMap<String, Boolean>> entry : hashMapValidOrNot.entrySet()) {
 
 			HashMap<String, Boolean> proba = entry.getValue();
-
+			
 			if(firstLine){
 				int nbRasterFile = 1;
 				for (Entry<String, Boolean> probaEntry : proba.entrySet()){
-					// nom du fichier raster
+					
 					String rasterName = probaEntry.getKey();
-
-					if(nbRasterFile < rasterFiles.size()){
+					//System.out.println("nbRasterFile : " + proba.size() + " " + rasterName);
+					if(nbRasterFile == 1){
 						heading += "abstract,acceptedNameUsage,acceptedNameUsageID,accessRights,accrualMethod,accrualPeriodicity,accrualPolicy,alternative,associatedMedia,associatedOccurrences,associatedOrganisms,associatedReferences,associatedSequences,associatedTaxa,audience,available,basisOfRecord,bed,behavior,bibliographicCitation,catalogNumber,class,classKey,collectionCode,collectionID,conformsTo,continent,contributor,coordinateAccuracy,coordinatePrecision,coordinateUncertaintyInMeters,country,countryCode,county,coverage,created,creator,dataGeneralizations,datasetID,datasetKey,datasetName,date,dateAccepted,dateCopyrighted,dateIdentified,dateSubmitted,day,decimalLatitude,decimalLongitude,depth,depthAccuracy,description,disposition,distanceAboveSurface,distanceAboveSurfaceAccuracy,dynamicProperties,earliestAgeOrLowestStage,earliestEonOrLowestEonothem,earliestEpochOrLowestSeries,earliestEraOrLowestErathem,earliestPeriodOrLowestSystem,educationLevel,elevation,elevationAccuracy,endDayOfYear,establishmentMeans,event,eventDate,eventID,eventRemarks,eventTime,extent,family,familyKey,fieldNotes,fieldNumber,footprintSpatialFit,footprintSRS,footprintWKT,format,formation,gbifID,genericName,genus,genusKey,geodeticDatum,geologicalContext,geologicalContextID,georeferencedBy,georeferencedDate,georeferenceProtocol,georeferenceRemarks,georeferenceSources,georeferenceVerificationStatus,group,habitat,hasCoordinate,hasFormat,hasGeospatialIssues,hasPart,hasVersion,higherClassification,higherGeography,higherGeographyID,highestBiostratigraphicZone,identification,identificationID,identificationQualifier,identificationReferences,identificationRemarks,identificationVerificationStatus,identifiedBy,identifier,idFile,individualCount,individualID,informationWithheld,infraspecificEpithet,institutionCode,institutionID,instructionalMethod,isFormatOf,island,islandGroup,isPartOf,isReferencedBy,isReplacedBy,isRequiredBy,issue,issued,isVersionOf,kingdom,kingdomKey,language,lastCrawled,lastInterpreted,lastParsed,latestAgeOrHighestStage,latestEonOrHighestEonothem,latestEpochOrHighestSeries,latestEraOrHighestErathem,latestPeriodOrHighestSystem,license,lifeStage,lithostratigraphicTerms,livingSpecimen,locality,locationAccordingTo,locationID,locationRemarks,lowestBiostratigraphicZone,machineObservation,materialSample,materialSampleID,maximumDepthinMeters,maximumDistanceAboveSurfaceInMeters,maximumElevationInMeters,measurementAccuracy,measurementDeterminedBy,measurementDeterminedDate,measurementID,measurementMethod,measurementOrFact,measurementRemarks,measurementType,measurementUnit,mediator,mediaType,medium,member,minimumDepthinMeters,minimumDistanceAboveSurfaceInMeters,minimumElevationInMeters,modified,month,municipality,nameAccordingTo,nameAccordingToID,namePublishedIn,namePublishedInID,namePublishedInYear,nomenclaturalCode,nomenclaturalStatus,occurrence,occurrenceDetails,occurrenceID,occurrenceRemarks,occurrenceStatus,order,orderKey,organism,organismID,organismName,organismRemarks,organismScope,originalNameUsage,originalNameUsageID,otherCatalogNumbers,ownerInstitutionCode,parentNameUsage,parentNameUsageID,phylum,phylumKey,pointRadiusSpatialFit,preparations,preservedSpecimen,previousIdentifications,protocol,provenance,publisher,publishingCountry,recordedBy,recordNumber,references,relatedResourceID,relationshipAccordingTo,relationshipEstablishedDate,relationshipRemarks,relation,replaces,reproductiveCondition,requires,resourceID,resourceRelationship,resourceRelationshipID,rights,rightsHolder,samplingEffort,samplingProtocol,scientificName,scientificNameAuthorship,scientificNameID,sex,source,spatial,species,speciesKey,specificEpithet,startDayOfYear,stateProvince,subgenus,subgenusKey,subject,tableOfContents,taxon,taxonConceptID,taxonID,taxonKey,taxonomicStatus,taxonRank,taxonRemarks,temporal,title,type,typeStatus,typifiedName,valid,verbatimCoordinates,verbatimCoordinateSystem,verbatimDate,verbatimDepth,verbatimElevation,verbatimEventDate,verbatimLatitude,verbatimLocality,verbatimLongitude,verbatimSRS,verbatimTaxonRank,vernacularName,waterBody,year," + rasterName + ",";
+						//System.out.println("if 1 heading : " + heading);
 					}
-					else{
+					else if(nbRasterFile < proba.size()){
+						heading += rasterName + ",";
+						//System.out.println("if 2 heading : " + heading);
+					}
+					if(proba.size() == 1){
+						heading += "\n";
+						//System.out.println("else heading : " + heading);
+					}
+					else if(nbRasterFile == proba.size()){
 						heading += rasterName + "\n";
+						//System.out.println("else heading : " + heading);
 					}
 					nbRasterFile ++;
 				}
@@ -391,16 +407,28 @@ public class RasterTreatment {
 
 				// TRUE : id valide dans le raster ou FALSE : id non valide dans le raster
 				boolean value = probaBisEntry.getValue();
-				if(nbRasterFile < rasterFiles.size()){
+				//System.out.println(nbRasterFile + " / " + probaBisEntry.getKey());
+				if(nbRasterFile == 1){
 					line += "," + value + ",";
+					//System.out.println("if 1 line : " + line);
 				}
-				else{
+				else if(nbRasterFile < probaBis.size()){
+					line += value + ",";
+					//System.out.println("if 2 line : " + line);
+				}
+				if(probaBis.size() == 1){
+					line += "\n";
+					//System.out.println("else heading : " + heading);
+				}
+				else if(nbRasterFile == probaBis.size()){
 					line += value + "\n";
+					//System.out.println("else line : " + line);
 				}
 				nbRasterFile ++;
-				System.out.println("line : " + line);
+				//System.out.println("line : " + line);
 			}
 			try {
+				//System.out.println("line : " + line);
 				writer.write(line);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

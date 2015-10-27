@@ -49,7 +49,7 @@ function addField(compteur, idAdd, typeInput) {
 		if(nb_inp != 0){
 			var inputBefore = document.getElementById("inp_" + (nb_inp - 1));
 			var uploadedInputBefore = inputBefore.getAttribute('value');
-			console.log("inp_" + (nb_inp - 1) + "  : " + uploadedInputBefore);
+			//console.log("inp_" + (nb_inp - 1) + "  : " + uploadedInputBefore);
 			if(uploadedInputBefore == 'false'){
 				
 				alert("Upload file before add a new file, please !");
@@ -781,8 +781,54 @@ function actionSeparatorCSV(nb_inp, action){
 			divCSV.removeChild(select);
 		}
 	}
-		
-	
-
 }
 
+
+function activeRunning(){
+	var checkInputs = checkingInputs();
+	//var checkRasters = checkRasterFiles();
+	//alert("raster : " + checkRasters);
+	if(checkInputs == false){
+		alert("File(s) aren't uploaded, please upload it/them");
+	}
+	else{
+		var submitButton = document.getElementById("workflowLaunch");
+		submitButton.setAttribute('type', 'submit');
+		var divRunning = document.getElementById('running');   
+		var divBody = document.getElementById('divBody');
+		divRunning.style.display = 'block';
+		divBody.style.display = 'none';
+	}
+	
+	
+}
+
+function checkingInputs(){
+	var all_ok = new Boolean(true);
+	var nbInput = document.getElementById("compteur_inp").value;
+	
+	for(var i = 1; i <= nbInput; i++){
+		var input = document.getElementById("inp_" + (i - 1));
+		var upload = input.getAttribute('value');
+		
+		if(upload == 'false'){
+			all_ok = false;
+		}
+	}
+	
+	return all_ok;
+}
+
+function checkRasterFiles(){
+	var all_ok = new Boolean(true);
+	var nbRaster = document.getElementById("compteur_raster").value;
+	var nbHeader = document.getElementById("compteur_header").value;
+	var checkboxRaster = document.getElementById("raster").checked;
+	if(checkboxRaster){
+		if(nbRaster == 0){
+			all_ok = false;
+		}
+	}
+	
+	return all_ok;
+}

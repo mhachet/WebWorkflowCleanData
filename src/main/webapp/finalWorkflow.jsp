@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@page import="fr.bird.bloom.servlets.Controler"%>
+<%@page import="fr.bird.bloom.servlets.MainControler"%>
 <%@page import="fr.bird.bloom.beans.*"%>
 
 

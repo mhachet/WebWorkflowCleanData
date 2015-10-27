@@ -8,6 +8,7 @@
 <link rel="stylesheet"	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 <link
 	href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
 <link
 	href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"
 	rel="stylesheet" type="text/css">
@@ -50,8 +51,7 @@
 		<!-- /.navbar-collapse -->
 	</div>
 	<!-- /.container --> </nav>
-	<header class="intro-header"
-		style="background-image: url('images/IMG_1792.JPG')">
+	<header class="intro-header" style="background-image: url('images/IMG_1792.JPG')">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 col-lg-offset-2 col-md-10 col-md-offset-1">
@@ -65,54 +65,43 @@
 	</header>
 	<div class="container">
 		<div id="divBody" class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <h4 class="contactRequest">Want to get in touch with me? Fill out the form below to send me a message and I will try to get back to you within 24 hours!</h4>
-                <br>
-                    <!-- Contact Form - Enter your email address on line 19 of the mail/contact_me.php file to make this form work. -->
-                    <!-- WARNING: Some web hosts do not allow emails to be sent through forms to common mail hosts like Gmail or Yahoo. It's recommended that you use a private domain email address! -->
-                    <!-- NOTE: To use the contact form, your site must be on a live web host with PHP! The form will not work locally! -->
-                 <form method="post" action="http://localhost/contact.php" name="sentMessage" id="contactForm" novalidate="">
-                    <div class="row control-group">
-                        <div class="form-group col-xs-12 floating-label-form-group controls">
-                            <label for="name">Name</label>
-                            <input placeholder="Name" name="name" id="name" required="" data-validation-required-message="Please enter your name." type="text" class="form-control contact" >
-                            <p class="help-block text-danger"></p>
-                        </div>
-                    </div>
-                    <div class="row control-group">
-                        <div class="form-group col-xs-12 floating-label-form-group controls">
-                            <label for="email">Email Address</label>
-                            <input class="form-control" placeholder="Email Address" name="email" id="email" required="" data-validation-required-message="Please enter your email address." type="email">
-                            <p class="help-block text-danger"></p>
-                        </div>
-                    </div>
-                    <div class="row control-group">
-                        <div class="form-group col-xs-12 floating-label-form-group controls">
-                            <label for="object">Object</label>
-                            <input class="form-control" placeholder="Object" name="object" id="object" required="" data-validation-required-message="Why do you want to contact us ?" type="text">
-                            <p class="help-block text-danger"></p>
-                        </div>
-                    </div>
-                    <div class="row control-group">
-                        <div class="form-group col-xs-12 floating-label-form-group controls">
-                            <label for="message">Message</label>
-                            <textarea rows="15" class="form-control" placeholder="Message" name="message" id="message" required="" data-validation-required-message="Please enter a message."></textarea>
-                            <p class="help-block text-danger"></p>
-                        </div>
-                    </div>
-                    <br>
-                    <div id="success">
-                     </div>
-                    <div class="row">
-                        <div class="form-group col-lg-12" style="text-align:center">
-                            <button type="submit" class="btn btn-primary">Send</button>
-                        </div>
-                    </div>
-                </form>
+            
+				<?php
+				if (isset ( $_POST ) && isset ( $_POST ['name'] ) && isset ( $_POST ['email'] ) && isset ( $_POST ['object'] ) && isset ( $_POST ['message'] )) {
+					if (! empty ( $_POST ['name'] ) && ! empty ( $_POST ['email'] ) && ! empty ( $_POST ['message'] )) {
+						$destinataire = "mhachet@mnhn.fr";
+						$sujet = "Contact request from " . $_POST ['name'] . " - " . $_POST ['object'];
+						$message = "Name : " . $_POST ['name'] . "<br>";
+						$message .= "email : " . $_POST ['email'] . "<br>";
+						$message .= "Message : <br><br>" .  str_replace("\r\n", "<br>", wordwrap($_POST ['message'], 70, "<br>"));
+						$header = 'From: ' . $_POST ['email'] . "\r\n" . 'Reply-To: ' . $_POST ['email'] . "\r\n" . "Content-type: text/html; charset=UTF-8" ;
+						echo "<div class='col-lg-12'>";
+						if (mail ( $destinataire, $sujet, $message, $header )) {
+							echo "<h3>Thank you for your message. It has been sent to our team.</h3>";
+							echo "<hr class='col-lg-12'</hr>";
+							echo "<div class='col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1'>";
+							echo "<h4 class='contactRequest'>Your message sent</h4>";
+							echo "<blockquote>";
+                            echo "<p>" . str_replace("\r\n", "<br>", $_POST ['message']) . "<p>";
+                        	echo "</blockquote>";
+                        	echo "</div>";
+						} else {
+							echo "<h3>Sorry ... An error occured when submitting the form by email.</h3>";
+							echo "<hr class='col-lg-12'</hr>";
+							echo "<h4 class='contactRequest'>Your message sent</h4>";
+							echo "<blockquote>";
+                            echo "<p>" . str_replace("\r\n", "<br>", $_POST ['message']) . "<p>";
+                        	echo "</blockquote>";
+                        	echo "</div>";
+						}
+						echo "</div>";
+					}
+				}
+				?>
             </div>
         </div>
 	<hr></hr>
-<!-- Footer -->
+	<!-- Footer -->
     <footer>
         <div class="container">
             <div class="row">
@@ -151,8 +140,8 @@
     </footer>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-	<script src="bootstrap/js/bootstrap.min.js"></script>
-	<script src="js/jquery.watable.js"></script>
+	<script src="../bootstrap/js/bootstrap.min.js"></script>
+	<script src="../js/jquery.watable.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript"></script>
     <script type="text/javascript" src="js/functionsFinal.js"></script>

@@ -3,7 +3,16 @@
  */
 package fr.bird.bloom.model;
 
-import java.sql.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 
@@ -15,8 +24,8 @@ import java.util.ArrayList;
  */
 public class ConnectionDatabase {
 	private String url = "jdbc:mysql://localhost:3306/Workflow";
-	private String utilisateur = "mhachet";
-	private String motDePasse = "ledzeppelin";
+	private String user = "";
+	private String password = "";
 	private Connection connexion;
 	private Statement statement;
 	private ResultSet resultSet;
@@ -30,9 +39,46 @@ public class ConnectionDatabase {
 	 * ConnectionDatabase
 	 */
 	public ConnectionDatabase(){
-
+		
 	}
 
+	/**
+	 * Retrieve user and password for mysql database
+	 */
+	public void getRessourcesMysql(){
+		File currentFile = new File("");
+		String currentPath = currentFile.getAbsolutePath();
+		
+		try{
+			BufferedReader buff = new BufferedReader(new FileReader(currentPath + "/.properties_mysql"));
+			if(currentPath.indexOf("eclipse") != -1){
+				currentPath = "";
+			}
+			try {
+				String line;
+				int count = 0;
+				while ((line = buff.readLine()) != null) {
+					if(count == 0){
+						this.setUser(line);
+						//System.out.println("mysql user : " + this.getUser());
+					}
+					else{
+						this.setPassword(line);
+						//System.out.println("mysql pwd : " + this.getPassword());
+					}
+					count ++;
+					
+				}
+			} finally {
+				buff.close();
+			}
+		} catch (IOException ioe) {
+			System.out.println("Erreur --" + ioe.toString());
+		}
+		
+		
+	}
+	
 	/**
 	 * Create a new connection to the database
 	 * @param String choiceStatement : execute, executeQuery or executeUpdate
@@ -40,7 +86,9 @@ public class ConnectionDatabase {
 	 * @return ArrayList<String>
 	 */
 	public ArrayList<String> newConnection(String choiceStatement, String sql){
-
+		
+		this.getRessourcesMysql();
+		
 		ArrayList<String> messages = new ArrayList<String>();
 
 		try {
@@ -54,7 +102,7 @@ public class ConnectionDatabase {
 
 		try {
 			messages.add("Connexion à la base de données ...");
-			connexion = DriverManager.getConnection( url, utilisateur, motDePasse );
+			connexion = DriverManager.getConnection( url, user, password );
 			messages.add("Connexion réussie !");
 
 			/* Create managing object of request */
@@ -230,4 +278,21 @@ public class ConnectionDatabase {
 		this.resultat = resultat;
 	}
 
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	
 }
