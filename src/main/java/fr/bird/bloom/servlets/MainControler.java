@@ -62,6 +62,8 @@ public class MainControler extends HttpServlet {
 	private String nbSessionRandom;
 	private Finalisation finalisation;
 
+
+	// TODO FIX THESE INSTANCE VARIABLES, THEY ARE NOT THREAD SAFE !
 	private Step1_MappingDwc step1;
 	private Step2_ReconciliationService step2;
 	private Step3_CheckCoordinates step3;
