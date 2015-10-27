@@ -5,14 +5,28 @@
  */
 package fr.bird.bloom.servlets;
 
+import fr.bird.bloom.beans.Finalisation;
+import fr.bird.bloom.beans.Initialise;
+import fr.bird.bloom.beans.Step1_MappingDwc;
+import fr.bird.bloom.beans.Step2_ReconciliationService;
+import fr.bird.bloom.beans.Step3_CheckCoordinates;
+import fr.bird.bloom.beans.Step4_CheckGeoIssue;
+import fr.bird.bloom.beans.Step5_IncludeSynonym;
+import fr.bird.bloom.beans.Step6_CheckTDWG;
+import fr.bird.bloom.beans.Step7_CheckISo2Coordinates;
+import fr.bird.bloom.beans.Step8_CheckCoordinatesRaster;
+import fr.bird.bloom.beans.Step9_EstablishmentMeans;
+import fr.bird.bloom.model.CSVFile;
+import fr.bird.bloom.model.LaunchWorkflow;
+import fr.bird.bloom.model.MappingDwC;
+import fr.bird.bloom.model.MappingReconcilePreparation;
+import fr.bird.bloom.model.ReconciliationService;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
-import fr.bird.bloom.beans.*;
-import fr.bird.bloom.model.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,8 +37,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 /**
  * fr.bird.bloom.servlets
@@ -32,8 +50,8 @@ import java.util.Map.Entry;
  * LaunchWorkflow
  */
 
-@WebServlet(name = "Controler")
-public class Controler extends HttpServlet {
+@WebServlet(name = "MainControler")
+public class MainControler extends HttpServlet {
 
 	//private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/WebContent/output/"; 
 	//private String RESSOURCES_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/";
@@ -59,7 +77,7 @@ public class Controler extends HttpServlet {
 	 * fr.bird.bloom.servlets
 	 * Controler
 	 */
-	public Controler(){
+	public MainControler(){
 
 	}
 
@@ -285,37 +303,45 @@ public class Controler extends HttpServlet {
 				nbFilesInput ++;
 			}
 			else if(fieldName.equals(raster)){
-				//System.out.println("if raster : " + item);
+				System.out.println("if raster : " + item);
 				initialisation.setRaster(true);
 
 				String fileExtensionName = item.getName();
 				fileExtensionName = FilenameUtils.getExtension(fileExtensionName);
 				String fileName = item.getName();
-				File file = new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/data/" + fileName);
-				try {
-					item.write(file);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if(fileName != ""){
+					File file = new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/data/" + fileName);
+					try {
+						item.write(file);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					this.initialisation.getInputRastersList().add(file);
+					nbFilesRaster ++;
 				}
-				this.initialisation.getInputRastersList().add(file);
-				nbFilesRaster ++;
+
 			}
 			else if(fieldName.equals(headerRaster)){
-				//System.out.println("if header : " + item);
+				System.out.println("if header : " + item);
 
 				String fileExtensionName = item.getName();
 				fileExtensionName = FilenameUtils.getExtension(fileExtensionName);
 				String fileName = item.getName();
-				File file = new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/data/" + fileName);
-				try {
-					item.write(file);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if(fileName != ""){
+					File file = new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/data/" + fileName);
+					try {
+						item.write(file);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					this.initialisation.getHeaderRasterList().add(file);
+					nbFilesHeader ++;
 				}
-				this.initialisation.getHeaderRasterList().add(file);
-				nbFilesHeader ++;
+			}
+			else if(fieldName.equals("raster")){
+				initialisation.setRaster(true);
 			}
 			else if(fieldName.equals(synonyms)){
 				initialisation.setSynonym(true);		

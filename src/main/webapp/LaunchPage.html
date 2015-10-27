@@ -69,7 +69,7 @@
 	<div class="container">
 		<div id="divBody" class="row">
 			<div class="col-lg-12">
-				<form action="controler" method="post" enctype="multipart/form-data"
+				<form action="mainControler" method="post" enctype="multipart/form-data"
 					name="formulaire" id="formulaire" accept-charset=utf-8>
 					<input type="hidden" id="uuid" name="" value="">
 					<div class="post-preview" id="bloc-intro">
@@ -206,7 +206,7 @@
 			         <ul class="pager">
                 <!--<div class="btn-group btn-group-justified" role="group">-->
                     <div class="col-lg-12">
-                    <button type="submit" id="workflowLaunch" name="workflowLaunch" class="waves-effect waves-light btn-large card-panel grey darken-2 font-button" onClick="activeRunning()">
+                    <button type="button" id="workflowLaunch" name="workflowLaunch" class="waves-effect waves-light btn-large card-panel grey darken-2 font-button" onclick="activeRunning()">
                         Start workflow
                     </button>
                     </div>

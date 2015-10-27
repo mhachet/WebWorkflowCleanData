@@ -365,23 +365,3 @@ function deleteMapping(nbInput){
 	divMessageCancelled.style.display = "block";
 	activeMapping(false, nbInput);
 }
-
-function activeRunning(){
-	var checkInputs = checkingInputs();
-	var divRunning = document.getElementById('running');   
-	//var submitButton = document.getElementById('workflowLaunch');
-	//console.log("running");
-	var divBody = document.getElementById('divBody');
-	//submitButton.addEventListener("click", function(){
-	divRunning.style.display = 'block';
-	divBody.style.display = 'none';
-	//});
-}
-
-function findNbInputs(){
-	
-}
-function checkingInputs(){
-	var all_ok = new Boolean(true);
-	
-}

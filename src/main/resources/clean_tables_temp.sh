@@ -2,7 +2,7 @@
 db="Workflow"
 user="mhachet"
 pass="ledzeppelin"
-directory="/var/lib/tomcat7/webapps/WebWorkflowCleanData/"
+directory="/home/mhachet/workspace/WebWorkflowCleanData/"
 
 mysql -u$user -p$pass -e "SHOW TABLES FROM $db" >$directory"src/resources/showTable.txt"
 
