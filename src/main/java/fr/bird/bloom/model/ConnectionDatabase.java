@@ -111,13 +111,13 @@ public class ConnectionDatabase {
 			messages.add( "Objet requête créé !" );
 
 			//global method for any SQL script - return a boolean : true if the instruction return ResultSet, false else
-			if(choiceStatement == "execute"){
+			if ("execute".equals(choiceStatement)) {
 				setResultat(statement.execute(sql));
 				messages.add(sql);
 				//messages.add(resultat.toString());
 			}
 			// SELECT - return ResultSet, with results : TDWG=
-			else if(choiceStatement == "executeQuery"){
+			else if ("executeQuery".equals(choiceStatement)) {
 				resultSet = statement.executeQuery(sql);
 				messages.add(sql);
 				ResultSetMetaData resultMeta = resultSet.getMetaData();
@@ -129,7 +129,7 @@ public class ConnectionDatabase {
 			 * give lines number edited by INSERT, UPDATE et DELETE
 			 * or 0 for no return methods like CREATE
 			 */
-			else if(choiceStatement == "executeUpdate"){
+			else if ("executeUpdate".equals(choiceStatement)) {
 				i = statement.executeUpdate(sql);
 				messages.add(sql);
 				messages.add("nb lignes affectées :" + Integer.toString(i));
