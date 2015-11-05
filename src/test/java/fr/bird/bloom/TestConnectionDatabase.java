@@ -6,7 +6,11 @@ package fr.bird.bloom;
 
 import org.junit.Test;
 import fr.bird.bloom.model.ConnectionDatabase;
+import fr.bird.bloom.model.DatabaseTreatment;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import static org.junit.Assert.fail;
@@ -28,15 +32,21 @@ public class TestConnectionDatabase {
     public void testNewConnection() {
 	
 	
-	ConnectionDatabase connection = new ConnectionDatabase();
-	String choiceStatement = "", sql = "";
-	choiceStatement = "execute";
-	sql = "SHOW COLUMNS FROM Workflow.IsoCode;";
-	ArrayList<String> messages = connection.newConnection(choiceStatement, sql);
-	if(messages.contains("Connection error")){
-	    fail("Connection to database failed");
-	}
-	
+    	Statement statement = null;
+		try {
+			statement = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		DatabaseTreatment newConnection = new DatabaseTreatment(statement);
+		String choiceStatement = "", sql = "";
+		choiceStatement = "execute";
+		sql = "SHOW COLUMNS FROM Workflow.IsoCode;";
+		ArrayList<String> messages = newConnection.executeSQLcommand(choiceStatement, sql);
+		if(messages.contains("Connection error")){
+			fail("Connection to database failed");
+		}
     }
-    
+
 }

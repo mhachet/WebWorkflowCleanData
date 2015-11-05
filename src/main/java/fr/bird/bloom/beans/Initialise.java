@@ -3,13 +3,13 @@
  */
 package fr.bird.bloom.beans;
 
-import fr.bird.bloom.model.MappingReconcilePreparation;
-
 import java.io.File;
 import java.util.ArrayList;
 
+import fr.bird.bloom.model.MappingReconcilePreparation;
+
 /**
- * fr.bird.bloom.beans
+ * src.beans
  * 
  * Initiliaze
  */
@@ -31,10 +31,12 @@ public class Initialise {
     private boolean establishment;    
     private String nbSessionRandom;
     private int nbInput;
+    private String emailUser;
+    private boolean sendEmail;
     
     /**
      * 
-     * fr.bird.bloom.beans
+     * src.beans
      * Initialise
      */
     public Initialise(){
@@ -258,5 +260,22 @@ public class Initialise {
 	public void setNbInput(int nbInput) {
 		this.nbInput = nbInput;
 	}
+
+	public String getEmailUser() {
+		return emailUser;
+	}
+
+	public void setEmailUser(String emailUser) {
+		this.emailUser = emailUser;
+	}
+
+	public boolean isSendEmail() {
+		return sendEmail;
+	}
+
+	public void setSendEmail(boolean sendEmail) {
+		this.sendEmail = sendEmail;
+	}
+	
     
 }
