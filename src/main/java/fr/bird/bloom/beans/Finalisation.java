@@ -8,7 +8,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
- * fr.bird.bloom.model
+ * src.model
  * 
  * Finalisation.java
  * Finalisation
