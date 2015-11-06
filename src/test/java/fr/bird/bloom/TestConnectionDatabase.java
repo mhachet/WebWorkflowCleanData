@@ -4,6 +4,7 @@
  */
 package fr.bird.bloom;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import fr.bird.bloom.model.ConnectionDatabase;
 import fr.bird.bloom.model.DatabaseTreatment;
@@ -21,6 +22,7 @@ import static org.junit.Assert.fail;
  * TestConnectionDatabase.java
  * TestConnectionDatabase
  */
+@Ignore
 public class TestConnectionDatabase {
 
 

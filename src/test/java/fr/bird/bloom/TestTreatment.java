@@ -5,6 +5,7 @@
 package fr.bird.bloom;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import fr.bird.bloom.model.MappingDwC;
 import fr.bird.bloom.model.Treatment;
@@ -19,6 +20,8 @@ import static org.junit.Assert.fail;
  * TestPrepareTreatmentData.java
  * TestPrepareTreatmentData
  */
+
+@Ignore
 public class TestTreatment {
 
     private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/test/";
