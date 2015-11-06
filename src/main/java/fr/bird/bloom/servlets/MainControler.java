@@ -21,6 +21,7 @@ import fr.bird.bloom.model.LaunchWorkflow;
 import fr.bird.bloom.model.MappingDwC;
 import fr.bird.bloom.model.MappingReconcilePreparation;
 import fr.bird.bloom.model.ReconciliationService;
+import fr.bird.bloom.utils.BloomConfig;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItem;
@@ -74,47 +75,20 @@ public class MainControler extends HttpServlet {
 	private Step8_CheckCoordinatesRaster step8;
 	private Step9_EstablishmentMeans step9;
 
-	/**
-	 * 
-	 * fr.bird.bloom.servlets
-	 * Controler
-	 */
-	public MainControler(){
 
-	}
-
-	public void init() throws ServletException{
+	public void init() throws ServletException {
 		// Do required initialization
 		File currentFile = new File("");
 		String currentPath = currentFile.getAbsolutePath();
 		System.out.println("currentPathControler : " + currentPath);
-		
-		try{
-			BufferedReader buff = new BufferedReader(new FileReader(currentPath + "/.properties"));
-			if(currentPath.indexOf("eclipse") != -1){
-				currentPath = "";
-			}
-			try {
-				String line;
-				int count = 0;
-				while ((line = buff.readLine()) != null) {
-					if(count == 0){
-						this.setDIRECTORY_PATH(currentPath + line);
-						System.out.println("directoryPathControler : " + this.getDIRECTORY_PATH());
-					}
-					else{
-						this.setRESSOURCES_PATH(currentPath + line);
-						System.out.println("ressourcePathControler : " + this.getRESSOURCES_PATH());
-					}
-					count ++;
-					
-				}
-			} finally {
-				buff.close();
-			}
-		} catch (IOException ioe) {
-			System.out.println("Erreur --" + ioe.toString());
+
+		if (currentPath.contains("eclipse")) {
+			currentPath = "";
 		}
+		this.setDIRECTORY_PATH(currentPath + BloomConfig.getProperty("directory.path"));
+		System.out.println("directoryPathControler : " + this.getDIRECTORY_PATH());
+		this.setRESSOURCES_PATH(currentPath + BloomConfig.getProperty("resource.path"));
+		System.out.println("ressourcePathControler : " + this.getRESSOURCES_PATH());
 
 	}
 
