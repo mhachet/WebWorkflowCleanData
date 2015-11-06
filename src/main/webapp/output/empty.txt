@@ -1,0 +1,1 @@
+we need a file to put the output folder under source control
