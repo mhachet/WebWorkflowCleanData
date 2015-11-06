@@ -1,5 +1,6 @@
 package fr.bird.bloom.servlets;
 
+import fr.bird.bloom.utils.BloomConfig;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItem;
@@ -22,46 +23,21 @@ public class ReconcileControler extends HttpServlet {
 
 	//private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/WebContent/output/"; 
 	//private String RESSOURCES_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/";
-	private String DIRECTORY_PATH = "";
-	private String RESSOURCES_PATH = "";
+	private String directoryPath;
+	private String resourcesPath;
 
-	public ReconcileControler() {
-
+	private String getDirectoryPath() {
+		if (directoryPath == null) {
+			directoryPath = getServletContext().getRealPath(BloomConfig.getProperty("directory.path"));
+		}
+		return directoryPath;
 	}
 
-	public void init() throws ServletException{
-		// Do required initialization
-		File currentFile = new File("");
-		String currentPath = currentFile.getAbsolutePath();
-		System.out.println("currentPathReconcile : " + currentPath);
-		
-		try{
-			BufferedReader buff = new BufferedReader(new FileReader(currentPath + "/.properties"));
-			if(currentPath.indexOf("eclipse") != -1){
-				currentPath = "";
-			}
-			try {
-				String line;
-				int count = 0;
-				while ((line = buff.readLine()) != null) {
-					if(count == 0){
-						this.setDIRECTORY_PATH(currentPath + line);
-						System.out.println("directoryPathReconcile : " + this.getDIRECTORY_PATH());
-					}
-					else{
-						this.setRESSOURCES_PATH(currentPath + line);
-						System.out.println("ressourcePathReconcile : " + this.getRESSOURCES_PATH());
-					}
-					count ++;
-					
-				}
-			} finally {
-				buff.close();
-			}
-		} catch (IOException ioe) {
-			System.out.println("Erreur --" + ioe.toString());
+	private String getResourcesPath() {
+		if (resourcesPath == null) {
+			resourcesPath = this.getClass().getClassLoader().getResource(BloomConfig.getProperty("resource.folder")).getPath();
 		}
-
+		return resourcesPath;
 	}
 	
 	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
@@ -111,27 +87,27 @@ public class ReconcileControler extends HttpServlet {
 		
 			count ++;
 		}
-		if(!new File(DIRECTORY_PATH + "temp/").exists()){
-			new File(DIRECTORY_PATH + "temp/").mkdirs();
+		if(!new File(getDirectoryPath() + "temp/").exists()){
+			new File(getDirectoryPath() + "temp/").mkdirs();
 		}
-		if(!new File(DIRECTORY_PATH + "temp/" + uuid).exists()){
-			new File(DIRECTORY_PATH + "temp/" + uuid);
+		if(!new File(getDirectoryPath() + "temp/" + uuid).exists()){
+			new File(getDirectoryPath() + "temp/" + uuid);
 		}
-		if(!new File(DIRECTORY_PATH + "temp/" + uuid + "/data/").exists()){
-			new File(DIRECTORY_PATH + "temp/" + uuid + "/data/").mkdirs();
+		if(!new File(getDirectoryPath() + "temp/" + uuid + "/data/").exists()){
+			new File(getDirectoryPath() + "temp/" + uuid + "/data/").mkdirs();
 		}
-		if(!new File(DIRECTORY_PATH + "temp/" + uuid + "/wrong/").exists()){
-			new File(DIRECTORY_PATH + "temp/" + uuid + "/wrong/").mkdirs();
+		if(!new File(getDirectoryPath() + "temp/" + uuid + "/wrong/").exists()){
+			new File(getDirectoryPath() + "temp/" + uuid + "/wrong/").mkdirs();
 		}
-		if(!new File(DIRECTORY_PATH + "temp/" + uuid + "/final_results/").exists()){
-			new File(DIRECTORY_PATH + "temp/" + uuid + "/final_results/").mkdirs();
+		if(!new File(getDirectoryPath() + "temp/" + uuid + "/final_results/").exists()){
+			new File(getDirectoryPath() + "temp/" + uuid + "/final_results/").mkdirs();
 		}
 
 		String extension = this.getExtension(nbInput, uuid);
 		System.out.println("extension : " + extension);
 		if(action.equals("preparation")){
 
-			File file = new File(DIRECTORY_PATH + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + "." + extension);
+			File file = new File(getDirectoryPath() + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + "." + extension);
 			firstLine = this.getFirstLine(file);
 
 			response.setContentType("application/text");
@@ -139,13 +115,13 @@ public class ReconcileControler extends HttpServlet {
 			response.getWriter().write(firstLine);
 		}
 		else if(action.equals("reconciliation")){
-			FileReader reader = new FileReader(DIRECTORY_PATH + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + "." + extension);
+			FileReader reader = new FileReader(getDirectoryPath() + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + "." + extension);
 			BufferedReader br = null;
 			ArrayList<String> lines = new ArrayList<>();
 			int countLines = 0;
 			try {
 				String sCurrentLine;
-				FileReader fileReader = new FileReader(DIRECTORY_PATH + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + "." + extension);
+				FileReader fileReader = new FileReader(getDirectoryPath() + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + "." + extension);
 
 				br = new BufferedReader(fileReader);
 				
@@ -193,8 +169,8 @@ public class ReconcileControler extends HttpServlet {
 	 */
 	protected String getExtension(String nbInput, String uuid){
 		String extension = "";
-		File csvFile = new File(DIRECTORY_PATH + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + ".csv");
-		File txtFile = new File(DIRECTORY_PATH + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + ".txt");
+		File csvFile = new File(getDirectoryPath() + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + ".csv");
+		File txtFile = new File(getDirectoryPath() + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + ".txt");
 		
 		if(csvFile.exists()){
 			extension = "csv";
@@ -291,38 +267,4 @@ public class ReconcileControler extends HttpServlet {
 		return newContentFile;
 		
 	}
-
-	/**
-	 * 
-	 * @return String
-	 */
-	public String getDIRECTORY_PATH() {
-		return DIRECTORY_PATH;
-	}
-
-	/**
-	 * 
-	 * @param dIRECTORY_PATH
-	 */
-	public void setDIRECTORY_PATH(String dIRECTORY_PATH) {
-		DIRECTORY_PATH = dIRECTORY_PATH;
-	}
-
-	/**
-	 * 
-	 * @return String
-	 */
-	public String getRESSOURCES_PATH() {
-		return RESSOURCES_PATH;
-	}
-
-	/**
-	 * 
-	 * @param rESSOURCES_PATH
-	 */
-	public void setRESSOURCES_PATH(String rESSOURCES_PATH) {
-		RESSOURCES_PATH = rESSOURCES_PATH;
-	}
-	
-	
 }
