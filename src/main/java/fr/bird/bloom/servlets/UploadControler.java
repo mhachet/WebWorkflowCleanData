@@ -33,12 +33,12 @@ public class UploadControler  extends HttpServlet{
 		return directoryPath;
 	}
 
-	private String getResourcesPath() {
-		if (resourcesPath == null) {
-			resourcesPath = this.getClass().getClassLoader().getResource(BloomConfig.getProperty("resource.folder")).getPath();
-		}
-		return resourcesPath;
-	}
+//	private String getResourcesPath() {
+//		if (resourcesPath == null) {
+//			resourcesPath = this.getClass().getClassLoader().getResource(BloomConfig.getProperty("resource.folder")).getPath();
+//		}
+//		return resourcesPath;
+//	}
 
 
 	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {		

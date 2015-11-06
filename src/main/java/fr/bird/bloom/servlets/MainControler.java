@@ -55,20 +55,6 @@ public class MainControler extends HttpServlet {
     private String directoryPath = null;
     private String resourcesPath = null;
 
-    private String getDirectoryPath() {
-        if (directoryPath == null) {
-            directoryPath = getServletContext().getRealPath(BloomConfig.getProperty("directory.path"));
-        }
-        return directoryPath;
-    }
-
-    private String getResourcesPath() {
-        if (resourcesPath == null) {
-            resourcesPath = this.getClass().getClassLoader().getResource(BloomConfig.getProperty("resource.folder")).getPath();
-        }
-        return resourcesPath;
-    }
-
     private Initialise initialisation;
     private String nbSessionRandom;
     private Finalisation finalisation;
@@ -84,6 +70,20 @@ public class MainControler extends HttpServlet {
     private Step7_CheckISo2Coordinates step7;
     private Step8_CheckCoordinatesRaster step8;
     private Step9_EstablishmentMeans step9;
+
+    private String getDirectoryPath() {
+        if (directoryPath == null) {
+            directoryPath = getServletContext().getRealPath(BloomConfig.getProperty("directory.path"));
+        }
+        return directoryPath;
+    }
+
+//	private String getResourcesPath() {
+//		if (resourcesPath == null) {
+//			resourcesPath = this.getClass().getClassLoader().getResource(BloomConfig.getProperty("resource.folder")).getPath();
+//		}
+//		return resourcesPath;
+//	}
 
     /**
      * @param request
@@ -303,13 +303,13 @@ public class MainControler extends HttpServlet {
                     this.initialisation.getHeaderRasterList().add(file);
                     nbFilesHeader++;
                 }
-            } else if (fieldName.equals("raster")) {
+            } else if ("raster".equals(fieldName)) {
                 initialisation.setRaster(true);
-            } else if (fieldName.equals(synonyms)) {
+            } else if (synonyms.equals(fieldName)) {
                 initialisation.setSynonym(true);
-            } else if (fieldName.equals("tdwg4")) {
+            } else if ("tdwg4".equals(fieldName)) {
                 initialisation.setTdwg4Code(true);
-            } else if (fieldName.equals("establishment")) {
+            } else if ("establishment".equals(fieldName)) {
                 initialisation.setEstablishment(true);
             } else if (fieldName.contains("dropdownDwC_")) {
                 //System.out.println("fieldName : " + fieldName);
@@ -401,9 +401,9 @@ public class MainControler extends HttpServlet {
                 //System.out.println("fieldName : " + fieldName);
                 int idInput = Integer.parseInt(fieldName.split("_")[1]);
                 String separator = item.getString();
-                if (separator.equals("comma")) {
+                if ("comma".equals(separator)) {
                     separator = ",";
-                } else if (separator.equals("semiComma")) {
+                } else if ("semiComma".equals(separator)) {
                     separator = ";";
                 } else {
                     separator = "\t";
