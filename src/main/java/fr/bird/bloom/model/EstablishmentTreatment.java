@@ -86,7 +86,7 @@ public class EstablishmentTreatment {
 			if(this.getInverseEstablishmentList().get(i).equals("others")){
 				Statement statement = null;
 				try {
-					statement = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+					statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -122,7 +122,7 @@ public class EstablishmentTreatment {
 
 				Statement statementSelect = null;
 				try {
-					statementSelect = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+					statementSelect = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -149,7 +149,7 @@ public class EstablishmentTreatment {
 
 				Statement statement = null;
 				try {
-					statement = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+					statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
