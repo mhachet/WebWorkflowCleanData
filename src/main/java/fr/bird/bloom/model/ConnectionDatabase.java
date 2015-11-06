@@ -3,6 +3,8 @@
  */
 package fr.bird.bloom.model;
 
+import fr.bird.bloom.utils.BloomConfig;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -41,7 +43,6 @@ public class ConnectionDatabase {
 	public static Connection getInstance(){
 		if(connexion == null){
 			try {
-				getRessourcesMysql();
 				//System.out.println(getUrl() + "  " + getUser() + "  " + getPassword());
 				try {
 					Class.forName( "com.mysql.jdbc.Driver" );
@@ -50,7 +51,10 @@ public class ConnectionDatabase {
 							+ e.getMessage() );
 				}
 
-				connexion = DriverManager.getConnection(getUrl(), getUser(), getPassword());
+				String url = BloomConfig.getProperty("db.url");
+				String user = BloomConfig.getProperty("db.user");
+				String password = BloomConfig.getProperty("db.password");
+				connexion = DriverManager.getConnection(url, user, password);
 			} catch (SQLException e) {
 				System.err.println("ERREUR DE CONNEXION : " + e.getMessage());
 			}
@@ -58,41 +62,6 @@ public class ConnectionDatabase {
 		//executeSQLcommand(choiceStatement, sqlCommand);
 		
 		return connexion;	
-	}
-
-	/**
-	 * Retrieve user and password for mysql database
-	 */
-	public static void getRessourcesMysql(){
-		File currentFile = new File("");
-		String currentPath = currentFile.getAbsolutePath();
-
-		try{
-			BufferedReader buff = new BufferedReader(new FileReader(currentPath + "/.properties_mysql"));
-			if(currentPath.indexOf("eclipse") != -1){
-				currentPath = "";
-			}
-			try {
-				String line;
-				int count = 0;
-				while ((line = buff.readLine()) != null) {
-					if(count == 0){
-						setUser(line);
-					}
-					else{
-						setPassword(line);
-					}
-					count ++;
-
-				}
-			} finally {
-				buff.close();
-			}
-		} catch (IOException ioe) {
-			System.out.println("Erreur --" + ioe.toString());
-		}
-
-		setUrl("jdbc:mysql://localhost:3306/Workflow");
 	}
 
 
