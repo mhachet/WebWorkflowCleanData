@@ -85,7 +85,7 @@ public class MainControler extends HttpServlet {
 		if (currentPath.contains("eclipse")) {
 			currentPath = "";
 		}
-		this.setDIRECTORY_PATH(currentPath + BloomConfig.getProperty("directory.path"));
+		this.setDIRECTORY_PATH(getServletContext().getRealPath(BloomConfig.getProperty("directory.path")));
 		System.out.println("directoryPathControler : " + this.getDIRECTORY_PATH());
 		this.setRESSOURCES_PATH(currentPath + BloomConfig.getProperty("resource.path"));
 		System.out.println("ressourcePathControler : " + this.getRESSOURCES_PATH());
