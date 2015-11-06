@@ -6,7 +6,6 @@ package fr.bird.bloom.model;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +18,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import org.omg.PortableInterceptor.INACTIVE;
 /**
  * 
  * src.model
@@ -146,7 +144,7 @@ public class MappingDwC{
 		DatabaseTreatment columnsNameDwC = null;
 		
 		try {
-			Statement statement = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			Statement statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			columnsNameDwC = new DatabaseTreatment(statement);
 			messages.addAll(columnsNameDwC.executeSQLcommand(choiceStatement, getColumnsName));
 		} catch (SQLException e) {

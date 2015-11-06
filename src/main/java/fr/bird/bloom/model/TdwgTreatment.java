@@ -85,7 +85,7 @@ public class TdwgTreatment {
 
 				Statement statement = null;
 				try {
-					statement = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+					statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -107,7 +107,7 @@ public class TdwgTreatment {
 
 				Statement statementUpdateClean = null;
 				try {
-					statementUpdateClean = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+					statementUpdateClean = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
