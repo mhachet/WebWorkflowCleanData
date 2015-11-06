@@ -4,6 +4,7 @@
  */
 package fr.bird.bloom;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.fail;
@@ -14,6 +15,8 @@ import static org.junit.Assert.fail;
  * TestOptionTDWG.java
  * TestOptionTDWG
  */
+
+@Ignore
 public class TestOptionTDWG {
 
     /**

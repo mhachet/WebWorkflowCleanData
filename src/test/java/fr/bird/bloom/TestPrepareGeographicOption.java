@@ -4,6 +4,7 @@
  */
 package fr.bird.bloom;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.fail;
@@ -14,6 +15,8 @@ import static org.junit.Assert.fail;
  * TestGeographicOption.java
  * TestGeographicOption
  */
+
+@Ignore
 public class TestPrepareGeographicOption {
 
     private static String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/test/";

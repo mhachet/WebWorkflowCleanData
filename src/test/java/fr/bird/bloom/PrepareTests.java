@@ -11,6 +11,7 @@ package fr.bird.bloom;
  * ExampleWebTestCase
  */
 
+import org.junit.Ignore;
 import org.junit.Test;
 import fr.bird.bloom.beans.Initialise;
 import fr.bird.bloom.model.CSVFile;
@@ -22,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+@Ignore
 public class PrepareTests {
 
 
