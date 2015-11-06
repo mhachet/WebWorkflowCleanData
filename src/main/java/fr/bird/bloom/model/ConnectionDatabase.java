@@ -49,7 +49,7 @@ public class ConnectionDatabase {
                 String url = BloomConfig.getProperty("db.url");
                 String user = BloomConfig.getProperty("db.user");
                 String password = BloomConfig.getProperty("db.password");
-                
+
                 connexion = DriverManager.getConnection(url, user, password);
             } catch (SQLException e) {
                 System.err.println("ERREUR DE CONNEXION : " + e.getMessage());
