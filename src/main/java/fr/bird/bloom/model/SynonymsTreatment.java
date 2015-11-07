@@ -22,7 +22,6 @@ import java.util.ArrayList;
 public class SynonymsTreatment {
 
 	private File synonymsFile;
-	private String DIRECTORY_PATH = "";
 	private ArrayList<String> tagsList;
 	private int nbSynonymInvolved;
 	private String nbSessionRandom;
@@ -251,14 +250,6 @@ public class SynonymsTreatment {
 
 	public void setNbSessionRandom(String nbSessionRandom) {
 		this.nbSessionRandom = nbSessionRandom;
-	}
-
-	public String getDIRECTORY_PATH() {
-		return DIRECTORY_PATH;
-	}
-
-	public void setDIRECTORY_PATH(String dIRECTORY_PATH) {
-		DIRECTORY_PATH = dIRECTORY_PATH;
 	}
 
 }

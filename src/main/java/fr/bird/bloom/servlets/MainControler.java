@@ -52,7 +52,6 @@ import java.util.UUID;
 @WebServlet(name = "MainControler")
 public class MainControler extends HttpServlet {
 
-    private String directoryPath = null;
     private String resourcesPath = null;
 
     private Initialise initialisation;
@@ -72,18 +71,11 @@ public class MainControler extends HttpServlet {
     private Step9_EstablishmentMeans step9;
 
     private String getDirectoryPath() {
-        if (directoryPath == null) {
-            directoryPath = getServletContext().getRealPath(BloomConfig.getProperty("directory.path"));
+        if (BloomConfig.getDirectoryPath() == null) {
+            BloomConfig.initializeDirectoryPath(getServletContext().getRealPath(BloomConfig.getProperty("directory.folder")));
         }
-        return directoryPath;
+        return BloomConfig.getDirectoryPath();
     }
-
-//	private String getResourcesPath() {
-//		if (resourcesPath == null) {
-//			resourcesPath = this.getClass().getClassLoader().getResource(BloomConfig.getProperty("resource.folder")).getPath();
-//		}
-//		return resourcesPath;
-//	}
 
     /**
      * @param request
@@ -106,7 +98,7 @@ public class MainControler extends HttpServlet {
     public void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/plain");
         initialisation = new Initialise();
-        initialisation.setDIRECTORY_PATH(directoryPath);
+        initialisation.setDIRECTORY_PATH(BloomConfig.getDirectoryPath());
         initialisation.setRESSOURCES_PATH(resourcesPath);
 
         //this.setNbSessionRandom(this.generateRandomKey());

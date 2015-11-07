@@ -36,7 +36,6 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class GeographicTreatment {
 
-	private String DIRECTORY_PATH = "";
 	private String nbSessionRandom;
 	private int nbWrongGeospatialIssues = 0;
 	private int nbWrongCoordinates = 0;
@@ -377,10 +376,8 @@ public class GeographicTreatment {
 		messages.add("nb lignes affectées :" + Integer.toString(resultatSelect.size() - 1));
 
 
-
-		if(!new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/wrong/").exists())
-		{
-			new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/wrong/").mkdirs();
+		if (!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/wrong/").exists()) {
+			new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/wrong/").mkdirs();
 		}
 
 
@@ -427,9 +424,8 @@ public class GeographicTreatment {
 
 		this.setNbWrongGeospatialIssues(resultatSelect.size() - 1 );
 
-		if(!new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/wrong/").exists())
-		{
-			new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/wrong/").mkdirs();
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/wrong/").exists()) {
+			new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/wrong/").mkdirs();
 		}
 
 
@@ -441,15 +437,6 @@ public class GeographicTreatment {
 		this.setNbWrongGeospatialIssues(resultatSelect.size()-1);
 
 		return resultatSelect;
-	}
-
-
-	public String getDIRECTORY_PATH() {
-		return DIRECTORY_PATH;//hasGeospatialIssues
-	}
-
-	public void setDIRECTORY_PATH(String dIRECTORY_PATH) {
-		DIRECTORY_PATH = dIRECTORY_PATH;
 	}
 
 	public String getNbSessionRandom() {

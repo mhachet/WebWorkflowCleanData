@@ -32,7 +32,6 @@ public class SendMail {
 	private static final String SMTP_HOST1 = "smtp.mnhn.fr";
 	private static final String LOGIN_SMTP1 = "mhachet";
 	private static final String IMAP_ACCOUNT1 = "mhachet@mnhn.fr";
-	private String DIRECTORY_PATH = "";
 
 	private Step1_MappingDwc step1;
 	private Step2_ReconciliationService step2;
@@ -143,14 +142,6 @@ public class SendMail {
 			
 		}
 		return message;
-	}
-
-	public String getDIRECTORY_PATH() {
-		return DIRECTORY_PATH;
-	}
-
-	public void setDIRECTORY_PATH(String dIRECTORY_PATH) {
-		DIRECTORY_PATH = dIRECTORY_PATH;
 	}
 
 	public Step1_MappingDwc getStep1() {

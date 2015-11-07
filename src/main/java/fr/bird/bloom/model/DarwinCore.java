@@ -3,6 +3,8 @@
  */
 package fr.bird.bloom.model;
 
+import fr.bird.bloom.utils.BloomConfig;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,7 +33,6 @@ public class DarwinCore extends CSVFile{
 	private HashMap<String, ArrayList<String>> idAssoData;
 	private ArrayList<String> darwinLines;
 	private File darwinCoreFileTemp;
-	private String DIRECTORY_PATH;
 
 	/**
 	 * 
@@ -103,17 +104,17 @@ public class DarwinCore extends CSVFile{
 	 */
 	public File readDarwinCoreFile(String separator) throws IOException {
 
-		if(!new File(DIRECTORY_PATH + "temp/").exists()){
-			new File(DIRECTORY_PATH + "temp/").mkdirs();
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/").exists()){
+			new File(BloomConfig.getDirectoryPath() + "temp/").mkdirs();
 		}
-		if(!new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom()).exists()){
-			new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom());
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom()).exists()){
+			new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom());
 		}
-		if(!new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/data/").exists()){
-			new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/data/").mkdirs();
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/").exists()){
+			new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/").mkdirs();
 		}
 		
-		File tempFile = new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/data/inputFile_" + Integer.toString(this.getIdFile_()) + ".csv");
+		File tempFile = new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/inputFile_" + Integer.toString(this.getIdFile_()) + ".csv");
 		FileWriter writer = null;
 		File darwinCoreFile = super.getCsvFile();
 		super.setSeparator(Separator.fromString(separator));
@@ -190,7 +191,7 @@ public class DarwinCore extends CSVFile{
 	public File createTemporaryFile(List<String> linesInputModified, int nbFile) throws IOException{
 
 
-		File tempFile = new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/data/inputFile_" + Integer.toString(nbFile) + ".csv");
+		File tempFile = new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/inputFile_" + Integer.toString(nbFile) + ".csv");
 		FileWriter writer = null;
 		try{
 			writer = new FileWriter(tempFile);
@@ -454,13 +455,4 @@ public class DarwinCore extends CSVFile{
 		this.darwinCoreFileTemp = darwinCoreFileTemp;
 	}
 
-	public String getDIRECTORY_PATH() {
-		return DIRECTORY_PATH;
-	}
-
-	public void setDIRECTORY_PATH(String dIRECTORY_PATH) {
-		DIRECTORY_PATH = dIRECTORY_PATH;
-	}
-	
-	
 }

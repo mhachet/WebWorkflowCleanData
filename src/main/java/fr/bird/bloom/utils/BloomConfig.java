@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 public class BloomConfig {
 
     private static String resourcePath;
+    private static String directoryPath = null; // TODO find a better name
 
     private BloomConfig() {
         // private default constructor to prevent instantiation
@@ -15,6 +16,14 @@ public class BloomConfig {
             resourcePath = BloomConfig.class.getClassLoader().getResource(BloomConfig.getProperty("resource.folder")).getPath();
         }
         return resourcePath;
+    }
+
+    public static String getDirectoryPath() {
+        return directoryPath;
+    }
+
+    public static void initializeDirectoryPath(String value){
+        directoryPath = value;
     }
 
     // properties file
