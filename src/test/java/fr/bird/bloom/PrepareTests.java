@@ -46,9 +46,6 @@ public class PrepareTests {
 	inputHeaderList = new ArrayList<>();
 	inputsRasterList = new ArrayList<>();
 
-	initialisation.setDIRECTORY_PATH(DIRECTORY_PATH);
-	initialisation.setRESSOURCES_PATH(RESSOURCES_PATH);
-
 	setNbSessionRandom(generateRandomKey());
 	prepareInputFiles();
 

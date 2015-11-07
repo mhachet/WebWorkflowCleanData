@@ -98,8 +98,6 @@ public class MainControler extends HttpServlet {
     public void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/plain");
         initialisation = new Initialise();
-        initialisation.setDIRECTORY_PATH(BloomConfig.getDirectoryPath());
-        initialisation.setRESSOURCES_PATH(resourcesPath);
 
         //this.setNbSessionRandom(this.generateRandomKey());
         //this.initialisation.setNbSessionRandom(this.getNbSessionRandom());
