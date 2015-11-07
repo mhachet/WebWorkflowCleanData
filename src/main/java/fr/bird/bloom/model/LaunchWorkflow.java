@@ -284,7 +284,7 @@ public class LaunchWorkflow {
 			ReconciliationService reconciliationService = mappingReconcilePrep.getReconcileDWC();
 			CSVFile csvFileNoMapped = mappingFile.getNoMappedFile();
 			
-			if(csvFileNoMapped.getSeparator().equals("-1")){
+			if(csvFileNoMapped.getSeparator() == CSVFile.Separator.INCONSISTENT || csvFileNoMapped.getSeparator() == CSVFile.Separator.UNKNOWN){
 				System.out.println("separator false : " + csvFileNoMapped.getSeparator());
 				mappingFile.setSuccessMapping(Boolean.toString(false));
 				reconciliationService.setSuccessReconcile(Boolean.toString(false));
