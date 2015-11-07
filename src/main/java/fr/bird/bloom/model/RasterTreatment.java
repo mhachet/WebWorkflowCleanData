@@ -3,6 +3,8 @@
  */
 package fr.bird.bloom.model;
 
+import fr.bird.bloom.utils.BloomConfig;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -34,7 +36,6 @@ public class RasterTreatment {
 	private HashMap<Integer, HashMap<String, Boolean>> hashMapValidOrNot;
 	private Treatment dataTreatment;
 	private String DIRECTORY_PATH = "";
-	private String RESSOURCES_PATH = "";
 	private int nbWrongOccurrences;
 	private File matrixFileValidCells;
 	private File wrongRasterFile;
@@ -127,7 +128,7 @@ public class RasterTreatment {
 		 *	BSQ			Band Sequential (BSQ) Image File		.bsq				NA
 		 *	BIP			Band Interleaved by Pixel (ESRI BIP)		.bip				NA
 		 ************************************************************************************************/
-		String scriptRaster = RESSOURCES_PATH + "raster.R";
+		String scriptRaster = BloomConfig.getResourcePath() + "raster.R";
 		if(!new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").exists())
 		{
 			new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").mkdirs();
@@ -669,22 +670,6 @@ public class RasterTreatment {
 	 */
 	public void setNbWrongOccurrences(int nbWrongOccurrences) {
 		this.nbWrongOccurrences = nbWrongOccurrences;
-	}
-
-	/**
-	 * 
-	 * @return String
-	 */
-	public String getRESSOURCES_PATH() {
-		return RESSOURCES_PATH;
-	}
-
-	/**
-	 * 
-	 * @param rESSOURCES_PATH
-	 */
-	public void setRESSOURCES_PATH(String rESSOURCES_PATH) {
-		RESSOURCES_PATH = rESSOURCES_PATH;
 	}
 
 	/**
