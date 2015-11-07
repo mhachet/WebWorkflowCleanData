@@ -174,7 +174,7 @@ public class LaunchWorkflow {
 			String originalName = listMappingReconcileDWC.get(i).getOriginalName();
 			mappingDwc.setFilename(originalName);
 
-			boolean isMapping = Boolean.parseBoolean(mappingDwc.getMappingInvolved());
+			boolean isMapping = mappingDwc.getMappingInvolved();
 
 			boolean isValid = preparation.isValid();
 
@@ -228,7 +228,7 @@ public class LaunchWorkflow {
 					darwinCoreModified = this.dataTreatment.initialiseFile(reconcileFile.getReconcileFile(), idFile, separator);
 					
 				}
-				else if(Boolean.parseBoolean(mappingFile.getMappingInvolved())){
+				else if(mappingFile.getMappingInvolved()){
 					
 					darwinCoreModified = this.dataTreatment.initialiseFile(mappingFile.getMappedFile(), idFile, separator);
 					
@@ -292,7 +292,7 @@ public class LaunchWorkflow {
 			}
 			else{
 				System.out.println("separator true : " + csvFileNoMapped.getSeparator());
-				if(!Boolean.parseBoolean(mappingReconcilePrep.getMappingDWC().getMappingInvolved())){
+				if(!mappingReconcilePrep.getMappingDWC().getMappingInvolved()){
 					mappingFile.setSuccessMapping(Boolean.toString(true));
 					String [] listTagsInput = csvFileNoMapped.getFirstLine().split(csvFileNoMapped.getSeparator());
 					ArrayList<String> tagsDwcOfficial = mappingFile.getTagsListDwC();

@@ -33,7 +33,7 @@ public class MappingDwC{
 	private ArrayList<String> tagsListDwC;
 	private HashMap<String, String> connectionTags;
 	private HashMap<String, ArrayList<String>> connectionValuesTags;
-	private String mappingInvolved;
+	private boolean mappingInvolved;
 	private ArrayList<Integer> listInvalidColumns;
 	private String successMapping;
 	private String filename;
@@ -46,7 +46,7 @@ public class MappingDwC{
 	 * src.model
 	 * MappingDwC
 	 */
-	public MappingDwC(CSVFile noMappedFile, String mappingInvolved){
+	public MappingDwC(CSVFile noMappedFile, boolean mappingInvolved){
 		this.noMappedFile = noMappedFile;
 		this.mappingInvolved = mappingInvolved;
 	}
@@ -491,11 +491,11 @@ public class MappingDwC{
 		this.successMapping = successMapping;
 	}
 
-	public String getMappingInvolved() {
+	public boolean getMappingInvolved() {
 		return mappingInvolved;
 	}
 
-	public void setMappingInvolved(String mappingInvolved) {
+	public void setMappingInvolved(boolean mappingInvolved) {
 		this.mappingInvolved = mappingInvolved;
 	}
 

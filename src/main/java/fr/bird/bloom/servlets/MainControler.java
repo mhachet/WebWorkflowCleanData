@@ -243,7 +243,7 @@ public class MainControler extends HttpServlet {
                 }
 
                 CSVFile csvFile = new CSVFile(file);
-                MappingDwC newMappingDWC = new MappingDwC(csvFile, Boolean.toString(false));
+                MappingDwC newMappingDWC = new MappingDwC(csvFile, false);
 
                 listMappingFiles.add(newMappingDWC);
 
@@ -337,9 +337,9 @@ public class MainControler extends HttpServlet {
                     if (idFile == (idMapping)) {
                         MappingDwC mappingDWC = listMappingReconcileDWC.get(i).getMappingDWC();
                         if (item.getString().equals("true")) {
-                            mappingDWC.setMappingInvolved(Boolean.toString(true));
+                            mappingDWC.setMappingInvolved(true);
                         } else {
-                            mappingDWC.setMappingInvolved(Boolean.toString(false));
+                            mappingDWC.setMappingInvolved(false);
                         }
                     }
                 }
