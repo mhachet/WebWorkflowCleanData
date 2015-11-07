@@ -7,6 +7,9 @@ public class BloomConfig {
     private static String resourcePath;
     private static String directoryPath = null; // TODO find a better name
 
+    // properties file
+    public static ResourceBundle bundleConf = ResourceBundle.getBundle("bloom");
+
     private BloomConfig() {
         // private default constructor to prevent instantiation
     }
@@ -28,9 +31,6 @@ public class BloomConfig {
         }
         directoryPath = value;
     }
-
-    // properties file
-    public static ResourceBundle bundleConf = ResourceBundle.getBundle("bloom");
 
     public static String getProperty(String key) {
         return bundleConf.getString(key);

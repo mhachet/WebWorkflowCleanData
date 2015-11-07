@@ -52,8 +52,6 @@ import java.util.UUID;
 @WebServlet(name = "MainControler")
 public class MainControler extends HttpServlet {
 
-    private String resourcesPath = null;
-
     private Initialise initialisation;
     private String nbSessionRandom;
     private Finalisation finalisation;
