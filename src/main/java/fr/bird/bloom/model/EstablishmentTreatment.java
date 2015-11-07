@@ -18,7 +18,6 @@ import java.util.ArrayList;
  */
 public class EstablishmentTreatment {
 
-	private String DIRECTORY_PATH = "";
 	private String nbSessionRandom;
 	private ArrayList<String> listEstablishmentChecked;
 	private ArrayList<String> inverseEstablishmentList;
@@ -173,14 +172,6 @@ public class EstablishmentTreatment {
 
 		return noEstablishment;
 
-	}
-
-	public String getDIRECTORY_PATH() {
-		return DIRECTORY_PATH;
-	}
-
-	public void setDIRECTORY_PATH(String dIRECTORY_PATH) {
-		DIRECTORY_PATH = dIRECTORY_PATH;
 	}
 
 	public String getNbSessionRandom() {

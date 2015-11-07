@@ -31,7 +31,6 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class TdwgTreatment {
 
-	private String DIRECTORY_PATH = "";
 	private String nbSessionRandom;
 	private boolean sucessTdwgTreatment;
 
@@ -162,14 +161,6 @@ public class TdwgTreatment {
 		}
 		return "";
 
-	}
-
-	public String getDIRECTORY_PATH() {
-		return DIRECTORY_PATH;
-	}
-
-	public void setDIRECTORY_PATH(String dIRECTORY_PATH) {
-		DIRECTORY_PATH = dIRECTORY_PATH;
 	}
 
 	public String getNbSessionRandom() {

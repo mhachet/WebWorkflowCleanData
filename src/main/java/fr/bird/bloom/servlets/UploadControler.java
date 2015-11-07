@@ -23,25 +23,14 @@ import java.util.zip.ZipInputStream;
 public class UploadControler  extends HttpServlet{
 
 
-	private String directoryPath;
-	private String resourcesPath;
-
 	private String getDirectoryPath() {
-		if (directoryPath == null) {
-			directoryPath = getServletContext().getRealPath(BloomConfig.getProperty("directory.path"));
+		if (BloomConfig.getDirectoryPath() == null) {
+			BloomConfig.initializeDirectoryPath(getServletContext().getRealPath(BloomConfig.getProperty("directory.folder")));
 		}
-		return directoryPath;
+		return BloomConfig.getDirectoryPath();
 	}
 
-//	private String getResourcesPath() {
-//		if (resourcesPath == null) {
-//			resourcesPath = this.getClass().getClassLoader().getResource(BloomConfig.getProperty("resource.folder")).getPath();
-//		}
-//		return resourcesPath;
-//	}
-
-
-	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {		
+	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 		int count = 0;
 		String uuid = "";
 		String nbInput = "";
