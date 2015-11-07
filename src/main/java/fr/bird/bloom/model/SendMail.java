@@ -24,6 +24,7 @@ import fr.bird.bloom.beans.Step6_CheckTDWG;
 import fr.bird.bloom.beans.Step7_CheckISo2Coordinates;
 import fr.bird.bloom.beans.Step8_CheckCoordinatesRaster;
 import fr.bird.bloom.beans.Step9_EstablishmentMeans;
+import fr.bird.bloom.utils.BloomConfig;
 
 public class SendMail {
 
@@ -32,7 +33,6 @@ public class SendMail {
 	private static final String LOGIN_SMTP1 = "mhachet";
 	private static final String IMAP_ACCOUNT1 = "mhachet@mnhn.fr";
 	private String DIRECTORY_PATH = "";
-	private String RESSOURCES_PATH = "";
 
 	private Step1_MappingDwc step1;
 	private Step2_ReconciliationService step2;
@@ -57,7 +57,7 @@ public class SendMail {
 		String username = "";
 		String password = "";
 		try{
-			BufferedReader buff = new BufferedReader(new FileReader(this.getRESSOURCES_PATH() + ".properties_mail"));
+			BufferedReader buff = new BufferedReader(new FileReader(BloomConfig.getResourcePath() + ".properties_mail"));
 			try {
 				String line;
 				int count = 0;
@@ -151,14 +151,6 @@ public class SendMail {
 
 	public void setDIRECTORY_PATH(String dIRECTORY_PATH) {
 		DIRECTORY_PATH = dIRECTORY_PATH;
-	}
-
-	public String getRESSOURCES_PATH() {
-		return RESSOURCES_PATH;
-	}
-
-	public void setRESSOURCES_PATH(String rESSOURCES_PATH) {
-		RESSOURCES_PATH = rESSOURCES_PATH;
 	}
 
 	public Step1_MappingDwc getStep1() {

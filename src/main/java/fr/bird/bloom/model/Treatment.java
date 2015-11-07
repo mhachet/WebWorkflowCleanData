@@ -35,7 +35,6 @@ public class Treatment {
 	private HashMap<Integer, HashMap<String, Boolean>> hashMapValidOrNot;
 	private String nbSessionRandom;
 	private String DIRECTORY_PATH = "";
-	private String RESSOURCES_PATH = "";
 	private int nbSynonymInvolved = 0;
 
 
@@ -327,7 +326,6 @@ public class Treatment {
 		else{
 			treatmentSynonyms = new SynonymsTreatment();
 			treatmentSynonyms.setDIRECTORY_PATH(this.getDIRECTORY_PATH());
-			treatmentSynonyms.setRESSOURCES_PATH(this.getRESSOURCES_PATH());
 			treatmentSynonyms.setNbSessionRandom(this.getNbSessionRandom());
 			treatmentSynonyms.updateClean();
 
@@ -344,7 +342,6 @@ public class Treatment {
 	public boolean tdwgCodeOption(){
 		TdwgTreatment tdwg4Treatment = new TdwgTreatment();
 		tdwg4Treatment.setDIRECTORY_PATH(this.getDIRECTORY_PATH());
-		tdwg4Treatment.setRESSOURCES_PATH(this.getRESSOURCES_PATH());
 		tdwg4Treatment.setNbSessionRandom(this.getNbSessionRandom());
 
 		tdwg4Treatment.checkIsoTdwgCode(fileDarwinCore);
@@ -363,7 +360,6 @@ public class Treatment {
 		GeographicTreatment geoTreatment = new GeographicTreatment(this.getFileDarwinCore());
 
 		geoTreatment.setDIRECTORY_PATH(this.getDIRECTORY_PATH());
-		geoTreatment.setRESSOURCES_PATH(this.getRESSOURCES_PATH());
 		geoTreatment.setNbSessionRandom(this.getNbSessionRandom());
 
 		geoTreatment.geoGraphicTreatment();
@@ -392,7 +388,6 @@ public class Treatment {
 
 		RasterTreatment rasterTreatment = new RasterTreatment(rasterFiles, this);
 		rasterTreatment.setDIRECTORY_PATH(this.getDIRECTORY_PATH());
-		rasterTreatment.setRESSOURCES_PATH(this.getRESSOURCES_PATH());
 
 		File matrixFileValidCells = rasterTreatment.treatmentRaster();
 		rasterTreatment.setMatrixFileValidCells(matrixFileValidCells);
@@ -410,7 +405,6 @@ public class Treatment {
 	public EstablishmentTreatment establishmentMeansOption(ArrayList<String> listEstablishmentChecked){
 		EstablishmentTreatment establishTreatment = new EstablishmentTreatment(listEstablishmentChecked);
 		establishTreatment.setDIRECTORY_PATH(this.getDIRECTORY_PATH());
-		establishTreatment.setRESSOURCES_PATH(this.getRESSOURCES_PATH());
 		establishTreatment.setNbSessionRandom(this.getNbSessionRandom());
 
 		establishTreatment.establishmentMeansTreatment();
@@ -568,14 +562,6 @@ public class Treatment {
 
 	public void setDIRECTORY_PATH(String dIRECTORY_PATH) {
 		DIRECTORY_PATH = dIRECTORY_PATH;
-	}
-
-	public String getRESSOURCES_PATH() {
-		return RESSOURCES_PATH;
-	}
-
-	public void setRESSOURCES_PATH(String rESSOURCES_PATH) {
-		RESSOURCES_PATH = rESSOURCES_PATH;
 	}
 
 	public int getNbSynonymInvolved() {

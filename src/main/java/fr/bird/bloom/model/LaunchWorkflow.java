@@ -26,6 +26,7 @@ import fr.bird.bloom.beans.Step6_CheckTDWG;
 import fr.bird.bloom.beans.Step7_CheckISo2Coordinates;
 import fr.bird.bloom.beans.Step8_CheckCoordinatesRaster;
 import fr.bird.bloom.beans.Step9_EstablishmentMeans;
+import fr.bird.bloom.utils.BloomConfig;
 
 /**
  * src.model
@@ -70,7 +71,6 @@ public class LaunchWorkflow {
 		this.dataTreatment = new Treatment();
 		this.dataTreatment.setNbSessionRandom(initialisation.getNbSessionRandom());
 		this.dataTreatment.setDIRECTORY_PATH(initialisation.getDIRECTORY_PATH());
-		this.dataTreatment.setRESSOURCES_PATH(initialisation.getRESSOURCES_PATH());
 
 		finalisation = new Finalisation();
 		step1 = new Step1_MappingDwc();
@@ -112,9 +112,10 @@ public class LaunchWorkflow {
 				this.launchRasterOption();	
 			}
 			else{
-				File defaultRaster = new File(this.dataTreatment.getRESSOURCES_PATH() + "test/inputs_data/tmean1.bil");
+				final String resourcePath = BloomConfig.getResourcePath();
+				File defaultRaster = new File(resourcePath + "test/inputs_data/tmean1.bil");
 				this.initialisation.getInputRastersList().add(defaultRaster);
-				File defaultHeader = new File(this.dataTreatment.getRESSOURCES_PATH() + "test/inputs_data/tmean1.hdr");
+				File defaultHeader = new File(resourcePath + "test/inputs_data/tmean1.hdr");
 				this.initialisation.getHeaderRasterList().add(defaultHeader);
 				this.launchRasterOption();
 				//step8.setStep8_ok(false);
@@ -134,7 +135,6 @@ public class LaunchWorkflow {
 		if(initialisation.isSendEmail()){
 			SendMail mail = new SendMail();
 			mail.setDIRECTORY_PATH(initialisation.getDIRECTORY_PATH());
-			mail.setRESSOURCES_PATH(initialisation.getRESSOURCES_PATH());
 		/*	try {
 				mail.sendMessage();
 			} catch (MessagingException e) {

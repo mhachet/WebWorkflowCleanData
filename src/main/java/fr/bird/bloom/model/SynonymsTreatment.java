@@ -23,7 +23,6 @@ public class SynonymsTreatment {
 
 	private File synonymsFile;
 	private String DIRECTORY_PATH = "";
-	private String RESSOURCES_PATH = "";
 	private ArrayList<String> tagsList;
 	private int nbSynonymInvolved;
 	private String nbSessionRandom;
@@ -261,14 +260,5 @@ public class SynonymsTreatment {
 	public void setDIRECTORY_PATH(String dIRECTORY_PATH) {
 		DIRECTORY_PATH = dIRECTORY_PATH;
 	}
-
-	public String getRESSOURCES_PATH() {
-		return RESSOURCES_PATH;
-	}
-
-	public void setRESSOURCES_PATH(String rESSOURCES_PATH) {
-		RESSOURCES_PATH = rESSOURCES_PATH;
-	}
-
 
 }
