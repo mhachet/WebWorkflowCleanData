@@ -412,7 +412,7 @@ public class MainControler extends HttpServlet {
                     int idFile = listMappingReconcileDWC.get(i).getIdFile();
                     if (idFile == (idInput)) {
                         MappingDwC mappingDWC = listMappingReconcileDWC.get(i).getMappingDWC();
-                        mappingDWC.getNoMappedFile().setSeparator(separator);
+                        mappingDWC.getNoMappedFile().setSeparator(CSVFile.Separator.fromString(separator));
                         //System.out.println("separator : " + item.getString());
                     }
                 }

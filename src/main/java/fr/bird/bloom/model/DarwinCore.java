@@ -116,8 +116,7 @@ public class DarwinCore extends CSVFile{
 		File tempFile = new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/data/inputFile_" + Integer.toString(this.getIdFile_()) + ".csv");
 		FileWriter writer = null;
 		File darwinCoreFile = super.getCsvFile();
-		super.setSeparator(separator);
-		separator = super.getSeparator();
+		super.setSeparator(Separator.fromString(separator));
 		//System.out.println("separator DarwinCore : " + separator + "  " + darwinCoreFile.getAbsolutePath());
 		//String firstLine = darwinLines.get(0);
 		String firstLine = super.getFirstLine();

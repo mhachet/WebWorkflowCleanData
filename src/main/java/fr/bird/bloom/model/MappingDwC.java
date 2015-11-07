@@ -185,7 +185,11 @@ public class MappingDwC {
 		String [] firstLine = linesCSV.get(0).split(csvNoMapped.getSeparator());
 		*/
         //ArrayList<String> linesCSV = this.getNoMappedFile().getLines();
-        String[] firstLine = this.getNoMappedFile().getFirstLine().split(this.getNoMappedFile().getSeparator());
+        final String separatorRegex = this.getNoMappedFile().getSeparator().getSymbol();
+
+        final String firstLineString = this.getNoMappedFile().getFirstLine();
+
+        String [] firstLine = firstLineString.split(separatorRegex);
         ArrayList<String> tagsListNoMappedInit = new ArrayList(Arrays.asList(firstLine));
         return tagsListNoMappedInit;
     }
@@ -239,7 +243,7 @@ public class MappingDwC {
             String line = "";
             int countLine = 0;
             while ((line = readerNoMapped.readLine()) != null) {
-                String[] lineSplit = line.split(noMappedFile.getSeparator(), -1);
+                String[] lineSplit = line.split(noMappedFile.getSeparator().getSymbol(), -1);
                 ArrayList<String> listValuesMap = new ArrayList<>();
                 for (int i = 0; i < lineSplit.length; i++) {
                     String id = "";
