@@ -262,7 +262,7 @@ public class MainControler extends HttpServlet {
                 String fileExtensionName = item.getName();
                 fileExtensionName = FilenameUtils.getExtension(fileExtensionName);
                 String fileName = item.getName();
-                if (fileName != "") {
+                if (!Objects.equals(fileName, "")) {
                     File file = new File(getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/" + fileName);
                     try {
                         item.write(file);
