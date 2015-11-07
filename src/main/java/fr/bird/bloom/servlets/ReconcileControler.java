@@ -21,17 +21,12 @@ import java.util.List;
 @WebServlet(name = "ReconcileControler")
 public class ReconcileControler extends HttpServlet {
 
-	//private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/WebContent/output/"; 
-	//private String RESSOURCES_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/";
-	private String resourcesPath;
-
 	private String getDirectoryPath() {
 		if (BloomConfig.getDirectoryPath() == null) {
 			BloomConfig.initializeDirectoryPath(getServletContext().getRealPath(BloomConfig.getProperty("directory.folder")));
 		}
 		return BloomConfig.getDirectoryPath();
 	}
-
 
 	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 		
