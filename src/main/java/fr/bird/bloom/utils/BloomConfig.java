@@ -22,7 +22,10 @@ public class BloomConfig {
         return directoryPath;
     }
 
-    public static void initializeDirectoryPath(String value){
+    public static void initializeDirectoryPath(String value) {
+        if (directoryPath != null) {
+            throw new IllegalStateException("direcoryPath has already by initalized once, cannot override it !");
+        }
         directoryPath = value;
     }
 
