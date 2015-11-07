@@ -145,7 +145,7 @@ public class Treatment {
 			int countLine = 0;
 			while ((line = readerReference.readLine()) != null){
 				//System.out.println("separator : " + referenceFileReconcile.getSeparator());
-				String [] lineSplit = line.split(referenceFileReconcile.getSeparator(), -1);
+				String [] lineSplit = line.split(referenceFileReconcile.getSeparator().getSymbol(), -1);
 
 				if(countLine == 0){
 					for(int i = 0; i < lineSplit.length; i++){

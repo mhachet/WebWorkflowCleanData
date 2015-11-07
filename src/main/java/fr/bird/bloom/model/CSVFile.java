@@ -11,8 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -24,12 +22,40 @@ import java.util.List;
  */
 public class CSVFile {
 
-    public final static List<String> AVAILABLE_SEPARATORS = Collections.unmodifiableList(new ArrayList<String>(Arrays.asList(",", ";", "\t")));
-    protected String separator;
+    protected Separator separator = Separator.COMMA;
     protected String csvName;
     protected File csvFile;
     protected ArrayList<String> lines;
 
+    public enum Separator {
+        COMMA(","),
+        SEMICOLON(";"),
+        TAB("\t"),
+        UNKNOWN("-1"),
+        INCONSISTENT("-1");
+
+        private final String symbol;
+
+        Separator(String symbol) {
+            this.symbol = symbol;
+        }
+
+        public String getSymbol() {
+            return symbol;
+        }
+
+        public static Separator fromString(String s) {
+            if (s != null) {
+                for (Separator sep : values()) {
+                    if (sep.getSymbol().equals(s)) {
+                        return sep;
+                    }
+                }
+            }
+            return UNKNOWN;
+        }
+
+    }
     /**
      * src.model
      * CSVFile
@@ -39,7 +65,7 @@ public class CSVFile {
     public CSVFile(File file) {
         this.csvFile = file;
         /*
-		try {
+        try {
 			this.readCsvFile();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -50,20 +76,17 @@ public class CSVFile {
         //this.setSeparator(",");
     }
 
-    /**
-     * @return String
-     */
-    public String getSeparator() {
-        return this.separator;
+    public void setSeparator(Separator separator) {
+        this.separator = separator;
     }
 
     /**
-     * @param separator
-     * @return void
+     * @return String
      */
-    public void setSeparator(String separator) {
-        this.separator = separator;
+    public Separator getSeparator() {
+        return this.separator;
     }
+
 
     /**
      * @return String
@@ -121,11 +144,11 @@ public class CSVFile {
 
         boolean isGoodCandidate = false;
 
-        for (String sep : AVAILABLE_SEPARATORS) {
+        for (Separator sep : Separator.values()) {
             for (int i = 0; i < lines.size(); i++) {
                 String line = lines.get(i);
 
-                int compte = this.countSeparators(line, sep);
+                int compte = this.countSeparators(line, sep.getSymbol());
                 if (compte == 0) {
                     // no separator in this line
                     isGoodCandidate = false;
@@ -141,22 +164,19 @@ public class CSVFile {
                 isGoodCandidate = true;
             }
             if (isGoodCandidate) {
-                reste.add(sep);
+                reste.add(sep.getSymbol());
             }
         }
 
         if (reste.isEmpty()) {
             // no one separator found
             System.out.println("No separator found !");
-            this.setSeparator("-1");
-            this.separator = this.getSeparator();
+            this.separator = Separator.UNKNOWN;
         } else if (reste.size() > 1) {
             // too many separators found
-            this.setSeparator("-1");
-            this.separator = this.getSeparator();
+            this.separator = Separator.INCONSISTENT;
         } else {
-            this.setSeparator(reste.get(0));
-            this.separator = this.getSeparator();
+            this.separator = Separator.fromString(reste.get(0));
         }
     }
 
@@ -168,8 +188,8 @@ public class CSVFile {
      */
     public void readCsvFile() throws IOException {
         lines = new ArrayList<String>();
-		/*byte[] searchString = {'\n'};
-		int count = 0;
+        /*byte[] searchString = {'\n'};
+        int count = 0;
 		long position = 1;
 		try (FileInputStream file = new FileInputStream(this.csvFile)) {
 			byte read[] = new byte[1];
