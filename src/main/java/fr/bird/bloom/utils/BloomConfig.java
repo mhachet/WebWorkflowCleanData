@@ -29,7 +29,7 @@ public class BloomConfig {
         if (directoryPath != null) {
             throw new IllegalStateException("directoryPath has already by initialized once, cannot override it !");
         }
-        directoryPath = value;
+        directoryPath = value + getProperty("directory.folder.name");
     }
 
     public static String getProperty(String key) {

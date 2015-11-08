@@ -25,7 +25,7 @@ public class UploadControler  extends HttpServlet{
 
 	private String getDirectoryPath() {
 		if (BloomConfig.getDirectoryPath() == null) {
-			BloomConfig.initializeDirectoryPath(getServletContext().getRealPath(BloomConfig.getProperty("directory.folder")));
+			BloomConfig.initializeDirectoryPath(getServletContext().getRealPath("/"));
 		}
 		return BloomConfig.getDirectoryPath();
 	}

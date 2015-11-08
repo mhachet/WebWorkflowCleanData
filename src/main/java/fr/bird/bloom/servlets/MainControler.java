@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -70,7 +71,7 @@ public class MainControler extends HttpServlet {
 
     private String getDirectoryPath() {
         if (BloomConfig.getDirectoryPath() == null) {
-            BloomConfig.initializeDirectoryPath(getServletContext().getRealPath(BloomConfig.getProperty("directory.folder")));
+            BloomConfig.initializeDirectoryPath(getServletContext().getRealPath("/"));
         }
         return BloomConfig.getDirectoryPath();
     }
