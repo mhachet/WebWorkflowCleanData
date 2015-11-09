@@ -4,6 +4,7 @@
  */
 package fr.bird.bloom;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import fr.bird.bloom.model.ConnectionDatabase;
 import fr.bird.bloom.model.DatabaseTreatment;
@@ -21,6 +22,7 @@ import static org.junit.Assert.fail;
  * TestConnectionDatabase.java
  * TestConnectionDatabase
  */
+@Ignore
 public class TestConnectionDatabase {
 
 
@@ -34,7 +36,7 @@ public class TestConnectionDatabase {
 	
     	Statement statement = null;
 		try {
-			statement = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

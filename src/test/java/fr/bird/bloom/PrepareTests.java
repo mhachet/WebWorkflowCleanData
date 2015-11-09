@@ -11,6 +11,7 @@ package fr.bird.bloom;
  * ExampleWebTestCase
  */
 
+import org.junit.Ignore;
 import org.junit.Test;
 import fr.bird.bloom.beans.Initialise;
 import fr.bird.bloom.model.CSVFile;
@@ -22,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+@Ignore
 public class PrepareTests {
 
 
@@ -43,9 +45,6 @@ public class PrepareTests {
 	inputFilesList = new ArrayList<>();
 	inputHeaderList = new ArrayList<>();
 	inputsRasterList = new ArrayList<>();
-
-	initialisation.setDIRECTORY_PATH(DIRECTORY_PATH);
-	initialisation.setRESSOURCES_PATH(RESSOURCES_PATH);
 
 	setNbSessionRandom(generateRandomKey());
 	prepareInputFiles();
@@ -97,7 +96,7 @@ public class PrepareTests {
 		e.printStackTrace();
 	    }
 	    CSVFile csvFile = new CSVFile(file);
-	    MappingDwC newMappingDWC = new MappingDwC(csvFile, Boolean.toString(false));
+	    MappingDwC newMappingDWC = new MappingDwC(csvFile, false);
 	    //newMappingDWC.setOriginalName(inputFilesList.get(i).getName());
 	    String nameFile = inputFilesList.get(i).getName();
 	    //newMappingDWC.setOriginalExtension(nameFile.substring(nameFile.indexOf('.')+1,nameFile.length()));
@@ -113,7 +112,7 @@ public class PrepareTests {
 	    //initialisation.getInputFilesList().add(csvFile.getCsvFile());
 
 	    boolean doMapping = newMappingDWC.doMapping();
-	    newMappingDWC.setMappingInvolved(Boolean.toString(doMapping));
+	    newMappingDWC.setMappingInvolved(doMapping);
 	    if(doMapping){
 		ArrayList<String> presentTags = newMappingDWC.getPresentTags();
 		for(Entry<String, String> entry : connectionTags.entrySet()) {

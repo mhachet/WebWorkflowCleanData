@@ -12,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * model
@@ -23,8 +22,6 @@ import java.util.Arrays;
 public class SynonymsTreatment {
 
 	private File synonymsFile;
-	private String DIRECTORY_PATH = "";
-	private String RESSOURCES_PATH = "";
 	private ArrayList<String> tagsList;
 	private int nbSynonymInvolved;
 	private String nbSessionRandom;
@@ -76,7 +73,7 @@ public class SynonymsTreatment {
 	public void updateClean(){
 		Statement statement = null;
 		try {
-			statement = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -101,7 +98,7 @@ public class SynonymsTreatment {
 
 			Statement statementUpdate = null;
 			try {
-				statementUpdate = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+				statementUpdate = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -141,7 +138,7 @@ public class SynonymsTreatment {
 
 		Statement statement = null;
 		try {
-			statement = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -205,7 +202,7 @@ public class SynonymsTreatment {
 		}
 		Statement statement = null;
 		try {
-			statement = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -254,22 +251,5 @@ public class SynonymsTreatment {
 	public void setNbSessionRandom(String nbSessionRandom) {
 		this.nbSessionRandom = nbSessionRandom;
 	}
-
-	public String getDIRECTORY_PATH() {
-		return DIRECTORY_PATH;
-	}
-
-	public void setDIRECTORY_PATH(String dIRECTORY_PATH) {
-		DIRECTORY_PATH = dIRECTORY_PATH;
-	}
-
-	public String getRESSOURCES_PATH() {
-		return RESSOURCES_PATH;
-	}
-
-	public void setRESSOURCES_PATH(String rESSOURCES_PATH) {
-		RESSOURCES_PATH = rESSOURCES_PATH;
-	}
-
 
 }

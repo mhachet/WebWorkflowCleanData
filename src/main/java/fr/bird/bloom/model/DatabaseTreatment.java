@@ -5,6 +5,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class DatabaseTreatment {
 
@@ -49,13 +50,13 @@ public class DatabaseTreatment {
 			messages.add( "Objet requête créé !" );
 
 			//global method for any SQL script - return a boolean : true if the instruction return ResultSet, false else
-			if(choiceStatement == "execute"){
+			if(Objects.equals(choiceStatement, "execute")){
 				this.setResultat(statement.execute(sql));
 				messages.add(sql);
 				//messages.add(resultat.toString());
 			}
 			// SELECT - return ResultSet, with results : TDWG=
-			else if(choiceStatement == "executeQuery"){
+			else if(Objects.equals(choiceStatement, "executeQuery")){
 				this.resultSet = statement.executeQuery(sql);
 				messages.add(sql);
 				ResultSetMetaData resultMeta = this.resultSet.getMetaData();
@@ -67,7 +68,7 @@ public class DatabaseTreatment {
 			 * give lines number edited by INSERT, UPDATE et DELETE
 			 * or 0 for no return methods like CREATE
 			 */
-			else if(choiceStatement == "executeUpdate"){
+			else if(Objects.equals(choiceStatement, "executeUpdate")){
 				i = statement.executeUpdate(sql);
 				messages.add(sql);
 				messages.add("nb lignes affectées :" + Integer.toString(i));

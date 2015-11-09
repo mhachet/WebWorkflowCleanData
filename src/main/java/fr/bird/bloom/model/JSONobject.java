@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.bird.bloom.utils.BloomConfig;
 import org.geotools.filter.expression.ThisPropertyAccessorFactory;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -21,8 +22,7 @@ import org.json.simple.JSONObject;
 
 public class JSONobject {
 
-    private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/WebContent/output/"; 
-    
+
     private ArrayList<String> presentTags;
     private ArrayList<String> dwcTags;
     private ArrayList<String> noMappedTags;
@@ -53,7 +53,7 @@ public class JSONobject {
       
       globalJsonObject.put(this.getUploadFilename(), globalArrayJSON);
       
-      File jsonFile = new File(DIRECTORY_PATH + "temp/data/" + this.getUploadFilename() + ".json");
+      File jsonFile = new File(BloomConfig.getDirectoryPath() + "temp/data/" + this.getUploadFilename() + ".json");
       if (!jsonFile.exists()){
 	  jsonFile.createNewFile();
       }

@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import fr.bird.bloom.utils.BloomConfig;
 import org.geotools.geojson.geom.GeometryJSON;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -30,8 +31,6 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class TdwgTreatment {
 
-	private String DIRECTORY_PATH = "";
-	private String RESSOURCES_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/";
 	private String nbSessionRandom;
 	private boolean sucessTdwgTreatment;
 
@@ -85,7 +84,7 @@ public class TdwgTreatment {
 
 				Statement statement = null;
 				try {
-					statement = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+					statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -107,7 +106,7 @@ public class TdwgTreatment {
 
 				Statement statementUpdateClean = null;
 				try {
-					statementUpdateClean = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+					statementUpdateClean = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -135,7 +134,7 @@ public class TdwgTreatment {
 	 */
 	public String tdwg4ContainedPoint(Point geoPoint, String iso2) throws IOException{
 		GeometryJSON geometryJSON = new GeometryJSON();
-		BufferedReader buff = new BufferedReader(new FileReader(RESSOURCES_PATH + "tdwg4.json"));
+		BufferedReader buff = new BufferedReader(new FileReader(BloomConfig.getResourcePath() + "tdwg4.json"));
 
 		try {
 			String line = null;
@@ -162,22 +161,6 @@ public class TdwgTreatment {
 		}
 		return "";
 
-	}
-
-	public String getDIRECTORY_PATH() {
-		return DIRECTORY_PATH;
-	}
-
-	public void setDIRECTORY_PATH(String dIRECTORY_PATH) {
-		DIRECTORY_PATH = dIRECTORY_PATH;
-	}
-
-	public String getRESSOURCES_PATH() {
-		return RESSOURCES_PATH;
-	}
-
-	public void setRESSOURCES_PATH(String rESSOURCES_PATH) {
-		RESSOURCES_PATH = rESSOURCES_PATH;
 	}
 
 	public String getNbSessionRandom() {

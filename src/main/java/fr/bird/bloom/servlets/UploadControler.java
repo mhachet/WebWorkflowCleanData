@@ -1,5 +1,6 @@
 package fr.bird.bloom.servlets;
 
+import fr.bird.bloom.utils.BloomConfig;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItem;
@@ -22,53 +23,14 @@ import java.util.zip.ZipInputStream;
 public class UploadControler  extends HttpServlet{
 
 
-	//private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/WebContent/output/"; 
-	//private String RESSOURCES_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/";
-
-	private String DIRECTORY_PATH = "";
-	private String RESSOURCES_PATH = "";
-	
-	public UploadControler(){
-
-
-	}
-
-	public void init() throws ServletException{
-		// Do required initialization
-		File currentFile = new File("");
-		String currentPath = currentFile.getAbsolutePath();
-		System.out.println("currentPathUpload : " + currentPath);
-		
-		try{
-			BufferedReader buff = new BufferedReader(new FileReader(currentPath + "/.properties"));
-			if(currentPath.indexOf("eclipse") != -1){
-				currentPath = "";
-			}
-			try {
-				String line;
-				int count = 0;
-				while ((line = buff.readLine()) != null) {
-					if(count == 0){
-						this.setDIRECTORY_PATH(currentPath + line);
-						System.out.println("directoryPathUpload : " + this.getDIRECTORY_PATH());
-					}
-					else{
-						this.setRESSOURCES_PATH(currentPath + line);
-						System.out.println("ressourcePathUpload : " + this.getRESSOURCES_PATH());
-					}
-					count ++;
-					
-				}
-			} finally {
-				buff.close();
-			}
-		} catch (IOException ioe) {
-			System.out.println("Erreur --" + ioe.toString());
+	private String getDirectoryPath() {
+		if (BloomConfig.getDirectoryPath() == null) {
+			BloomConfig.initializeDirectoryPath(getServletContext().getRealPath("/"));
 		}
-
+		return BloomConfig.getDirectoryPath();
 	}
 
-	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {		
+	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 		int count = 0;
 		String uuid = "";
 		String nbInput = "";
@@ -90,14 +52,14 @@ public class UploadControler  extends HttpServlet{
 
 			if(count == 0){
 				uuid = itemFile.getString();
-				if(!new File(DIRECTORY_PATH + "temp/").exists()){
-					new File(DIRECTORY_PATH + "temp/").mkdirs();
+				if(!new File(getDirectoryPath() + "temp/").exists()){
+					new File(getDirectoryPath() + "temp/").mkdirs();
 				}
-				if(!new File(DIRECTORY_PATH + "temp/" + uuid + "/").exists()){
-					new File(DIRECTORY_PATH + "temp/" + uuid + "/").mkdirs();
+				if(!new File(getDirectoryPath() + "temp/" + uuid + "/").exists()){
+					new File(getDirectoryPath() + "temp/" + uuid + "/").mkdirs();
 				}
-				if(!new File(DIRECTORY_PATH + "temp/" + uuid + "/data/").exists()){
-					new File(DIRECTORY_PATH + "temp/" + uuid + "/data/").mkdirs();
+				if(!new File(getDirectoryPath() + "temp/" + uuid + "/data/").exists()){
+					new File(getDirectoryPath() + "temp/" + uuid + "/data/").mkdirs();
 				}
 				System.out.println(uuid);
 			}
@@ -116,7 +78,7 @@ public class UploadControler  extends HttpServlet{
 				compressedFormat.add("rar");
 				compressedFormat.add("tar.gz");
 				
-				File file = new File(DIRECTORY_PATH + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + "." + fileExtensionName);
+				File file = new File(getDirectoryPath() + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + "." + fileExtensionName);
 				if(action.equals("upload")){
 					try {
 						itemFile.write(file);
@@ -125,7 +87,7 @@ public class UploadControler  extends HttpServlet{
 						e.printStackTrace();
 					}
 					if(fileExtensionName.equals("zip")){
-						String dezipFile = this.unzip(file, DIRECTORY_PATH + "temp/" + uuid + "/data/");
+						String dezipFile = this.unzip(file, getDirectoryPath() + "temp/" + uuid + "/data/");
 						System.out.println("dezipfile : " + dezipFile);
 					}
 					else{
@@ -270,39 +232,7 @@ public class UploadControler  extends HttpServlet{
 		return dezipFilename;
 	}
 
-	/**
-	 * 
-	 * @return String
-	 */
-	public String getDIRECTORY_PATH() {
-		return DIRECTORY_PATH;
-	}
 
-	/**
-	 * 
-	 * @param dIRECTORY_PATH
-	 */
-	public void setDIRECTORY_PATH(String dIRECTORY_PATH) {
-		DIRECTORY_PATH = dIRECTORY_PATH;
-	}
-
-	/**
-	 * 
-	 * @return String
-	 */
-	public String getRESSOURCES_PATH() {
-		return RESSOURCES_PATH;
-	}
-
-	/**
-	 * 
-	 * @param rESSOURCES_PATH
-	 */
-	public void setRESSOURCES_PATH(String rESSOURCES_PATH) {
-		RESSOURCES_PATH = rESSOURCES_PATH;
-	}
-
-	
 }
 
 

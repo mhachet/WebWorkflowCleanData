@@ -17,9 +17,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map.Entry;
 
+import fr.bird.bloom.utils.BloomConfig;
 import org.apache.commons.lang.StringUtils;
 
 
@@ -35,8 +35,6 @@ public class Treatment {
 	private ArrayList<File> rasterFiles;
 	private HashMap<Integer, HashMap<String, Boolean>> hashMapValidOrNot;
 	private String nbSessionRandom;
-	private String DIRECTORY_PATH = "";
-	private String RESSOURCES_PATH = "";
 	private int nbSynonymInvolved = 0;
 
 
@@ -58,7 +56,7 @@ public class Treatment {
 	public void deleteTables(){
 		Statement statementDeleteClean = null;
 		try {
-			statementDeleteClean = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			statementDeleteClean = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -75,7 +73,7 @@ public class Treatment {
 
 		Statement statementDeleteDarwin = null;
 		try {
-			statementDeleteDarwin = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			statementDeleteDarwin = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -92,7 +90,7 @@ public class Treatment {
 
 		Statement statementDeleteTemp = null;
 		try {
-			statementDeleteTemp = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			statementDeleteTemp = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -147,7 +145,7 @@ public class Treatment {
 			int countLine = 0;
 			while ((line = readerReference.readLine()) != null){
 				//System.out.println("separator : " + referenceFileReconcile.getSeparator());
-				String [] lineSplit = line.split(referenceFileReconcile.getSeparator(), -1);
+				String [] lineSplit = line.split(referenceFileReconcile.getSeparator().getSymbol(), -1);
 
 				if(countLine == 0){
 					for(int i = 0; i < lineSplit.length; i++){
@@ -194,7 +192,6 @@ public class Treatment {
 	public DarwinCore initialiseFile(File inputFile, int nbFile, String separator) throws IOException{
 
 		fileDarwinCore = new DarwinCore(inputFile, nbFile, this.getNbSessionRandom());
-		fileDarwinCore.setDIRECTORY_PATH(DIRECTORY_PATH);
 		File darwinCoreFileTemp = fileDarwinCore.readDarwinCoreFile(separator);
 		fileDarwinCore.setDarwinCoreFileTemp(darwinCoreFileTemp);
 		System.out.println("filename : " + darwinCoreFileTemp.getAbsolutePath());
@@ -268,7 +265,7 @@ public class Treatment {
 					String sqlInsert = "INSERT INTO Workflow.DarwinCoreInput (" + firstLine + ") VALUES (" + line + ");";
 					Statement statement = null;
 					try {
-						statement = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+						statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -327,8 +324,6 @@ public class Treatment {
 		}
 		else{
 			treatmentSynonyms = new SynonymsTreatment();
-			treatmentSynonyms.setDIRECTORY_PATH(this.getDIRECTORY_PATH());
-			treatmentSynonyms.setRESSOURCES_PATH(this.getRESSOURCES_PATH());
 			treatmentSynonyms.setNbSessionRandom(this.getNbSessionRandom());
 			treatmentSynonyms.updateClean();
 
@@ -339,13 +334,11 @@ public class Treatment {
 
 	/**
 	 * Find tdwg level 4 for occurrences
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public boolean tdwgCodeOption(){
 		TdwgTreatment tdwg4Treatment = new TdwgTreatment();
-		tdwg4Treatment.setDIRECTORY_PATH(this.getDIRECTORY_PATH());
-		tdwg4Treatment.setRESSOURCES_PATH(this.getRESSOURCES_PATH());
 		tdwg4Treatment.setNbSessionRandom(this.getNbSessionRandom());
 
 		tdwg4Treatment.checkIsoTdwgCode(fileDarwinCore);
@@ -356,15 +349,13 @@ public class Treatment {
 	}
 
 	/**
-	 * process of geo checking 
-	 * 
+	 * process of geo checking
+	 *
 	 * @return GeographicTreatment
 	 */
 	public GeographicTreatment checkGeographicOption(){
 		GeographicTreatment geoTreatment = new GeographicTreatment(this.getFileDarwinCore());
 
-		geoTreatment.setDIRECTORY_PATH(this.getDIRECTORY_PATH());
-		geoTreatment.setRESSOURCES_PATH(this.getRESSOURCES_PATH());
 		geoTreatment.setNbSessionRandom(this.getNbSessionRandom());
 
 		geoTreatment.geoGraphicTreatment();
@@ -383,17 +374,15 @@ public class Treatment {
 
 
 	/**
-	 * 
+	 *
 	 * Check if coordinates are included in raster cells
-	 * 
+	 *
 	 * @param ArrayList<File> raster file
 	 * @return void
 	 */
 	public RasterTreatment checkWorldClimCell(ArrayList<File> rasterFiles) {
 
 		RasterTreatment rasterTreatment = new RasterTreatment(rasterFiles, this);
-		rasterTreatment.setDIRECTORY_PATH(this.getDIRECTORY_PATH());
-		rasterTreatment.setRESSOURCES_PATH(this.getRESSOURCES_PATH());
 
 		File matrixFileValidCells = rasterTreatment.treatmentRaster();
 		rasterTreatment.setMatrixFileValidCells(matrixFileValidCells);
@@ -404,14 +393,12 @@ public class Treatment {
 
 	/**
 	 * process of establishmentMeans option
-	 * 
+	 *
 	 * @param listEstablishmentChecked
 	 * @return EstablishmentTreatment
 	 */
 	public EstablishmentTreatment establishmentMeansOption(ArrayList<String> listEstablishmentChecked){
 		EstablishmentTreatment establishTreatment = new EstablishmentTreatment(listEstablishmentChecked);
-		establishTreatment.setDIRECTORY_PATH(this.getDIRECTORY_PATH());
-		establishTreatment.setRESSOURCES_PATH(this.getRESSOURCES_PATH());
 		establishTreatment.setNbSessionRandom(this.getNbSessionRandom());
 
 		establishTreatment.establishmentMeansTreatment();
@@ -423,31 +410,31 @@ public class Treatment {
 	}
 
 	/**
-	 * Create a new csv file from lines 
-	 * 
+	 * Create a new csv file from lines
+	 *
 	 * @param ArrayList<String> linesFile
 	 * @param String fileName
-	 * @return File 
+	 * @return File
 	 */
 	public File createFileCsv(ArrayList<String> linesFile, String fileName, String category){
-		if(!new File(DIRECTORY_PATH + "temp/").exists()){
-			new File(DIRECTORY_PATH + "temp/").mkdirs();
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/").exists()){
+			new File(BloomConfig.getDirectoryPath() + "temp/").mkdirs();
 		}
-		if(!new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom()).exists()){
-			new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom());
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom()).exists()){
+			new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom());
 		}
-		if(!new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/data/").exists()){
-			new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/data/").mkdirs();
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/").exists()){
+			new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/").mkdirs();
 		}
-		if(!new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/wrong/").exists()){
-			new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/wrong/").mkdirs();
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/wrong/").exists()){
+			new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/wrong/").mkdirs();
 		}
-		if(!new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/final_results/").exists()){
-			new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/final_results/").mkdirs();
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/final_results/").exists()){
+			new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/final_results/").mkdirs();
 		}
 
 		//String fileRename = fileName + "_" + nbFileRandom + ".csv";
-		File newFile = new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/" + category +"/" + fileName);
+		File newFile = new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/" + category +"/" + fileName);
 		FileWriter writer = null;
 		try {
 			writer = new FileWriter(newFile);
@@ -471,7 +458,7 @@ public class Treatment {
 
 	/**
 	 * Delete a directory
-	 * 
+	 *
 	 * @param path
 	 * @return boolean
 	 */
@@ -495,7 +482,7 @@ public class Treatment {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return DarwinCore
 	 */
 	public DarwinCore getFileDarwinCore() {
@@ -503,7 +490,7 @@ public class Treatment {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param fileDarwinCore
 	 * @return void
 	 */
@@ -512,7 +499,7 @@ public class Treatment {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return ArrayList<File>
 	 */
 	public ArrayList<File> getRasterFiles() {
@@ -520,7 +507,7 @@ public class Treatment {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rasterFiles
 	 * @return void
 	 */
@@ -529,7 +516,7 @@ public class Treatment {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return HashMap<Integer,HashMap<String,Boolean>>
 	 */
 	public HashMap<Integer, HashMap<String, Boolean>> getHashMapValidOrNot() {
@@ -537,7 +524,7 @@ public class Treatment {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param hashMapValidOrNot
 	 * @return void
 	 */
@@ -547,7 +534,7 @@ public class Treatment {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return int
 	 */
 	public String getNbSessionRandom() {
@@ -555,28 +542,12 @@ public class Treatment {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param nbFileRandom
 	 * @return void
 	 */
 	public void setNbSessionRandom(String nbFileRandom) {
 		this.nbSessionRandom = nbFileRandom;
-	}
-
-	public String getDIRECTORY_PATH() {
-		return DIRECTORY_PATH;
-	}
-
-	public void setDIRECTORY_PATH(String dIRECTORY_PATH) {
-		DIRECTORY_PATH = dIRECTORY_PATH;
-	}
-
-	public String getRESSOURCES_PATH() {
-		return RESSOURCES_PATH;
-	}
-
-	public void setRESSOURCES_PATH(String rESSOURCES_PATH) {
-		RESSOURCES_PATH = rESSOURCES_PATH;
 	}
 
 	public int getNbSynonymInvolved() {

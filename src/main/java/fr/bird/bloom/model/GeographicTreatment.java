@@ -15,6 +15,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import fr.bird.bloom.utils.BloomConfig;
 import org.geotools.geojson.geom.GeometryJSON;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -35,8 +36,6 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class GeographicTreatment {
 
-	private String DIRECTORY_PATH = "";
-	private String RESSOURCES_PATH = "";
 	private String nbSessionRandom;
 	private int nbWrongGeospatialIssues = 0;
 	private int nbWrongCoordinates = 0;
@@ -92,7 +91,8 @@ public class GeographicTreatment {
 
 		ArrayList<String> listToDelete = new ArrayList<>();
 
-		HashMap<String, ArrayList<String>> idAssoData = this.getDarwinCore().getIdAssoData(); 
+		HashMap<String, ArrayList<String>> idAssoData = this.getDarwinCore().getIdAssoData();
+		final String resourcePath = BloomConfig.getResourcePath();
 
 		int iLatitude = this.getDarwinCore().getIndiceFromTag("decimalLatitude_");
 		int iLongitude = this.getDarwinCore().getIndiceFromTag("decimalLongitude_");
@@ -116,7 +116,7 @@ public class GeographicTreatment {
 				iso3 = this.convertIso2ToIso3(iso2);
 				gbifId_ = listInfos.get(iGbifID);
 
-				File geoJsonFile = new File(RESSOURCES_PATH + "gadm_json/" + iso3.toUpperCase() + "_adm0.json");
+				File geoJsonFile = new File(resourcePath + "gadm_json/" + iso3.toUpperCase() + "_adm0.json");
 				GeometryFactory geometryFactory = new GeometryFactory();
 				Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
 				/*System.out.println("--------------------------------------------------------------");
@@ -133,7 +133,7 @@ public class GeographicTreatment {
 					nbWrongIso2 ++;
 					Statement statement = null;
 					try {
-						statement = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+						statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -157,7 +157,7 @@ public class GeographicTreatment {
 
 					Statement statementDelete = null;
 					try {
-						statementDelete = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+						statementDelete = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -191,7 +191,7 @@ public class GeographicTreatment {
 
 		Statement statement = null;
 		try {
-			statement = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -298,7 +298,7 @@ public class GeographicTreatment {
 	public void deleteWrongIso2() {
 		Statement statement = null;
 		try {
-			statement = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -331,7 +331,7 @@ public class GeographicTreatment {
 	public void createTableClean(){
 		Statement statement = null;
 		try {
-			statement = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -360,7 +360,7 @@ public class GeographicTreatment {
 	public ArrayList<String> deleteWrongCoordinates(){
 		Statement statement = null;
 		try {
-			statement = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -376,10 +376,8 @@ public class GeographicTreatment {
 		messages.add("nb lignes affectées :" + Integer.toString(resultatSelect.size() - 1));
 
 
-
-		if(!new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/wrong/").exists())
-		{
-			new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/wrong/").mkdirs();
+		if (!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/wrong/").exists()) {
+			new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/wrong/").mkdirs();
 		}
 
 
@@ -407,7 +405,7 @@ public class GeographicTreatment {
 	public ArrayList<String> deleteWrongGeospatial(){
 		Statement statement = null;
 		try {
-			statement = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -426,9 +424,8 @@ public class GeographicTreatment {
 
 		this.setNbWrongGeospatialIssues(resultatSelect.size() - 1 );
 
-		if(!new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/wrong/").exists())
-		{
-			new File(DIRECTORY_PATH + "temp/" + this.getNbSessionRandom() + "/wrong/").mkdirs();
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/wrong/").exists()) {
+			new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/wrong/").mkdirs();
 		}
 
 
@@ -440,23 +437,6 @@ public class GeographicTreatment {
 		this.setNbWrongGeospatialIssues(resultatSelect.size()-1);
 
 		return resultatSelect;
-	}
-
-
-	public String getDIRECTORY_PATH() {
-		return DIRECTORY_PATH;//hasGeospatialIssues
-	}
-
-	public void setDIRECTORY_PATH(String dIRECTORY_PATH) {
-		DIRECTORY_PATH = dIRECTORY_PATH;
-	}
-
-	public String getRESSOURCES_PATH() {
-		return RESSOURCES_PATH;
-	}
-
-	public void setRESSOURCES_PATH(String rESSOURCES_PATH) {
-		RESSOURCES_PATH = rESSOURCES_PATH;
 	}
 
 	public String getNbSessionRandom() {
