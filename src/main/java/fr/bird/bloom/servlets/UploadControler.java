@@ -13,7 +13,17 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -73,7 +83,7 @@ public class UploadControler  extends HttpServlet{
 			}
 			else if(count == 3){
 				System.out.println("format : " + fileExtensionName);
-				ArrayList<String> compressedFormat = new ArrayList<>();
+				List<String> compressedFormat = new ArrayList<>();
 				compressedFormat.add("zip");
 				compressedFormat.add("rar");
 				compressedFormat.add("tar.gz");

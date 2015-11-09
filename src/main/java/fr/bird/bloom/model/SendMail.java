@@ -1,20 +1,5 @@
 package fr.bird.bloom.model;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.Properties;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
 import fr.bird.bloom.beans.Step1_MappingDwc;
 import fr.bird.bloom.beans.Step2_ReconciliationService;
 import fr.bird.bloom.beans.Step3_CheckCoordinates;
@@ -25,6 +10,20 @@ import fr.bird.bloom.beans.Step7_CheckISo2Coordinates;
 import fr.bird.bloom.beans.Step8_CheckCoordinatesRaster;
 import fr.bird.bloom.beans.Step9_EstablishmentMeans;
 import fr.bird.bloom.utils.BloomConfig;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Properties;
 
 public class SendMail {
 

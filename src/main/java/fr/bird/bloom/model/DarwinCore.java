@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -30,7 +31,7 @@ public class DarwinCore extends CSVFile{
 
 	private int idFile_;
 	private String nbSessionRandom;
-	private HashMap<String, ArrayList<String>> idAssoData;
+	private HashMap<String, List<String>> idAssoData;
 	private ArrayList<String> darwinLines;
 	private File darwinCoreFileTemp;
 
@@ -68,7 +69,7 @@ public class DarwinCore extends CSVFile{
 	public void associateIdData(){
 		idAssoData = new HashMap<>();
 		DatabaseTreatment newConnection = null;
-		ArrayList<String> messages = new ArrayList<String>();
+		List<String> messages = new ArrayList<String>();
 		//ConnectionDatabase newConnection = new ConnectionDatabase();
 		messages.add("\n--- Select id line from clean ---\n");
 		Statement statement = null;
@@ -84,12 +85,12 @@ public class DarwinCore extends CSVFile{
 		//System.out.println(sqlID);
 		//--- Create DarwinCoreInput table ---inputFile_
 		//messages.addAll(newConnection.executeSQLcommand("executeQuery", sqlID));
-		ArrayList<String> resultats = newConnection.getResultatSelect();
+		List<String> resultats = newConnection.getResultatSelect();
 
 		for(int i = 0 ; i < resultats.size() ; i++){
 			String id_ = resultats.get(i).split(",")[0];
 			String line [] = resultats.get(i).split(",");
-			ArrayList<String> infos = new ArrayList<>();
+			List<String> infos = new ArrayList<>();
 			for(int j = 1 ; j < line.length ; j++){
 				infos.add(line[j]);
 			}
@@ -215,9 +216,9 @@ public class DarwinCore extends CSVFile{
 	 *  
 	 * @return ArrayList<String>
 	 */
-	public ArrayList<String> getDecimalLatitudeClean(){
+	public List<String> getDecimalLatitudeClean(){
 		DatabaseTreatment newConnection = null;
-		ArrayList<String> messages = new ArrayList<String>();
+		List<String> messages = new ArrayList<String>();
 		//ConnectionDatabase newConnection = new ConnectionDatabase();
 		messages.add("\n--- Select decimal latitude from coordinates ---");
 		Statement statement = null;
@@ -231,7 +232,7 @@ public class DarwinCore extends CSVFile{
 			e.printStackTrace();
 		}	
 		
-		ArrayList<String> resultatLatitude = newConnection.getResultatSelect();
+		List<String> resultatLatitude = newConnection.getResultatSelect();
 
 		return resultatLatitude;
 	}
@@ -241,10 +242,10 @@ public class DarwinCore extends CSVFile{
 	 *  
 	 * @return ArrayList<String>
 	 */
-	public ArrayList<String> getDecimalLongitudeClean(){
+	public List<String> getDecimalLongitudeClean(){
 		
 		DatabaseTreatment newConnection = null;
-		ArrayList<String> messages = new ArrayList<String>();
+		List<String> messages = new ArrayList<String>();
 		//ConnectionDatabase newConnection = new ConnectionDatabase();
 		messages.add("\n--- Select decimal longitude from coordinates ---");
 		Statement statement = null;
@@ -258,7 +259,7 @@ public class DarwinCore extends CSVFile{
 			e.printStackTrace();
 		}
 		
-		ArrayList<String> resultatLongitude = newConnection.getResultatSelect();
+		List<String> resultatLongitude = newConnection.getResultatSelect();
 
 		return resultatLongitude;
 	}
@@ -267,9 +268,9 @@ public class DarwinCore extends CSVFile{
 	 * Get id from table Clean 
 	 * @return ArrayList<String>
 	 */
-	public ArrayList<String> getIDClean(){
+	public List<String> getIDClean(){
 		DatabaseTreatment newConnection = null;
-		ArrayList<String> messages = new ArrayList<String>();
+		List<String> messages = new ArrayList<String>();
 		messages.add("\n--- Select id line from clean ---\n");
 		Statement statement = null;
 		try {
@@ -282,7 +283,7 @@ public class DarwinCore extends CSVFile{
 			e.printStackTrace();
 		}
 
-		ArrayList<String> resultatID = newConnection.getResultatSelect();
+		List<String> resultatID = newConnection.getResultatSelect();
 
 		return resultatID;
 	}
@@ -292,9 +293,9 @@ public class DarwinCore extends CSVFile{
 	 *  
 	 * @return ArrayList<String>
 	 */
-	public ArrayList<String> getGbifIDClean(){
+	public List<String> getGbifIDClean(){
 		DatabaseTreatment newConnection = null;
-		ArrayList<String> messages = new ArrayList<String>();
+		List<String> messages = new ArrayList<String>();
 		messages.add("\n--- Select id line from clean ---\n");
 		Statement statement = null;
 		try {
@@ -307,7 +308,7 @@ public class DarwinCore extends CSVFile{
 			e.printStackTrace();
 		}
 		
-		ArrayList<String> resultatGbifID = newConnection.getResultatSelect();
+		List<String> resultatGbifID = newConnection.getResultatSelect();
 
 		return resultatGbifID;
 	}
@@ -317,9 +318,9 @@ public class DarwinCore extends CSVFile{
 	 *  
 	 * @return ArrayList<String>
 	 */
-	public ArrayList<String> getID(){
+	public List<String> getID(){
 		DatabaseTreatment newConnection = null;
-		ArrayList<String> messages = new ArrayList<String>();
+		List<String> messages = new ArrayList<String>();
 		messages.add("\n--- Select id line from DarwinCoreInput ---\n");
 		Statement statement = null;
 		try {
@@ -332,7 +333,7 @@ public class DarwinCore extends CSVFile{
 			e.printStackTrace();
 		}
 
-		ArrayList<String> resultatID = newConnection.getResultatSelect();
+		List<String> resultatID = newConnection.getResultatSelect();
 
 		return resultatID;
 	}
@@ -342,10 +343,10 @@ public class DarwinCore extends CSVFile{
 	 * 
 	 * @return ArrayList<String>
 	 */
-	public ArrayList<String> getIso2Clean(){
+	public List<String> getIso2Clean(){
 		
 		DatabaseTreatment newConnection = null;
-		ArrayList<String> messages = new ArrayList<String>();
+		List<String> messages = new ArrayList<String>();
 		messages.add("\n--- Select iso2 code ---");
 		Statement statement = null;
 		try {
@@ -358,7 +359,7 @@ public class DarwinCore extends CSVFile{
 			e.printStackTrace();
 		}
 		
-		ArrayList<String> resultatISO2 = newConnection.getResultatSelect();
+		List<String> resultatISO2 = newConnection.getResultatSelect();
 
 		return resultatISO2;
 	}
@@ -372,11 +373,11 @@ public class DarwinCore extends CSVFile{
 	 */
 	public int getIndiceFromTag(String tagName){
 
-		HashMap<String, ArrayList<String>> idAssoData = this.getIdAssoData();
+		Map<String, List<String>> idAssoData = this.getIdAssoData();
 
 		for(String id_ : idAssoData.keySet()){
 			if(id_.equals("id_")){
-				ArrayList<String> tagsList = idAssoData.get(id_);
+				List<String> tagsList = idAssoData.get(id_);
 				for(int i = 0 ; i < tagsList.size() ; i++){
 					if(tagsList.get(i).equals(tagName)){
 						return i;
@@ -409,7 +410,7 @@ public class DarwinCore extends CSVFile{
 	 * 
 	 * @return HashMap<String,ArrayList<String>>
 	 */
-	public HashMap<String, ArrayList<String>> getIdAssoData() {
+	public Map<String, List<String>> getIdAssoData() {
 		return idAssoData;
 	}
 
@@ -418,7 +419,7 @@ public class DarwinCore extends CSVFile{
 	 * @param idAssoData
 	 * @return void
 	 */
-	public void setIdAssoData(HashMap<String, ArrayList<String>> idAssoData) {
+	public void setIdAssoData(HashMap<String, List<String>> idAssoData) {
 		this.idAssoData = idAssoData;
 	}
 
@@ -426,7 +427,7 @@ public class DarwinCore extends CSVFile{
 	 * 
 	 * @return ArrayList<String>
 	 */
-	public ArrayList<String> getDarwinLines() {
+	public List<String> getDarwinLines() {
 		return darwinLines;
 	}
 

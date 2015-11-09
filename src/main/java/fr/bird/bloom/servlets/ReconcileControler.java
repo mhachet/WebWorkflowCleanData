@@ -13,7 +13,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -105,7 +112,7 @@ public class ReconcileControler extends HttpServlet {
 		else if(action.equals("reconciliation")){
 			FileReader reader = new FileReader(getDirectoryPath() + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + "." + extension);
 			BufferedReader br = null;
-			ArrayList<String> lines = new ArrayList<>();
+			List<String> lines = new ArrayList<>();
 			int countLines = 0;
 			try {
 				String sCurrentLine;
@@ -126,7 +133,7 @@ public class ReconcileControler extends HttpServlet {
 				e.printStackTrace();
 			}
 			
-			ArrayList<Integer> idColumnsCheck = this.getColumnsIdReconcile(firstLine, separator, checkingColumns);
+			List<Integer> idColumnsCheck = this.getColumnsIdReconcile(firstLine, separator, checkingColumns);
 			String selectedLines = this.getSelectedLines(idColumnsCheck, lines, separator);
 			/*
 			JSONArray array = null;
@@ -212,10 +219,10 @@ public class ReconcileControler extends HttpServlet {
 	 * @param columnsCheck
 	 * @return ArrayList<Integer>
 	 */
-	public ArrayList<Integer> getColumnsIdReconcile(String firstline, String separator, String columnsCheck){
-		ArrayList<Integer> columnsReconcile = new ArrayList<>();
-		ArrayList<String> columns = new ArrayList(Arrays.asList(firstline.split(separator)));
-		ArrayList<String> arrayColumnsCheck = new ArrayList(Arrays.asList(columnsCheck.split(",")));
+	public List<Integer> getColumnsIdReconcile(String firstline, String separator, String columnsCheck){
+		List<Integer> columnsReconcile = new ArrayList<>();
+		List<String> columns = new ArrayList(Arrays.asList(firstline.split(separator)));
+		List<String> arrayColumnsCheck = new ArrayList(Arrays.asList(columnsCheck.split(",")));
 		
 		for(int i = 0; i < columns.size(); i++){
 			String column = columns.get(i);
@@ -236,7 +243,7 @@ public class ReconcileControler extends HttpServlet {
 	 * @param separator
 	 * @return String
 	 */
-	public String getSelectedLines(ArrayList<Integer> idColumns, ArrayList<String> contentFile, String separator){
+	public String getSelectedLines(List<Integer> idColumns, List<String> contentFile, String separator){
 		String newContentFile = "";
 		
 		for(int i = 0; i < contentFile.size(); i++){

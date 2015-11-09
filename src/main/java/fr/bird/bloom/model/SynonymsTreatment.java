@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * model
@@ -34,7 +35,7 @@ public class SynonymsTreatment {
 
 	}
 
-	public ArrayList<String> getTagsSynonymsTempTable(){
+	public List<String> getTagsSynonymsTempTable(){
 		FileReader fr = null;
 		try {
 			fr = new FileReader(this.synonymsFile);
@@ -80,14 +81,14 @@ public class SynonymsTreatment {
 		}
 		DatabaseTreatment newConnection = new DatabaseTreatment(statement);
 
-		ArrayList<String> messages = new ArrayList<String>();
+		List<String> messages = new ArrayList<String>();
 		messages.add("\n--- Select to include synonyms ---");
 
 		String sqlRetrieveSynonyms = "SELECT Clean_" + this.getNbSessionRandom() + ".*,Taxon.taxonID_ ,Taxon.acceptedNameUsageID_,Taxon.acceptedNameUsage_," +
 				"Taxon.taxonomicStatus_,Taxon.scientificNameProper_ " +
 				"FROM Workflow.Clean_" + this.getNbSessionRandom() + ",Workflow.Taxon WHERE Clean_" + this.getNbSessionRandom() + ".scientificName_=Taxon.scientificNameProper_"; 
 		messages.addAll(newConnection.executeSQLcommand("executeQuery", sqlRetrieveSynonyms));
-		ArrayList<String> resultatSelect = newConnection.getResultatSelect();
+		List<String> resultatSelect = newConnection.getResultatSelect();
 		if(resultatSelect != null){
 			messages.add("nb lignes affectées : " + Integer.toString(resultatSelect.size() - 1));
 			//this.createFileCsv(resultatSelect, "test");
@@ -105,7 +106,7 @@ public class SynonymsTreatment {
 			}
 			DatabaseTreatment newConnectionUpdate = new DatabaseTreatment(statementUpdate);
 
-			ArrayList<String> messagesUpdate = new ArrayList<String>();
+			List<String> messagesUpdate = new ArrayList<String>();
 			messagesUpdate.add("\n--- Update to include synonyms ---");
 
 			String [] data = resultatSelect.get(i).split(",");
@@ -122,7 +123,7 @@ public class SynonymsTreatment {
 					+ " WHERE Clean.id_=" + id_ + ";"; 
 			messagesUpdate.add(sqlUpdateClean);
 			messagesUpdate.addAll(newConnectionUpdate.executeSQLcommand("executeUpdate", sqlUpdateClean));
-			ArrayList<String> resultatUpdate = newConnectionUpdate.getResultatSelect();
+			List<String> resultatUpdate = newConnectionUpdate.getResultatSelect();
 			if(resultatUpdate != null){
 				messagesUpdate.add("nb lignes affectées : " + Integer.toString(resultatUpdate.size() - 1));
 			}			
@@ -145,13 +146,13 @@ public class SynonymsTreatment {
 		}
 		DatabaseTreatment newConnection = new DatabaseTreatment(statement);
 
-		ArrayList<String> messages = new ArrayList<String>();
+		List<String> messages = new ArrayList<String>();
 		messages.add("\n--- Select to include synonyms ---");
 
 		String sqlRetrieveSynonyms = "SELECT Clean_" + this.getNbSessionRandom() + ".*,SynonymTemp_" + this.getNbSessionRandom() + ".* " +
 				"FROM Workflow.Clean_" + this.getNbSessionRandom() + ",Workflow.SynonymTemp_" + this.getNbSessionRandom() + " WHERE Clean_" + this.getNbSessionRandom() + ".scientificName_=SynonymTemp_" + this.getNbSessionRandom() + ".scientificNameProper_"; 
 		messages.addAll(newConnection.executeSQLcommand("executeQuery", sqlRetrieveSynonyms));
-		ArrayList<String> resultatSelect = newConnection.getResultatSelect();
+		List<String> resultatSelect = newConnection.getResultatSelect();
 		if(resultatSelect != null){
 			messages.add("nb lignes affectées : " + Integer.toString(resultatSelect.size() - 1));
 			//this.createFileCsv(resultatSelect, "test");
@@ -164,7 +165,7 @@ public class SynonymsTreatment {
 	}
 
 	public void createSynonymTempTable(){
-		ArrayList<String> linesIncludeSynonyms = new ArrayList<>();
+		List<String> linesIncludeSynonyms = new ArrayList<>();
 		FileReader fr = null;
 		try {
 			fr = new FileReader(synonymsFile);
@@ -208,11 +209,11 @@ public class SynonymsTreatment {
 			e.printStackTrace();
 		}
 		DatabaseTreatment newConnection = new DatabaseTreatment(statement);
-		ArrayList<String> messages = new ArrayList<String>();
+		List<String> messages = new ArrayList<String>();
 		messages.add("\n--- Select to include synonyms with user input file ---");
 
 		messages.addAll(newConnection.executeSQLcommand("executeUpdate", sqlCreateSynonymTemp));
-		ArrayList<String> resultatSelect = newConnection.getResultatSelect();
+		List<String> resultatSelect = newConnection.getResultatSelect();
 		if(resultatSelect != null){
 			messages.add("nb lignes affectées : " + Integer.toString(resultatSelect.size() - 1));
 			//this.createFileCsv(resultatSelect, "test");
@@ -228,7 +229,7 @@ public class SynonymsTreatment {
 		this.synonymsFile = synonymsFile;
 	}
 
-	public ArrayList<String> getTagsList() {
+	public List<String> getTagsList() {
 		return tagsList;
 	}
 

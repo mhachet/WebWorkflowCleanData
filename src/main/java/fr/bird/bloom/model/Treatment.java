@@ -3,6 +3,9 @@
  */
 package fr.bird.bloom.model;
 
+import fr.bird.bloom.utils.BloomConfig;
+import org.apache.commons.lang.StringUtils;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,10 +20,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
-
-import fr.bird.bloom.utils.BloomConfig;
-import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -62,7 +63,7 @@ public class Treatment {
 			e.printStackTrace();
 		}
 		DatabaseTreatment newConnectionDeleteClean = new DatabaseTreatment(statementDeleteClean);
-		ArrayList<String> messagesClean = new ArrayList<String>();
+		List<String> messagesClean = new ArrayList<String>();
 		messagesClean.add("\n--- Delete Clean table ---");
 		messagesClean.addAll(newConnectionDeleteClean.dropTable("Workflow.Clean_" + this.getNbSessionRandom()));
 
@@ -79,7 +80,7 @@ public class Treatment {
 			e.printStackTrace();
 		}
 		DatabaseTreatment newConnectionDeleteDarwin = new DatabaseTreatment(statementDeleteDarwin);
-		ArrayList<String> messagesDarwin = new ArrayList<String>();
+		List<String> messagesDarwin = new ArrayList<String>();
 		messagesDarwin.add("\n--- Delete DarwinCoreInput table ---");
 		messagesDarwin.addAll(newConnectionDeleteDarwin.deleteTable("Workflow.DarwinCoreInput", this.getNbSessionRandom()));
 
@@ -96,7 +97,7 @@ public class Treatment {
 			e.printStackTrace();
 		}
 		DatabaseTreatment newConnectionDeleteTemp = new DatabaseTreatment(statementDeleteTemp);
-		ArrayList<String> messagesTemp = new ArrayList<String>();
+		List<String> messagesTemp = new ArrayList<String>();
 		messagesTemp.add("\n--- Delete temp table ---");
 		messagesTemp.addAll(newConnectionDeleteTemp.dropTable("Workflow.temp_" + this.getNbSessionRandom()));
 
@@ -135,7 +136,7 @@ public class Treatment {
 		String tagReconcile = reconcileService.getReconcileTagBased();
 		int tagReconcileColumn = 0;
 		HashMap<Integer, String> linesConnectedNewName = reconcileService.getLinesConnectedNewName();
-		ArrayList<String> listLinesReconciled = new ArrayList<>();
+		List<String> listLinesReconciled = new ArrayList<>();
 		try{
 			System.out.println(referenceFileReconcile.getCsvFile().getAbsolutePath());
 			InputStream inputStreamReference = new FileInputStream(referenceFileReconcile.getCsvFile()); 
@@ -272,7 +273,7 @@ public class Treatment {
 					}
 					DatabaseTreatment newConnection = new DatabaseTreatment(statement);
 					String choiceStatement = "execute";
-					ArrayList<String> messages = new ArrayList<String>();
+					List<String> messages = new ArrayList<String>();
 					messages.add("\n--- Insert line " + countLine + " in DarwinCoreInput table ---");
 					messages.add(countLine + " => " + sqlInsert);
 					messages.addAll(newConnection.executeSQLcommand(choiceStatement, sqlInsert));
@@ -297,7 +298,7 @@ public class Treatment {
 		//System.out.println("insertFileSQL : " + insertFileSQL);
 		ConnectionDatabase newConnection = new ConnectionDatabase();
 		String choiceStatement = "execute";
-		ArrayList<String> messages = new ArrayList<String>();
+		List<String> messages = new ArrayList<String>();
 		messages.add("\n--- Create DarwinCoreInput table ---");
 		//messages.addAll(newConnection.newConnection(choiceStatement, insertFileSQL));
 
@@ -378,9 +379,10 @@ public class Treatment {
 	 * Check if coordinates are included in raster cells
 	 *
 	 * @param ArrayList<File> raster file
+	 * @param rasterFiles
 	 * @return void
 	 */
-	public RasterTreatment checkWorldClimCell(ArrayList<File> rasterFiles) {
+	public RasterTreatment checkWorldClimCell(List<File> rasterFiles) {
 
 		RasterTreatment rasterTreatment = new RasterTreatment(rasterFiles, this);
 
@@ -397,12 +399,12 @@ public class Treatment {
 	 * @param listEstablishmentChecked
 	 * @return EstablishmentTreatment
 	 */
-	public EstablishmentTreatment establishmentMeansOption(ArrayList<String> listEstablishmentChecked){
+	public EstablishmentTreatment establishmentMeansOption(List<String> listEstablishmentChecked){
 		EstablishmentTreatment establishTreatment = new EstablishmentTreatment(listEstablishmentChecked);
 		establishTreatment.setNbSessionRandom(this.getNbSessionRandom());
 
 		establishTreatment.establishmentMeansTreatment();
-		ArrayList<String> noEstablishment = establishTreatment.getNoEstablishmentList();
+		List<String> noEstablishment = establishTreatment.getNoEstablishmentList();
 		File wrongEstablishmentMeans = this.createFileCsv(noEstablishment, "noEstablishmentMeans_" + this.getNbSessionRandom() + ".csv", "wrong");
 		establishTreatment.setWrongEstablishmentMeansFile(wrongEstablishmentMeans);
 
@@ -414,9 +416,10 @@ public class Treatment {
 	 *
 	 * @param ArrayList<String> linesFile
 	 * @param String fileName
+	 * @param linesFile
 	 * @return File
 	 */
-	public File createFileCsv(ArrayList<String> linesFile, String fileName, String category){
+	public File createFileCsv(List<String> linesFile, String fileName, String category){
 		if(!new File(BloomConfig.getDirectoryPath() + "temp/").exists()){
 			new File(BloomConfig.getDirectoryPath() + "temp/").mkdirs();
 		}
@@ -502,7 +505,7 @@ public class Treatment {
 	 *
 	 * @return ArrayList<File>
 	 */
-	public ArrayList<File> getRasterFiles() {
+	public List<File> getRasterFiles() {
 		return rasterFiles;
 	}
 

@@ -21,8 +21,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * model
@@ -32,15 +34,15 @@ import java.util.Map.Entry;
  */
 public class RasterTreatment {
 
-	private ArrayList<File> rasterFiles;
-	private HashMap<Integer, HashMap<String, Boolean>> hashMapValidOrNot;
+	private List<File> rasterFiles;
+	private Map<Integer, HashMap<String, Boolean>> hashMapValidOrNot;
 	private Treatment dataTreatment;
 	private int nbWrongOccurrences;
 	private File matrixFileValidCells;
 	private File wrongRasterFile;
-	private HashMap<String, Boolean> checkProcess;
+	private Map<String, Boolean> checkProcess;
 	
-	public RasterTreatment(ArrayList<File> rasterFiles, Treatment dataTreatment){
+	public RasterTreatment(List<File> rasterFiles, Treatment dataTreatment){
 		this.rasterFiles = rasterFiles;
 		this.dataTreatment = dataTreatment;
 	}
@@ -52,14 +54,14 @@ public class RasterTreatment {
 	 */
 	public File treatmentRaster(){
 		// retrieve all data (included or not) from Clean table
-		ArrayList<String> listAllData = dataTreatment.getFileDarwinCore().getIDClean();
+		List<String> listAllData = dataTreatment.getFileDarwinCore().getIDClean();
 		//System.out.println("all Data : " + listAllData);
 
 		// initialise raster file and hash map
 		this.initialiseRasterFiles(rasterFiles, listAllData);
 
 		// retrieve all data included in a cell
-		ArrayList<Integer> listValidData = this.getValidData();
+		List<Integer> listValidData = this.getValidData();
 		//System.out.println("valid Data : " + listValidData);
 
 		// create a matrix file : for each point and for each raster file,
@@ -67,7 +69,7 @@ public class RasterTreatment {
 		File matrixFileValidCells = this.writeMatrixReport();
 
 		// retrieve all data not included in a cell
-		ArrayList<Integer> listNotValidData = this.getIDdelete(listValidData, listAllData);
+		List<Integer> listNotValidData = this.getIDdelete(listValidData, listAllData);
 		//System.out.println("not valid : " + listNotValidData);
 
 		// delete from Clean table, all data not included
@@ -89,9 +91,10 @@ public class RasterTreatment {
 	 * Check the number of raster file, necessary 1
 	 * 
 	 * @param ArrayList<File> raster file
-	 * @return void
+	 * @param rasterFiles
+	 *@param listAllID @return void
 	 */
-	public void initialiseRasterFiles(ArrayList<File> rasterFiles, ArrayList<String> listAllID){
+	public void initialiseRasterFiles(List<File> rasterFiles, List<String> listAllID){
 
 
 		hashMapValidOrNot = new HashMap<Integer, HashMap<String,Boolean>>();
@@ -114,7 +117,7 @@ public class RasterTreatment {
 	 * 
 	 * @return ArrayList<Integer> list of all "id_" which are included in a raster cell
 	 */
-	public ArrayList<Integer> getValidData(){
+	public List<Integer> getValidData(){
 
 		/************************************* FORMATS ************************************************
 		File type 		Long name 					default extension 	Multiband support
@@ -134,8 +137,8 @@ public class RasterTreatment {
 		}
 		File dataInputFileRaster = new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/dataInputFileRaster.csv");
 		//System.out.println("dataInputFileRaster : " + dataInputFileRaster.getAbsolutePath());
-		ArrayList<Integer> listValidData = new ArrayList<>();
-		ArrayList<Integer> idForOneRaster = new ArrayList<>();
+		List<Integer> listValidData = new ArrayList<>();
+		List<Integer> idForOneRaster = new ArrayList<>();
 
 		for(int i = 0 ; i < rasterFiles.size() ; i++){
 			idForOneRaster = this.rasterScript(scriptRaster, rasterFiles.get(i), dataInputFileRaster);
@@ -168,11 +171,11 @@ public class RasterTreatment {
 	 * 
 	 * @return ArrayList<Integer>
 	 */
-	public ArrayList<Integer> rasterScript(String scriptRaster, File dataRasterFile, File dataInputFileRaster){
+	public List<Integer> rasterScript(String scriptRaster, File dataRasterFile, File dataInputFileRaster){
 
-		ArrayList<String> decimalLatitude = dataTreatment.getFileDarwinCore().getDecimalLatitudeClean();
-		ArrayList<String> decimalLongitude = dataTreatment.getFileDarwinCore().getDecimalLongitudeClean();
-		ArrayList<String> idLine = dataTreatment.getFileDarwinCore().getIDClean();
+		List<String> decimalLatitude = dataTreatment.getFileDarwinCore().getDecimalLatitudeClean();
+		List<String> decimalLongitude = dataTreatment.getFileDarwinCore().getDecimalLongitudeClean();
+		List<String> idLine = dataTreatment.getFileDarwinCore().getIDClean();
 
 		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").exists())
 		{
@@ -222,7 +225,7 @@ public class RasterTreatment {
 		
 		this.getCheckProcess().put(dataRasterFile.getName(), errorProcess);
 		
-		ArrayList<Integer> listValidData= null; 
+		List<Integer> listValidData= null;
 		
 		if(!errorProcess){
 			listValidData = this.getValidIDCells(validRaster);
@@ -282,8 +285,8 @@ public class RasterTreatment {
 	 * @param File temporary file with all valid "id_" (included in raster cell) and others informations contained in raster file
 	 * @return ArrayList<Integer> list of valid "id_"
 	 */
-	public ArrayList<Integer> getValidIDCells(File validRaster){
-		ArrayList<Integer> listValidData = new ArrayList<Integer>();
+	public List<Integer> getValidIDCells(File validRaster){
+		List<Integer> listValidData = new ArrayList<Integer>();
 		InputStream ips = null;
 		try {
 			ips = new FileInputStream(validRaster);
@@ -412,7 +415,7 @@ public class RasterTreatment {
 			}
 			DatabaseTreatment newConnectionSelect = new DatabaseTreatment(statement);
 			newConnectionSelect.executeSQLcommand("executeQuery", sqlSelectId);
-			ArrayList<String> resultatSelect = newConnectionSelect.getResultatSelect();
+			List<String> resultatSelect = newConnectionSelect.getResultatSelect();
 
 			if(resultatSelect != null){
 				for(int i = 0; i < resultatSelect.size() ; i++){
@@ -473,8 +476,8 @@ public class RasterTreatment {
 	 * @param ArrayList<String> list of valid and not valid data "id_" 
 	 * @return ArrayList<Integer> list of not valid data "id_" 
 	 */
-	public ArrayList<Integer> getIDdelete(ArrayList<Integer> validData, ArrayList<String> validAndNotData){
-		ArrayList<Integer> dataToDelete = new ArrayList<Integer>();
+	public List<Integer> getIDdelete(List<Integer> validData, List<String> validAndNotData){
+		List<Integer> dataToDelete = new ArrayList<Integer>();
 
 		for(int i = 1 ; i < validAndNotData.size() ; i++){
 			int id_ = Integer.parseInt(validAndNotData.get(i).replace("\"", ""));
@@ -490,10 +493,10 @@ public class RasterTreatment {
 	 * 
 	 * From "id_" not valid, delete it to Clean table
 	 * 
-	 * @param ArrayList<Integer> list of not valid data "id_" 
+	 * @param ArrayList<Integer> list of not valid data "id_"
 	 * @return void
 	 */
-	public void deleteWrongCellsFromClean(ArrayList<Integer> notValidData){
+	public void deleteWrongCellsFromClean(List<Integer> notValidData){
 
 		/*
 		 * First, retrieve wrong data, not included in a raster cell.
@@ -526,11 +529,11 @@ public class RasterTreatment {
 			}
 			DatabaseTreatment newConnectionSelect = new DatabaseTreatment(statement);
 
-			ArrayList<String> messagesSelect = new ArrayList<String>();
+			List<String> messagesSelect = new ArrayList<String>();
 			messagesSelect.add("\n--- Select point aren't included in cells ---");
 			messagesSelect.add(sqlIdDelete);
 			messagesSelect.addAll(newConnectionSelect.executeSQLcommand("executeQuery", sqlIdDelete));
-			ArrayList<String> resultatSelect = newConnectionSelect.getResultatSelect();
+			List<String> resultatSelect = newConnectionSelect.getResultatSelect();
 
 			if(resultatSelect != null){
 				messagesSelect.add("nb lignes affectées :" + Integer.toString(resultatSelect.size() - 1));
@@ -570,13 +573,13 @@ public class RasterTreatment {
 			}
 			DatabaseTreatment newConnectionDelete = new DatabaseTreatment(statement);
 
-			ArrayList<String> messagesDelete = new ArrayList<String>();
+			List<String> messagesDelete = new ArrayList<String>();
 			messagesDelete.add("\n--- Delete points not in cells ---");
 
 			String sqlDeleteCell = "DELETE FROM Clean_" + this.getDataTreatment().getNbSessionRandom() + " WHERE Clean_" + this.getDataTreatment().getNbSessionRandom() + ".id_=" + id_ + " AND UUID_=\"" + this.getDataTreatment().getNbSessionRandom() + "\";";
 
 			messagesDelete.addAll(newConnectionDelete.executeSQLcommand("executeUpdate", sqlDeleteCell));
-			ArrayList<String> resultatDelete = newConnectionDelete.getResultatSelect();
+			List<String> resultatDelete = newConnectionDelete.getResultatSelect();
 			if(resultatDelete != null){
 				messagesDelete.add("nb lignes affectées :" + Integer.toString(resultatDelete.size() - 1));
 			}
@@ -594,7 +597,7 @@ public class RasterTreatment {
 	 * 
 	 * @return ArrayList<File>
 	 */
-	public ArrayList<File> getRasterFiles() {
+	public List<File> getRasterFiles() {
 		return rasterFiles;
 	}
 
@@ -610,7 +613,7 @@ public class RasterTreatment {
 	 * 
 	 * @return HashMap<Integer, HashMap<String, Boolean>>
 	 */
-	public HashMap<Integer, HashMap<String, Boolean>> getHashMapValidOrNot() {
+	public Map<Integer, HashMap<String, Boolean>> getHashMapValidOrNot() {
 		return hashMapValidOrNot;
 	}
 
@@ -692,7 +695,7 @@ public class RasterTreatment {
 	 * 
 	 * @return HashMap<String, Boolean>
 	 */
-	public HashMap<String, Boolean> getCheckProcess() {
+	public Map<String, Boolean> getCheckProcess() {
 		return checkProcess;
 	}
 

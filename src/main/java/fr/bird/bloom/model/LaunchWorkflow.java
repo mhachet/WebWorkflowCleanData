@@ -5,16 +5,6 @@
  */
 package fr.bird.bloom.model;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map.Entry;
-
 import fr.bird.bloom.beans.Finalisation;
 import fr.bird.bloom.beans.Initialise;
 import fr.bird.bloom.beans.Step1_MappingDwc;
@@ -27,6 +17,18 @@ import fr.bird.bloom.beans.Step7_CheckISo2Coordinates;
 import fr.bird.bloom.beans.Step8_CheckCoordinatesRaster;
 import fr.bird.bloom.beans.Step9_EstablishmentMeans;
 import fr.bird.bloom.utils.BloomConfig;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * src.model
@@ -154,7 +156,7 @@ public class LaunchWorkflow {
 	 */
 	public void launchWorkflow() throws IOException{
 
-		ArrayList<MappingReconcilePreparation> listMappingReconcileDWC = this.initialisation.getListMappingReconcileFiles();
+		List<MappingReconcilePreparation> listMappingReconcileDWC = this.initialisation.getListMappingReconcileFiles();
 		HashMap<Integer, ReconciliationService> reconcilePath = step2.getInfos_reconcile();
 		HashMap<Integer, MappingDwC> hashMapStep1 = step1.getInfos_mapping();
 		
@@ -273,12 +275,12 @@ public class LaunchWorkflow {
 	 */
 	public void isValidInputFiles(){
 
-		ArrayList<MappingReconcilePreparation> listMappingReconcileFiles = this.initialisation.getListMappingReconcileFiles();
+		List<MappingReconcilePreparation> listMappingReconcileFiles = this.initialisation.getListMappingReconcileFiles();
 		
 		for(int i = 0; i < listMappingReconcileFiles.size(); i++){
 
 			MappingReconcilePreparation mappingReconcilePrep = listMappingReconcileFiles.get(i);
-			//ArrayList<String> listColumnsToDelete = new ArrayList<>();
+			//List<String> listColumnsToDelete = new ArrayList<>();
 
 			MappingDwC mappingFile = mappingReconcilePrep.getMappingDWC();
 			ReconciliationService reconciliationService = mappingReconcilePrep.getReconcileDWC();
@@ -294,7 +296,7 @@ public class LaunchWorkflow {
 				if(!mappingReconcilePrep.getMappingDWC().getMappingInvolved()){
 					mappingFile.setSuccessMapping(Boolean.toString(true));
 					String [] listTagsInput = csvFileNoMapped.getFirstLine().split(csvFileNoMapped.getSeparator().getSymbol());
-					ArrayList<String> tagsDwcOfficial = mappingFile.getTagsListDwC();
+					List<String> tagsDwcOfficial = mappingFile.getTagsListDwC();
 
 					for(int j = 0; j < listTagsInput.length; j++){
 
@@ -339,7 +341,7 @@ public class LaunchWorkflow {
 			File raster = this.initialisation.getInputRastersList().get(i);
 			String extensionRaster = raster.getName().substring(raster.getName().lastIndexOf("."));
 			String [] extensionsRaster = {".bil", ".grd", ".asc", ".sdat", ".rsc", ".nc", ".cdf", ".bsq", ".bip", ".adf"};
-			ArrayList<String> extensionsRasterList = new ArrayList(Arrays.asList(extensionsRaster));
+			List<String> extensionsRasterList = new ArrayList(Arrays.asList(extensionsRaster));
 
 			if(!extensionsRasterList.contains(extensionRaster)){
 				isValid = false;
@@ -407,10 +409,10 @@ public class LaunchWorkflow {
 	 */
 	public void launchRasterOption(){
 
-		RasterTreatment rasterTreatment = this.dataTreatment.checkWorldClimCell(this.initialisation.getInputRastersList());
+		RasterTreatment rasterTreatment = this.dataTreatment.checkWorldClimCell(initialisation.getInputRastersList());
 		finalisation.setMatrixFileValidCells(rasterTreatment.getMatrixFileValidCells());
 		finalisation.setPathMatrixFile(rasterTreatment.getMatrixFileValidCells().getAbsolutePath().replace(BloomConfig.getDirectoryPath(), "output/")); //change to 'output/'
-		HashMap<String, Boolean> errorProcessRaster = rasterTreatment.getCheckProcess();
+		Map<String, Boolean> errorProcessRaster = rasterTreatment.getCheckProcess();
 		step8.setProcessRaster(errorProcessRaster);
 		for(Entry<String, Boolean> entry : errorProcessRaster.entrySet()) {
 			String filenameRaster = entry.getKey();
@@ -437,7 +439,7 @@ public class LaunchWorkflow {
 	public void launchEstablishmentMeansOption(){
 		if(this.initialisation.getEstablishmentList().size() != 0){
 			EstablishmentTreatment establishTreatment = this.dataTreatment.establishmentMeansOption(this.initialisation.getEstablishmentList());
-			ArrayList<String> noEstablishment = establishTreatment.getNoEstablishmentList();
+			List<String> noEstablishment = establishTreatment.getNoEstablishmentList();
 			step9.setNbFound(noEstablishment.size());
 			File wrongEstablishmentMeans = establishTreatment.getWrongEstablishmentMeansFile();
 			finalisation.setWrongEstablishmentMeans(wrongEstablishmentMeans);
@@ -454,8 +456,8 @@ public class LaunchWorkflow {
 	 * Write clean file(s)
 	 */
 	public void writeFinalOutput(){
-		ArrayList<File> listFinalOutput = new ArrayList<>();
-		ArrayList<String> listPathsOutput = new ArrayList<>();
+		List<File> listFinalOutput = new ArrayList<>();
+		List<String> listPathsOutput = new ArrayList<>();
 
 		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + initialisation.getNbSessionRandom() + "/final_results/").exists()){
 			new File(BloomConfig.getDirectoryPath() + "temp/" + initialisation.getNbSessionRandom() + "/final_results/").mkdir();
@@ -476,7 +478,7 @@ public class LaunchWorkflow {
 			}
 			DatabaseTreatment newConnection = new DatabaseTreatment(statement);
 			
-			ArrayList<String > resultCleanTable = newConnection.getCleanTableFromIdFile(idFile, initialisation.getNbSessionRandom());
+			List<String > resultCleanTable = newConnection.getCleanTableFromIdFile(idFile, initialisation.getNbSessionRandom());
 			String nameFile = originalName.replace("." + originalExtension, "") + "_" + initialisation.getNbSessionRandom() + "_clean.csv";
 			File cleanOutput = this.dataTreatment.createFileCsv(resultCleanTable, nameFile, "final_results");
 

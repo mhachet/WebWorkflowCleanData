@@ -5,69 +5,69 @@ package fr.bird.bloom.beans;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import fr.bird.bloom.model.MappingReconcilePreparation;
 
 /**
  * src.beans
- * 
+ *
  * Initiliaze
  */
 public class Initialise {
 
-    private ArrayList<File> inputMappedFilesList = new ArrayList<>();
-    private ArrayList<File> inputRastersList = new ArrayList<>();
-    private ArrayList<File> headerRasterList = new ArrayList<>();
-    private ArrayList<File> inputSynonymsList = new ArrayList<>();
-    private ArrayList<String> establishmentList = new ArrayList<>();
-    private ArrayList<MappingReconcilePreparation> listMappingReconcileFiles = new ArrayList<>();
-    
+    private List<File> inputMappedFilesList = new ArrayList<>();
+    private List<File> inputRastersList = new ArrayList<>();
+    private List<File> headerRasterList = new ArrayList<>();
+    private List<File> inputSynonymsList = new ArrayList<>();
+    private List<String> establishmentList = new ArrayList<>();
+    private List<MappingReconcilePreparation> listMappingReconcileFiles = new ArrayList<>();
+
     private boolean synonym;
     private boolean tdwg4Code;
     private boolean raster;
-    private boolean establishment;    
+    private boolean establishment;
     private String nbSessionRandom;
     private int nbInput;
     private String emailUser;
     private boolean sendEmail;
-    
+
     /**
-     * 
+     *
      * src.beans
      * Initialise
      */
     public Initialise(){
-	
+
     }
-    
+
     /**
-     * 
+     *
      * @return ArrayList<MappingReconcilePreparation>
      */
-    public ArrayList<MappingReconcilePreparation> getListMappingReconcileFiles() {
+    public List<MappingReconcilePreparation> getListMappingReconcileFiles() {
         return listMappingReconcileFiles;
     }
 
     /**
-     * 
+     *
      * @param listMappingReconcileFiles
      * @return void
      */
-    public void setListMappingReconcileFiles(
-    	ArrayList<MappingReconcilePreparation> listMappingReconcileFiles) {
+    public void setListMappingReconcileFiles(List<MappingReconcilePreparation> listMappingReconcileFiles) {
         this.listMappingReconcileFiles = listMappingReconcileFiles;
     }
 
     /**
-     * 
+     *
      * @return ArrayList<File>
      */
-    public ArrayList<File> getInputMappedFilesList() {
+    public List<File> getInputMappedFilesList() {
         return inputMappedFilesList;
     }
 
     /**
-     * 
+     *
      * @param inputMappedFilesList
      * @return void
      */
@@ -76,32 +76,32 @@ public class Initialise {
     }
 
     /**
-     * 
+     *
      * @return ArrayList<File>
      */
-    public ArrayList<File> getInputRastersList() {
+    public List<File> getInputRastersList() {
         return inputRastersList;
     }
 
     /**
-     * 
+     *
      * @param inputRastersList
      * @return void
      */
     public void setInputRastersList(ArrayList<File> inputRastersList) {
         this.inputRastersList = inputRastersList;
     }
-    
+
     /**
-     * 
+     *
      * @return ArrayList<File>
      */
-    public ArrayList<File> getHeaderRasterList() {
+    public List<File> getHeaderRasterList() {
         return headerRasterList;
     }
 
     /**
-     * 
+     *
      * @param headerRasterList
      * @return void
      */
@@ -110,15 +110,15 @@ public class Initialise {
     }
 
     /**
-     * 
+     *
      * @return ArrayList<File>
      */
-    public ArrayList<File> getInputSynonymsList() {
+    public List<File> getInputSynonymsList() {
         return inputSynonymsList;
     }
 
     /**
-     * 
+     *
      * @param inputSynonymsList
      * @return void
      */
@@ -127,7 +127,7 @@ public class Initialise {
     }
 
     /**
-     * 
+     *
      * @return boolean
      */
     public boolean isSynonym() {
@@ -135,7 +135,7 @@ public class Initialise {
     }
 
     /**
-     * 
+     *
      * @param synonym
      * @return void
      */
@@ -144,7 +144,7 @@ public class Initialise {
     }
 
     /**
-     * 
+     *
      * @return boolean
      */
     public boolean isTdwg4Code() {
@@ -152,7 +152,7 @@ public class Initialise {
     }
 
     /**
-     * 
+     *
      * @param tdwg4Code
      * @return void
      */
@@ -161,24 +161,24 @@ public class Initialise {
     }
 
     /**
-     * 
+     *
      * @return ArrayList<String>
      */
-    public ArrayList<String> getEstablishmentList() {
+    public List<String> getEstablishmentList() {
         return establishmentList;
     }
 
     /**
-     * 
+     *
      * @param establishmentList
      * @return void
      */
-    public void setEstablishmentList(ArrayList<String> establishmentList) {
+    public void setEstablishmentList(List<String> establishmentList) {
         this.establishmentList = establishmentList;
     }
 
     /**
-     * 
+     *
      * @return boolean
      */
     public boolean isEstablishment() {
@@ -186,16 +186,16 @@ public class Initialise {
     }
 
     /**
-     * 
+     *
      * @param establishment
      * @return void
      */
     public void setEstablishment(boolean establishment) {
         this.establishment = establishment;
-    }    
+    }
 
     /**
-     * 
+     *
      * @return boolean
      */
     public boolean isRaster() {
@@ -203,7 +203,7 @@ public class Initialise {
     }
 
     /**
-     * 
+     *
      * @param raster
      * @return void
      */
@@ -212,7 +212,7 @@ public class Initialise {
     }
 
     /**
-     * 
+     *
      * @return int
      */
     public String getNbSessionRandom() {
@@ -220,17 +220,17 @@ public class Initialise {
     }
 
     /**
-     * 
+     *
      * @param nbSessionRandom
      * @return void
      */
     public void setNbSessionRandom(String nbSessionRandom) {
         this.nbSessionRandom = nbSessionRandom;
     }
-    
+
     public int getNbFiles(){
 	int nbFiles = this.getListMappingReconcileFiles().size();
-	
+
 	return nbFiles;
     }
 
@@ -257,6 +257,6 @@ public class Initialise {
 	public void setSendEmail(boolean sendEmail) {
 		this.sendEmail = sendEmail;
 	}
-	
-    
+
+
 }

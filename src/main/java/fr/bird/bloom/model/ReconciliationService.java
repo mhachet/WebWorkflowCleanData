@@ -7,6 +7,7 @@ package fr.bird.bloom.model;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * src.model
@@ -86,7 +87,7 @@ public class ReconciliationService{
 		this.filepath = filepath;
 	}
 
-	public ArrayList<String> getLines() {
+	public List<String> getLines() {
 		return lines;
 	}
 

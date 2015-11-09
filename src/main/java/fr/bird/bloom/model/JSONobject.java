@@ -3,16 +3,15 @@
  */
 package fr.bird.bloom.model;
 
+import fr.bird.bloom.utils.BloomConfig;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import fr.bird.bloom.utils.BloomConfig;
-import org.geotools.filter.expression.ThisPropertyAccessorFactory;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 /**
  * src.model
@@ -72,7 +71,7 @@ public class JSONobject {
         this.globalJsonObject = globalJsonObject;
     }
 
-    public ArrayList<String> getPresentTags() {
+    public List<String> getPresentTags() {
         return presentTags;
     }
 
@@ -80,7 +79,7 @@ public class JSONobject {
         this.presentTags = presentTags;
     }
 
-    public ArrayList<String> getDwcTags() {
+    public List<String> getDwcTags() {
         return dwcTags;
     }
 
@@ -88,7 +87,7 @@ public class JSONobject {
         this.dwcTags = dwcTags;
     }
 
-    public ArrayList<String> getNoMappedTags() {
+    public List<String> getNoMappedTags() {
         return noMappedTags;
     }
 
