@@ -112,8 +112,8 @@ public class SendMail {
 		if(this.getStep1().isInvolved()){
 			HashMap<Integer,MappingDwC> infos_mapping = step1.getInfos_mapping();
 			for (Entry<Integer, MappingDwC> idFile : infos_mapping.entrySet()){
-				MappingDwC mappingDWC = infos_mapping.get(idFile);
-				content += "- " + idFile + " => " + mappingDWC.getFilepath();
+				MappingDwC mappingDWC = idFile.getValue();
+				content += "- " + idFile.getKey() + " => " + mappingDWC.getFilepath();
 			}
 		}
 		if(this.getStep2().isInvolved()){
