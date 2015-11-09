@@ -3,122 +3,58 @@
  */
 package fr.bird.bloom.model;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import fr.bird.bloom.utils.BloomConfig;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 
 /**
- * 
  * src.model
- * 
+ * <p>
  * ConnectionDatabase.java
  */
 public class ConnectionDatabase {
-	private static String url = "";
-	private static String user = "";
-	private static String password = "";
-	private static Connection connexion;
-	
-	/**
-	 * 
-	 * src.model
-	 * ConnectionDatabase
-	 */
-	public ConnectionDatabase(){
+    private static Connection connexion;
 
-	}
+    /**
+     * src.model
+     * ConnectionDatabase
+     */
+    private ConnectionDatabase() {
+        // private default constructor to prevent instantiation
+    }
 
-	/**
-	 * Create an instance to connect on the database if not exist
-	 *  
-	 * @return Connection
-	 */
-	public static Connection getInstance(){
-		if(connexion == null){
-			try {
-				getRessourcesMysql();
-				//System.out.println(getUrl() + "  " + getUser() + "  " + getPassword());
-				try {
-					Class.forName( "com.mysql.jdbc.Driver" );
-				} catch ( ClassNotFoundException e ) {
-					System.err.println("Erreur lors du chargement : le driver n'a pas été trouvé dans le classpath ! <br/>"
-							+ e.getMessage() );
-				}
+    /**
+     * Create an instance to connect on the database if not exist
+     *
+     * @return Connection
+     */
+    public static Connection getConnection() {
+        if (connexion == null) {
+            try {
+                //System.out.println(getUrl() + "  " + getUser() + "  " + getPassword());
+                try {
+                    Class.forName("com.mysql.jdbc.Driver");
+                } catch (ClassNotFoundException e) {
+                    System.err.println("Erreur lors du chargement : le driver n'a pas été trouvé dans le classpath ! <br/>"
+                            + e.getMessage());
+                }
 
-				connexion = DriverManager.getConnection(getUrl(), getUser(), getPassword());
-			} catch (SQLException e) {
-				System.err.println("ERREUR DE CONNEXION : " + e.getMessage());
-			}
-		}
-		//executeSQLcommand(choiceStatement, sqlCommand);
-		
-		return connexion;	
-	}
+                String url = BloomConfig.getProperty("db.url");
+                String user = BloomConfig.getProperty("db.user");
+                String password = BloomConfig.getProperty("db.password");
 
-	/**
-	 * Retrieve user and password for mysql database
-	 */
-	public static void getRessourcesMysql(){
-		File currentFile = new File("");
-		String currentPath = currentFile.getAbsolutePath();
+                connexion = DriverManager.getConnection(url, user, password);
+            } catch (SQLException e) {
+                System.err.println("ERREUR DE CONNEXION : " + e.getMessage());
+            }
+        }
+        //executeSQLcommand(choiceStatement, sqlCommand);
 
-		try{
-			BufferedReader buff = new BufferedReader(new FileReader(currentPath + "/.properties_mysql"));
-			if(currentPath.indexOf("eclipse") != -1){
-				currentPath = "";
-			}
-			try {
-				String line;
-				int count = 0;
-				while ((line = buff.readLine()) != null) {
-					if(count == 0){
-						setUser(line);
-					}
-					else{
-						setPassword(line);
-					}
-					count ++;
+        return connexion;
+    }
 
-				}
-			} finally {
-				buff.close();
-			}
-		} catch (IOException ioe) {
-			System.out.println("Erreur --" + ioe.toString());
-		}
-
-		setUrl("jdbc:mysql://localhost:3306/Workflow");
-	}
-
-
-	public static String getUser() {
-		return user;
-	}
-
-	public static void setUser(String newUser) {
-		user = newUser;
-	}
-
-	public static String getPassword() {
-		return password;
-	}
-
-	public static void setPassword(String newPassword) {
-		password = newPassword;
-	}
-
-	public static String getUrl() {
-		return url;
-	}
-
-	public static void setUrl(String url) {
-		ConnectionDatabase.url = url;
-	}
-	
 
 }

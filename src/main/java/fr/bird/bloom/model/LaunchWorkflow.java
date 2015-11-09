@@ -26,6 +26,7 @@ import fr.bird.bloom.beans.Step6_CheckTDWG;
 import fr.bird.bloom.beans.Step7_CheckISo2Coordinates;
 import fr.bird.bloom.beans.Step8_CheckCoordinatesRaster;
 import fr.bird.bloom.beans.Step9_EstablishmentMeans;
+import fr.bird.bloom.utils.BloomConfig;
 
 /**
  * src.model
@@ -69,8 +70,6 @@ public class LaunchWorkflow {
 		//System.out.println("repCourant : "  + repCourant);
 		this.dataTreatment = new Treatment();
 		this.dataTreatment.setNbSessionRandom(initialisation.getNbSessionRandom());
-		this.dataTreatment.setDIRECTORY_PATH(initialisation.getDIRECTORY_PATH());
-		this.dataTreatment.setRESSOURCES_PATH(initialisation.getRESSOURCES_PATH());
 
 		finalisation = new Finalisation();
 		step1 = new Step1_MappingDwc();
@@ -112,9 +111,10 @@ public class LaunchWorkflow {
 				this.launchRasterOption();	
 			}
 			else{
-				File defaultRaster = new File(this.dataTreatment.getRESSOURCES_PATH() + "test/inputs_data/tmean1.bil");
+				final String resourcePath = BloomConfig.getResourcePath();
+				File defaultRaster = new File(resourcePath + "test/inputs_data/tmean1.bil");
 				this.initialisation.getInputRastersList().add(defaultRaster);
-				File defaultHeader = new File(this.dataTreatment.getRESSOURCES_PATH() + "test/inputs_data/tmean1.hdr");
+				File defaultHeader = new File(resourcePath + "test/inputs_data/tmean1.hdr");
 				this.initialisation.getHeaderRasterList().add(defaultHeader);
 				this.launchRasterOption();
 				//step8.setStep8_ok(false);
@@ -133,8 +133,6 @@ public class LaunchWorkflow {
 		
 		if(initialisation.isSendEmail()){
 			SendMail mail = new SendMail();
-			mail.setDIRECTORY_PATH(initialisation.getDIRECTORY_PATH());
-			mail.setRESSOURCES_PATH(initialisation.getRESSOURCES_PATH());
 		/*	try {
 				mail.sendMessage();
 			} catch (MessagingException e) {
@@ -174,7 +172,7 @@ public class LaunchWorkflow {
 			String originalName = listMappingReconcileDWC.get(i).getOriginalName();
 			mappingDwc.setFilename(originalName);
 
-			boolean isMapping = Boolean.parseBoolean(mappingDwc.getMappingInvolved());
+			boolean isMapping = mappingDwc.getMappingInvolved();
 
 			boolean isValid = preparation.isValid();
 
@@ -182,7 +180,7 @@ public class LaunchWorkflow {
 				step1.setInvolved(isMapping);
 				
 				this.dataTreatment.mappingDwC(mappingDwc, idFile);
-				String pathMappedFile = mappingDwc.getMappedFile().getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(),"output/"); //change to 'output/'
+				String pathMappedFile = mappingDwc.getMappedFile().getAbsolutePath().replace(BloomConfig.getDirectoryPath(),"output/"); //change to 'output/'
 
 				mappingDwc.setFilepath(pathMappedFile);
 			}
@@ -202,7 +200,7 @@ public class LaunchWorkflow {
 					//System.out.println("new CSVFile isMapping false line 208 LaunchWorkflow");
 					this.dataTreatment.reconcileService(reconcileService, mappingDwc.getNoMappedFile(), idFile);
 				}
-				String pathReconcileFile = reconcileService.getReconcileFile().getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(),"output/"); //change to 'output/'
+				String pathReconcileFile = reconcileService.getReconcileFile().getAbsolutePath().replace(BloomConfig.getDirectoryPath(),"output/"); //change to 'output/'
 				reconcileService.setFilepath(pathReconcileFile);
 				
 				
@@ -222,13 +220,13 @@ public class LaunchWorkflow {
 			MappingDwC mappingFile = mappingReconcilePrep.getMappingDWC();
 			ReconciliationService reconcileFile = mappingReconcilePrep.getReconcileDWC();
 			boolean isValid = mappingReconcilePrep.isValid();
-			String separator = mappingFile.getNoMappedFile().getSeparator(); 
+			String separator = mappingFile.getNoMappedFile().getSeparator().getSymbol();
 			if(isValid){
 				if(reconcileFile.isReconcile()){
 					darwinCoreModified = this.dataTreatment.initialiseFile(reconcileFile.getReconcileFile(), idFile, separator);
 					
 				}
-				else if(Boolean.parseBoolean(mappingFile.getMappingInvolved())){
+				else if(mappingFile.getMappingInvolved()){
 					
 					darwinCoreModified = this.dataTreatment.initialiseFile(mappingFile.getMappedFile(), idFile, separator);
 					
@@ -250,19 +248,20 @@ public class LaunchWorkflow {
 
 		File wrongCoordinatesFile = geoTreatment.getWrongCoordinatesFile();
 		finalisation.setWrongCoordinatesFile(wrongCoordinatesFile);
-		finalisation.setPathWrongCoordinatesFile(wrongCoordinatesFile.getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), "output/")); //change to 'output/'	
+		final String pathWrongCoordinatesFile = wrongCoordinatesFile.getAbsolutePath().replace(BloomConfig.getDirectoryPath(), "output/");
+		finalisation.setPathWrongCoordinatesFile(pathWrongCoordinatesFile); //change to 'output/'
 		step3.setNbFound(geoTreatment.getNbWrongCoordinates());
 		step3.setPathWrongCoordinates(finalisation.getPathWrongCoordinatesFile());
 
 		File wrongGeospatial = geoTreatment.getWrongGeoFile();
 		finalisation.setWrongGeospatial(wrongGeospatial);
-		finalisation.setPathWrongGeospatial(wrongGeospatial.getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), "output/")); //change to 'output/'
+		finalisation.setPathWrongGeospatial(wrongGeospatial.getAbsolutePath().replace(BloomConfig.getDirectoryPath(), "output/")); //change to 'output/'
 		step4.setNbFound(geoTreatment.getNbWrongGeospatialIssues());
 		step4.setPathWrongGeoIssue(finalisation.getPathWrongGeospatial());
 
 		File wrongPolygon = geoTreatment.getWrongPolygonFile();
 		finalisation.setWrongPolygon(wrongPolygon);
-		finalisation.setPathWrongPolygon(wrongPolygon.getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), "output/")); //change to 'output/'
+		finalisation.setPathWrongPolygon(wrongPolygon.getAbsolutePath().replace(BloomConfig.getDirectoryPath(), "output/")); //change to 'output/'
 		step7.setNbFound(geoTreatment.getNbWrongIso2());
 		step7.setPathWrongIso2(finalisation.getPathWrongPolygon());
 	}
@@ -285,16 +284,16 @@ public class LaunchWorkflow {
 			ReconciliationService reconciliationService = mappingReconcilePrep.getReconcileDWC();
 			CSVFile csvFileNoMapped = mappingFile.getNoMappedFile();
 			
-			if(csvFileNoMapped.getSeparator().equals("-1")){
+			if(csvFileNoMapped.getSeparator() == CSVFile.Separator.INCONSISTENT || csvFileNoMapped.getSeparator() == CSVFile.Separator.UNKNOWN){
 				System.out.println("separator false : " + csvFileNoMapped.getSeparator());
 				mappingFile.setSuccessMapping(Boolean.toString(false));
 				reconciliationService.setSuccessReconcile(Boolean.toString(false));
 			}
 			else{
 				System.out.println("separator true : " + csvFileNoMapped.getSeparator());
-				if(!Boolean.parseBoolean(mappingReconcilePrep.getMappingDWC().getMappingInvolved())){
+				if(!mappingReconcilePrep.getMappingDWC().getMappingInvolved()){
 					mappingFile.setSuccessMapping(Boolean.toString(true));
-					String [] listTagsInput = csvFileNoMapped.getFirstLine().split(csvFileNoMapped.getSeparator());
+					String [] listTagsInput = csvFileNoMapped.getFirstLine().split(csvFileNoMapped.getSeparator().getSymbol());
 					ArrayList<String> tagsDwcOfficial = mappingFile.getTagsListDwC();
 
 					for(int j = 0; j < listTagsInput.length; j++){
@@ -410,7 +409,7 @@ public class LaunchWorkflow {
 
 		RasterTreatment rasterTreatment = this.dataTreatment.checkWorldClimCell(this.initialisation.getInputRastersList());
 		finalisation.setMatrixFileValidCells(rasterTreatment.getMatrixFileValidCells());
-		finalisation.setPathMatrixFile(rasterTreatment.getMatrixFileValidCells().getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), "output/")); //change to 'output/'
+		finalisation.setPathMatrixFile(rasterTreatment.getMatrixFileValidCells().getAbsolutePath().replace(BloomConfig.getDirectoryPath(), "output/")); //change to 'output/'
 		HashMap<String, Boolean> errorProcessRaster = rasterTreatment.getCheckProcess();
 		step8.setProcessRaster(errorProcessRaster);
 		for(Entry<String, Boolean> entry : errorProcessRaster.entrySet()) {
@@ -423,8 +422,8 @@ public class LaunchWorkflow {
 		    	step8.setStep8_ok(true);
 		    }
 		}
-		step8.setPathWrongRaster(rasterTreatment.getWrongRasterFile().getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), "output/")); //change to 'output/'
-		step8.setPathMatrixResultRaster(rasterTreatment.getMatrixFileValidCells().getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), "output/")); //change to 'output/'
+		step8.setPathWrongRaster(rasterTreatment.getWrongRasterFile().getAbsolutePath().replace(BloomConfig.getDirectoryPath(), "output/")); //change to 'output/'
+		step8.setPathMatrixResultRaster(rasterTreatment.getMatrixFileValidCells().getAbsolutePath().replace(BloomConfig.getDirectoryPath(), "output/")); //change to 'output/'
 		//System.out.println("pathWrongRaster : " + step8.getPathWrongRaster());
 		//System.out.println("pathmatrixresult : " + step8.getPathMatrixResultRaster());
 		step8.setNbFound(rasterTreatment.getNbWrongOccurrences());
@@ -442,9 +441,9 @@ public class LaunchWorkflow {
 			step9.setNbFound(noEstablishment.size());
 			File wrongEstablishmentMeans = establishTreatment.getWrongEstablishmentMeansFile();
 			finalisation.setWrongEstablishmentMeans(wrongEstablishmentMeans);
-			finalisation.setPathWrongEstablishmentMeans(wrongEstablishmentMeans.getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), "output/")); //change to 'output/'
+			finalisation.setPathWrongEstablishmentMeans(wrongEstablishmentMeans.getAbsolutePath().replace(BloomConfig.getDirectoryPath(), "output/")); //change to 'output/'
 			step9.setStep9_ok(true);
-			step9.setPathWrongEstablishmentMeans(wrongEstablishmentMeans.getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(), "output/")); //change to 'output/'
+			step9.setPathWrongEstablishmentMeans(wrongEstablishmentMeans.getAbsolutePath().replace(BloomConfig.getDirectoryPath(), "output/")); //change to 'output/'
 		}
 		/*else{
 	    step9.setStep9_ok(false);
@@ -458,8 +457,8 @@ public class LaunchWorkflow {
 		ArrayList<File> listFinalOutput = new ArrayList<>();
 		ArrayList<String> listPathsOutput = new ArrayList<>();
 
-		if(!new File(initialisation.getDIRECTORY_PATH() + "temp/" + initialisation.getNbSessionRandom() + "/final_results/").exists()){
-			new File(initialisation.getDIRECTORY_PATH() + "temp/" + initialisation.getNbSessionRandom() + "/final_results/").mkdir();
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + initialisation.getNbSessionRandom() + "/final_results/").exists()){
+			new File(BloomConfig.getDirectoryPath() + "temp/" + initialisation.getNbSessionRandom() + "/final_results/").mkdir();
 		}
 
 		int nbFiles = this.initialisation.getNbFiles();
@@ -470,7 +469,7 @@ public class LaunchWorkflow {
 
 			Statement statement = null;
 			try {
-				statement = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+				statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -482,7 +481,7 @@ public class LaunchWorkflow {
 			File cleanOutput = this.dataTreatment.createFileCsv(resultCleanTable, nameFile, "final_results");
 
 			listFinalOutput.add(cleanOutput);
-			String pathFile = cleanOutput.getAbsolutePath().replace(initialisation.getDIRECTORY_PATH(),"output/"); //change to 'output/'
+			String pathFile = cleanOutput.getAbsolutePath().replace(BloomConfig.getDirectoryPath(),"output/"); //change to 'output/'
 			listPathsOutput.add(pathFile);
 		}
 

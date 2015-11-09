@@ -3,6 +3,8 @@
  */
 package fr.bird.bloom.model;
 
+import fr.bird.bloom.utils.BloomConfig;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -22,8 +24,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import fr.bird.bloom.model.Treatment;
-
 /**
  * model
  * 
@@ -35,8 +35,6 @@ public class RasterTreatment {
 	private ArrayList<File> rasterFiles;
 	private HashMap<Integer, HashMap<String, Boolean>> hashMapValidOrNot;
 	private Treatment dataTreatment;
-	private String DIRECTORY_PATH = "";
-	private String RESSOURCES_PATH = "";
 	private int nbWrongOccurrences;
 	private File matrixFileValidCells;
 	private File wrongRasterFile;
@@ -129,12 +127,12 @@ public class RasterTreatment {
 		 *	BSQ			Band Sequential (BSQ) Image File		.bsq				NA
 		 *	BIP			Band Interleaved by Pixel (ESRI BIP)		.bip				NA
 		 ************************************************************************************************/
-		String scriptRaster = RESSOURCES_PATH + "raster.R";
-		if(!new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").exists())
+		String scriptRaster = BloomConfig.getResourcePath() + "raster.R";
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").exists())
 		{
-			new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").mkdirs();
+			new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").mkdirs();
 		}
-		File dataInputFileRaster = new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/dataInputFileRaster.csv");			
+		File dataInputFileRaster = new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/dataInputFileRaster.csv");
 		//System.out.println("dataInputFileRaster : " + dataInputFileRaster.getAbsolutePath());
 		ArrayList<Integer> listValidData = new ArrayList<>();
 		ArrayList<Integer> idForOneRaster = new ArrayList<>();
@@ -176,12 +174,12 @@ public class RasterTreatment {
 		ArrayList<String> decimalLongitude = dataTreatment.getFileDarwinCore().getDecimalLongitudeClean();
 		ArrayList<String> idLine = dataTreatment.getFileDarwinCore().getIDClean();
 
-		if(!new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").exists())
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").exists())
 		{
-			new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").mkdirs();
+			new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").mkdirs();
 		}
-		File validRaster = new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/validRaster.txt");
-		File errorRaster = new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/errorRaster.txt");
+		File validRaster = new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/validRaster.txt");
+		File errorRaster = new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/errorRaster.txt");
 		try {
 
 			FileWriter dataInputWriterTemp = new FileWriter(dataInputFileRaster, false);
@@ -197,8 +195,8 @@ public class RasterTreatment {
 			FileOutputStream fos = new FileOutputStream(validRaster);
 			FileOutputStream fosError = new FileOutputStream(errorRaster);
 			Runtime rt = Runtime.getRuntime();
-			String [] cmdarray = {"Rscript", scriptRaster, DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/", dataRasterFile.getAbsolutePath(), dataInputFileRaster.getAbsolutePath()};
-			System.out.println("Rscript " +  scriptRaster + " " + DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/ " + dataRasterFile.getAbsolutePath() + " " + dataInputFileRaster.getAbsolutePath());
+			String [] cmdarray = {"Rscript", scriptRaster, BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/", dataRasterFile.getAbsolutePath(), dataInputFileRaster.getAbsolutePath()};
+			System.out.println("Rscript " +  scriptRaster + " " + BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/ " + dataRasterFile.getAbsolutePath() + " " + dataInputFileRaster.getAbsolutePath());
 			Process proc = rt.exec(cmdarray);
 			// any error message?
 			// any streamGobble is a thread
@@ -293,7 +291,7 @@ public class RasterTreatment {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-		File outputRaster = new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/outputRaster.csv");
+		File outputRaster = new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/outputRaster.csv");
 		InputStreamReader ipsr=new InputStreamReader(ips);
 		BufferedReader br=new BufferedReader(ipsr);
 		String ligne;
@@ -336,19 +334,19 @@ public class RasterTreatment {
 	 * @return File
 	 */
 	public File writeMatrixReport(){
-		if(!new File(DIRECTORY_PATH + "temp/").exists()){
-			new File(DIRECTORY_PATH + "temp/").mkdirs();
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/").exists()){
+			new File(BloomConfig.getDirectoryPath() + "temp/").mkdirs();
 		}
-		if(!new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom()).exists()){
-			new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom());
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom()).exists()){
+			new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom());
 		}
-		if(!new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/data/").exists()){
-			new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/data/").mkdirs();
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/data/").exists()){
+			new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/data/").mkdirs();
 		}
-		if(!new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").exists()){
-			new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").mkdirs();
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").exists()){
+			new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").mkdirs();
 		}
-		File matrix = new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/cells_proba_raster_" + dataTreatment.getNbSessionRandom() + ".csv");
+		File matrix = new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/cells_proba_raster_" + dataTreatment.getNbSessionRandom() + ".csv");
 		FileWriter writer = null;
 		try {
 			writer = new FileWriter(matrix);
@@ -407,7 +405,7 @@ public class RasterTreatment {
 			String sqlSelectId = "SELECT abstract_,acceptedNameUsage_,acceptedNameUsageID_,accessRights_,accrualMethod_,accrualPeriodicity_,accrualPolicy_,alternative_,associatedMedia_,associatedOccurrences_,associatedOrganisms_,associatedReferences_,associatedSequences_,associatedTaxa_,audience_,available_,basisOfRecord_,bed_,behavior_,bibliographicCitation_,catalogNumber_,class_,classKey_,collectionCode_,collectionID_,conformsTo_,continent_,contributor_,coordinateAccuracy_,coordinatePrecision_,coordinateUncertaintyInMeters_,country_,countryCode_,county_,coverage_,created_,creator_,dataGeneralizations_,datasetID_,datasetKey_,datasetName_,date_,dateAccepted_,dateCopyrighted_,dateIdentified_,dateSubmitted_,day_,decimalLatitude_,decimalLongitude_,depth_,depthAccuracy_,description_,disposition_,distanceAboveSurface_,distanceAboveSurfaceAccuracy_,dynamicProperties_,earliestAgeOrLowestStage_,earliestEonOrLowestEonothem_,earliestEpochOrLowestSeries_,earliestEraOrLowestErathem_,earliestPeriodOrLowestSystem_,educationLevel_,elevation_,elevationAccuracy_,endDayOfYear_,establishmentMeans_,event_,eventDate_,eventID_,eventRemarks_,eventTime_,extent_,family_,familyKey_,fieldNotes_,fieldNumber_,footprintSpatialFit_,footprintSRS_,footprintWKT_,format_,formation_,gbifID_,genericName_,genus_,genusKey_,geodeticDatum_,geologicalContext_,geologicalContextID_,georeferencedBy_,georeferencedDate_,georeferenceProtocol_,georeferenceRemarks_,georeferenceSources_,georeferenceVerificationStatus_,group_,habitat_,hasCoordinate_,hasFormat_,hasGeospatialIssues_,hasPart_,hasVersion_,higherClassification_,higherGeography_,higherGeographyID_,highestBiostratigraphicZone_,identification_,identificationID_,identificationQualifier_,identificationReferences_,identificationRemarks_,identificationVerificationStatus_,identifiedBy_,identifier_,idFile_,individualCount_,individualID_,informationWithheld_,infraspecificEpithet_,institutionCode_,institutionID_,instructionalMethod_,isFormatOf_,island_,islandGroup_,isPartOf_,isReferencedBy_,isReplacedBy_,isRequiredBy_,issue_,issued_,isVersionOf_,kingdom_,kingdomKey_,language_,lastCrawled_,lastInterpreted_,lastParsed_,latestAgeOrHighestStage_,latestEonOrHighestEonothem_,latestEpochOrHighestSeries_,latestEraOrHighestErathem_,latestPeriodOrHighestSystem_,license_,lifeStage_,lithostratigraphicTerms_,livingSpecimen_,locality_,locationAccordingTo_,locationID_,locationRemarks_,lowestBiostratigraphicZone_,machineObservation_,materialSample_,materialSampleID_,maximumDepthinMeters_,maximumDistanceAboveSurfaceInMeters_,maximumElevationInMeters_,measurementAccuracy_,measurementDeterminedBy_,measurementDeterminedDate_,measurementID_,measurementMethod_,measurementOrFact_,measurementRemarks_,measurementType_,measurementUnit_,mediator_,mediaType_,medium_,member_,minimumDepthinMeters_,minimumDistanceAboveSurfaceInMeters_,minimumElevationInMeters_,modified_,month_,municipality_,nameAccordingTo_,nameAccordingToID_,namePublishedIn_,namePublishedInID_,namePublishedInYear_,nomenclaturalCode_,nomenclaturalStatus_,occurrence_,occurrenceDetails_,occurrenceID_,occurrenceRemarks_,occurrenceStatus_,order_,orderKey_,organism_,organismID_,organismName_,organismRemarks_,organismScope_,originalNameUsage_,originalNameUsageID_,otherCatalogNumbers_,ownerInstitutionCode_,parentNameUsage_,parentNameUsageID_,phylum_,phylumKey_,pointRadiusSpatialFit_,preparations_,preservedSpecimen_,previousIdentifications_,protocol_,provenance_,publisher_,publishingCountry_,recordedBy_,recordNumber_,references_,relatedResourceID_,relationshipAccordingTo_,relationshipEstablishedDate_,relationshipRemarks_,relation_,replaces_,reproductiveCondition_,requires_,resourceID_,resourceRelationship_,resourceRelationshipID_,rights_,rightsHolder_,samplingEffort_,samplingProtocol_,scientificName_,scientificNameAuthorship_,scientificNameID_,sex_,source_,spatial_,species_,speciesKey_,specificEpithet_,startDayOfYear_,stateProvince_,subgenus_,subgenusKey_,subject_,tableOfContents_,taxon_,taxonConceptID_,taxonID_,taxonKey_,taxonomicStatus_,taxonRank_,taxonRemarks_,temporal_,title_,type_,typeStatus_,typifiedName_,valid_,verbatimCoordinates_,verbatimCoordinateSystem_,verbatimDate_,verbatimDepth_,verbatimElevation_,verbatimEventDate_,verbatimLatitude_,verbatimLocality_,verbatimLongitude_,verbatimSRS_,verbatimTaxonRank_,vernacularName_,waterBody_,year_ FROM Workflow.Clean_" + this.getDataTreatment().getNbSessionRandom() + " WHERE id_=" + id + ";";
 			Statement statement = null;
 			try {
-				statement = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+				statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -521,7 +519,7 @@ public class RasterTreatment {
 			// retrieve data aren't in cells in a csv file
 			Statement statement = null;
 			try {
-				statement = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+				statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -536,9 +534,9 @@ public class RasterTreatment {
 
 			if(resultatSelect != null){
 				messagesSelect.add("nb lignes affectées :" + Integer.toString(resultatSelect.size() - 1));
-				if(!new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/wrong/").exists())
+				if(!new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/wrong/").exists())
 				{
-					new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/wrong/").mkdirs();
+					new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/wrong/").mkdirs();
 				}
 				File wrongRasterFile = dataTreatment.createFileCsv(resultatSelect, "/wrong_raster_" + this.dataTreatment.getNbSessionRandom() + ".csv", "wrong");
 				this.setWrongRasterFile(wrongRasterFile);
@@ -549,9 +547,9 @@ public class RasterTreatment {
 			}
 		}
 		else{
-			if(!new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/wrong/").exists())
+			if(!new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/wrong/").exists())
 			{
-				new File(DIRECTORY_PATH + "temp/" + dataTreatment.getNbSessionRandom() + "/wrong/").mkdirs();
+				new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/wrong/").mkdirs();
 			}
 			File wrongRasterFile = dataTreatment.createFileCsv(new ArrayList<String>(), "/wrong_raster_" + this.dataTreatment.getNbSessionRandom() + ".csv", "wrong");
 
@@ -565,7 +563,7 @@ public class RasterTreatment {
 			int id_ = notValidData.get(i);
 			Statement statement = null;
 			try {
-				statement = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+				statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -641,21 +639,6 @@ public class RasterTreatment {
 		this.dataTreatment = dataTreatment;
 	}
 
-	/**
-	 * 
-	 * @return String
-	 */
-	public String getDIRECTORY_PATH() {
-		return DIRECTORY_PATH;
-	}
-
-	/**
-	 * 
-	 * @param dIRECTORY_PATH
-	 */
-	public void setDIRECTORY_PATH(String dIRECTORY_PATH) {
-		DIRECTORY_PATH = dIRECTORY_PATH;
-	}
 
 	/**
 	 * 
@@ -671,22 +654,6 @@ public class RasterTreatment {
 	 */
 	public void setNbWrongOccurrences(int nbWrongOccurrences) {
 		this.nbWrongOccurrences = nbWrongOccurrences;
-	}
-
-	/**
-	 * 
-	 * @return String
-	 */
-	public String getRESSOURCES_PATH() {
-		return RESSOURCES_PATH;
-	}
-
-	/**
-	 * 
-	 * @param rESSOURCES_PATH
-	 */
-	public void setRESSOURCES_PATH(String rESSOURCES_PATH) {
-		RESSOURCES_PATH = rESSOURCES_PATH;
 	}
 
 	/**

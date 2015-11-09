@@ -22,9 +22,6 @@ public class Initialise {
     private ArrayList<String> establishmentList = new ArrayList<>();
     private ArrayList<MappingReconcilePreparation> listMappingReconcileFiles = new ArrayList<>();
     
-    private String DIRECTORY_PATH = "";
-    private String RESSOURCES_PATH = "";
-    
     private boolean synonym;
     private boolean tdwg4Code;
     private boolean raster;
@@ -235,22 +232,6 @@ public class Initialise {
 	int nbFiles = this.getListMappingReconcileFiles().size();
 	
 	return nbFiles;
-    }
-
-    public String getDIRECTORY_PATH() {
-        return this.DIRECTORY_PATH;
-    }
-
-    public void setDIRECTORY_PATH(String DIRECTORY_PATH) {
-        this.DIRECTORY_PATH = DIRECTORY_PATH;
-    }
-
-    public String getRESSOURCES_PATH() {
-        return this.RESSOURCES_PATH;
-    }
-
-    public void setRESSOURCES_PATH(String RESSOURCES_PATH) {
-        this.RESSOURCES_PATH = RESSOURCES_PATH;
     }
 
 	public int getNbInput() {

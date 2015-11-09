@@ -18,8 +18,6 @@ import java.util.ArrayList;
  */
 public class EstablishmentTreatment {
 
-	private String DIRECTORY_PATH = "";
-	private String RESSOURCES_PATH = "";
 	private String nbSessionRandom;
 	private ArrayList<String> listEstablishmentChecked;
 	private ArrayList<String> inverseEstablishmentList;
@@ -86,7 +84,7 @@ public class EstablishmentTreatment {
 			if(this.getInverseEstablishmentList().get(i).equals("others")){
 				Statement statement = null;
 				try {
-					statement = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+					statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -122,7 +120,7 @@ public class EstablishmentTreatment {
 
 				Statement statementSelect = null;
 				try {
-					statementSelect = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+					statementSelect = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -149,7 +147,7 @@ public class EstablishmentTreatment {
 
 				Statement statement = null;
 				try {
-					statement = ConnectionDatabase.getInstance().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+					statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -174,22 +172,6 @@ public class EstablishmentTreatment {
 
 		return noEstablishment;
 
-	}
-
-	public String getDIRECTORY_PATH() {
-		return DIRECTORY_PATH;
-	}
-
-	public void setDIRECTORY_PATH(String dIRECTORY_PATH) {
-		DIRECTORY_PATH = dIRECTORY_PATH;
-	}
-
-	public String getRESSOURCES_PATH() {
-		return RESSOURCES_PATH;
-	}
-
-	public void setRESSOURCES_PATH(String rESSOURCES_PATH) {
-		RESSOURCES_PATH = rESSOURCES_PATH;
 	}
 
 	public String getNbSessionRandom() {

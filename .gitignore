@@ -1,6 +1,8 @@
 src/resources/test/temp/
 target
-.idea
+*.iml
+.idea/*
+!.idea/runConfigurations
 classes
 build
 
