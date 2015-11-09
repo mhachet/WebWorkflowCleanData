@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.UUID;
@@ -101,7 +102,7 @@ public class MainControler extends HttpServlet {
         //this.setNbSessionRandom(this.generateRandomKey());
         //this.initialisation.setNbSessionRandom(this.getNbSessionRandom());
 
-        List<FileItem> listFileItems = this.initialiseRequest(request);
+        List<FileItem> listFileItems = initialiseRequest(request);
 
         this.initialiseParameters(listFileItems, response, request);
         request.setAttribute("initialise", initialisation);
@@ -171,10 +172,10 @@ public class MainControler extends HttpServlet {
         response.setContentType("text/html");
         response.addHeader("Access-Control-Allow-Origin", "*");
 
-        Iterator<FileItem> iterator = (Iterator<FileItem>) items.iterator();
-        ArrayList<MappingDwC> listMappingFiles = new ArrayList<>();
-        ArrayList<ReconciliationService> listReconcileFiles = new ArrayList<>();
-        ArrayList<MappingReconcilePreparation> listMappingReconcileDWC = new ArrayList<>();
+        Iterator<FileItem> iterator = items.iterator();
+        List<MappingDwC> listMappingFiles = new ArrayList<>();
+        List<ReconciliationService> listReconcileFiles = new ArrayList<>();
+        List<MappingReconcilePreparation> listMappingReconcileDWC = new ArrayList<>();
 
         int nbFilesInput = 0;
         int nbFilesRaster = 0;
@@ -238,7 +239,7 @@ public class MainControler extends HttpServlet {
 
                 newMappingDWC.initialiseMapping(this.getNbSessionRandom());
                 HashMap<String, String> connectionTags = new HashMap<>();
-                ArrayList<String> tagsNoMapped = newMappingDWC.getTagsListNoMapped();
+                List<String> tagsNoMapped = newMappingDWC.getTagsListNoMapped();
                 for (int i = 0; i < tagsNoMapped.size(); i++) {
                     connectionTags.put(tagsNoMapped.get(i) + "_" + i, "");
                 }
@@ -281,7 +282,7 @@ public class MainControler extends HttpServlet {
                 String fileExtensionName = item.getName();
                 fileExtensionName = FilenameUtils.getExtension(fileExtensionName);
                 String fileName = item.getName();
-                if (fileName != "") {
+                if (!Objects.equals(fileName, "")) {
                     File file = new File(getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/" + fileName);
                     try {
                         item.write(file);
@@ -306,7 +307,7 @@ public class MainControler extends HttpServlet {
                 String[] tableauField = fieldName.split("_");
                 String idDropdown = tableauField[tableauField.length - 1];
                 for (int i = 0; i < listMappingReconcileDWC.size(); i++) {
-                    HashMap<String, String> connectionTags = listMappingReconcileDWC.get(i).getMappingDWC().getConnectionTags();
+                    Map<String, String> connectionTags = listMappingReconcileDWC.get(i).getMappingDWC().getConnectionTags();
                     for (Entry<String, String> entry : connectionTags.entrySet()) {
                         String[] tableKey = entry.getKey().split("_");
                         String idKey = tableKey[tableKey.length - 1];

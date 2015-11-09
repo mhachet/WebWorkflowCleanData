@@ -6,6 +6,7 @@ package fr.bird.bloom.beans;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * src.model
@@ -15,7 +16,7 @@ import java.util.ArrayList;
  */
 public class Finalisation {
 
-    private ArrayList<File> finalOutputFiles = new ArrayList<>();
+    private List<File> finalOutputFiles = new ArrayList<>();
     private File wrongCoordinatesFile = new File("");
     private File wrongGeospatial = new File("");
     private File wrongPolygon = new File("");
@@ -27,7 +28,7 @@ public class Finalisation {
     private String pathWrongGeospatial = "";
     private String pathWrongPolygon = "";
     private String pathWrongEstablishmentMeans = "";
-    private ArrayList<String> listPathsOutputFiles = new ArrayList<>();
+    private List<String> listPathsOutputFiles = new ArrayList<>();
     
     private String step1_resultMappingDwC = "";
     private String step2_reconciliationService = "";
@@ -147,11 +148,11 @@ public class Finalisation {
         this.pathWrongEstablishmentMeans = pathWrongEstablishmentMeans;
     }
 
-    public ArrayList<String> getListPathsOutputFiles() {
+    public List<String> getListPathsOutputFiles() {
         return listPathsOutputFiles;
     }
 
-    public void setListPathsOutputFiles(ArrayList<String> listPathsOutputFiles) {
+    public void setListPathsOutputFiles(List<String> listPathsOutputFiles) {
         this.listPathsOutputFiles = listPathsOutputFiles;
     }
 
@@ -163,11 +164,11 @@ public class Finalisation {
         this.pathMatrixFile = pathMatrixFile;
     }
 
-    public ArrayList<File> getFinalOutputFiles() {
+    public List<File> getFinalOutputFiles() {
         return finalOutputFiles;
     }
 
-    public void setFinalOutputFiles(ArrayList<File> finalOutputFiles) {
+    public void setFinalOutputFiles(List<File> finalOutputFiles) {
         this.finalOutputFiles = finalOutputFiles;
     }
 

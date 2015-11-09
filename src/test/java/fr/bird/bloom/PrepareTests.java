@@ -20,6 +20,7 @@ import fr.bird.bloom.model.MappingDwC;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
 
@@ -83,7 +84,7 @@ public class PrepareTests {
 		writer = new FileWriter(file.getAbsoluteFile());
 
 		BufferedWriter output = new BufferedWriter(writer);
-		ArrayList<String> linesFile = getLinesFile(inputFilesList.get(i));
+		List<String> linesFile = getLinesFile(inputFilesList.get(i));
 
 		for(int j = 0 ; j < linesFile.size() ; j++){
 		    output.write(linesFile.get(j) + "\n");
@@ -103,7 +104,7 @@ public class PrepareTests {
 	    listMappedDWC.add(newMappingDWC);
 	    newMappingDWC.initialiseMapping(getNbSessionRandom());
 	    HashMap<String, String> connectionTags = new HashMap<>();
-	    ArrayList<String> tagsNoMapped = newMappingDWC.getTagsListNoMapped();
+	    List<String> tagsNoMapped = newMappingDWC.getTagsListNoMapped();
 	    for(int k = 0 ; k < tagsNoMapped.size() ; k++){
 		connectionTags.put(tagsNoMapped.get(k) + "_" + k, "");
 	    }
@@ -114,7 +115,7 @@ public class PrepareTests {
 	    boolean doMapping = newMappingDWC.doMapping();
 	    newMappingDWC.setMappingInvolved(doMapping);
 	    if(doMapping){
-		ArrayList<String> presentTags = newMappingDWC.getPresentTags();
+		List<String> presentTags = newMappingDWC.getPresentTags();
 		for(Entry<String, String> entry : connectionTags.entrySet()) {
 		    String [] tableKey = entry.getKey().split("_");
 		    String idKey = tableKey[0];
@@ -156,7 +157,7 @@ public class PrepareTests {
     }
 
     public void prepareEstablishment(){
-	ArrayList<String> listEstablishment = new ArrayList<>();
+	List<String> listEstablishment = new ArrayList<>();
 	listEstablishment.add("introduced");
 	listEstablishment.add("invasive");
 	listEstablishment.add("native");
@@ -165,8 +166,8 @@ public class PrepareTests {
 	initialisation.setEstablishmentList(listEstablishment);
     }
 
-    public ArrayList<String> getLinesFile(File file){
-	ArrayList<String> linesFile = new ArrayList<>();
+    public List<String> getLinesFile(File file){
+	List<String> linesFile = new ArrayList<>();
 	try{
 	    InputStream ips = new FileInputStream(file.getAbsoluteFile()); 
 	    InputStreamReader ipsr = new InputStreamReader(ips);
@@ -228,7 +229,7 @@ public class PrepareTests {
     }
 
 
-    public ArrayList<File> getInputFilesList() {
+    public List<File> getInputFilesList() {
         return inputFilesList;
     }
 
@@ -238,7 +239,7 @@ public class PrepareTests {
     }
 
 
-    public ArrayList<File> getInputsRasterList() {
+    public List<File> getInputsRasterList() {
         return inputsRasterList;
     }
 
@@ -248,7 +249,7 @@ public class PrepareTests {
     }
 
 
-    public ArrayList<File> getInputHeaderList() {
+    public List<File> getInputHeaderList() {
         return inputHeaderList;
     }
 
@@ -258,7 +259,7 @@ public class PrepareTests {
     }
 
 
-    public ArrayList<MappingDwC> getListMappedDWC() {
+    public List<MappingDwC> getListMappedDWC() {
         return listMappedDWC;
     }
 

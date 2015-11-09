@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * src.model
@@ -19,12 +20,12 @@ import java.util.ArrayList;
 public class EstablishmentTreatment {
 
 	private String nbSessionRandom;
-	private ArrayList<String> listEstablishmentChecked;
-	private ArrayList<String> inverseEstablishmentList;
-	private ArrayList<String> noEstablishmentList;
+	private List<String> listEstablishmentChecked;
+	private List<String> inverseEstablishmentList;
+	private List<String> noEstablishmentList;
 	private File wrongEstablishmentMeansFile;
 
-	public EstablishmentTreatment(ArrayList<String> listCheckedEstablishment){
+	public EstablishmentTreatment(List<String> listCheckedEstablishment){
 		this.listEstablishmentChecked = listCheckedEstablishment;
 	}
 
@@ -32,10 +33,10 @@ public class EstablishmentTreatment {
 	 * start establishmentMeans option
 	 */
 	public void establishmentMeansTreatment(){
-		ArrayList<String> inverseEstablishment = this.inverseEstablishmentList();
+		List<String> inverseEstablishment = this.inverseEstablishmentList();
 		this.setInverseEstablishmentList(inverseEstablishment);
 
-		ArrayList<String> noEstablishment = this.filterOnEstablishmentMeans();
+		List<String> noEstablishment = this.filterOnEstablishmentMeans();
 		this.setNoEstablishmentList(noEstablishment);
 
 	}
@@ -45,9 +46,9 @@ public class EstablishmentTreatment {
 	 * 
 	 * @return void
 	 */
-	public ArrayList<String> inverseEstablishmentList(){
+	public List<String> inverseEstablishmentList(){
 
-		ArrayList<String> allEstablishmentMeans = new ArrayList<>();
+		List<String> allEstablishmentMeans = new ArrayList<>();
 		allEstablishmentMeans.add("native");
 		allEstablishmentMeans.add("introduced");
 		allEstablishmentMeans.add("naturalised");
@@ -56,7 +57,7 @@ public class EstablishmentTreatment {
 		allEstablishmentMeans.add("uncertain");
 		allEstablishmentMeans.add("others");
 
-		ArrayList<String> inverseEstablishmentList = new ArrayList<>();
+		List<String> inverseEstablishmentList = new ArrayList<>();
 		for(int i = 0 ; i < allEstablishmentMeans.size() ; i++){
 			if(!listEstablishmentChecked.contains(allEstablishmentMeans.get(i))){
 				inverseEstablishmentList.add(allEstablishmentMeans.get(i));
@@ -74,11 +75,11 @@ public class EstablishmentTreatment {
 	 * @param establishmentList
 	 * @return void
 	 */
-	public ArrayList<String> filterOnEstablishmentMeans(){
+	public List<String> filterOnEstablishmentMeans(){
 
 		// list containing tags "establishmentMeans" to delete
 		// inversed list of the begining (user want to keep the others) 
-		ArrayList<String> noEstablishment = new ArrayList<>();
+		List<String> noEstablishment = new ArrayList<>();
 
 		for(int i = 0; i < this.getInverseEstablishmentList().size() ; i++){
 			if(this.getInverseEstablishmentList().get(i).equals("others")){
@@ -90,7 +91,7 @@ public class EstablishmentTreatment {
 					e.printStackTrace();
 				}
 				DatabaseTreatment newConnectionOthers = new DatabaseTreatment(statement);
-				ArrayList<String> messagesOthers = new ArrayList<String>();
+				List<String> messagesOthers = new ArrayList<String>();
 
 				String sqlOthers = "SELECT * FROM Workflow.Clean_" + this.getNbSessionRandom() + " WHERE Clean_" + this.getNbSessionRandom() + ".establishmentMeans_!=\"native\" && " +
 						"Clean_" + this.getNbSessionRandom() + ".establishmentMeans_!=\"introduced\" && " +
@@ -100,7 +101,7 @@ public class EstablishmentTreatment {
 						"Clean_" + this.getNbSessionRandom() + ".establishmentMeans_!=\"uncertain\";" ;
 				messagesOthers.addAll(newConnectionOthers.executeSQLcommand("executeQuery", sqlOthers));
 
-				ArrayList<String> othersResults = newConnectionOthers.getResultatSelect();
+				List<String> othersResults = newConnectionOthers.getResultatSelect();
 				if(othersResults.size() > 1){
 					for(int m = 0 ; m < othersResults.size() ; m++){
 						if(!noEstablishment.contains(othersResults.get(m))){
@@ -126,12 +127,12 @@ public class EstablishmentTreatment {
 					e.printStackTrace();
 				}
 				DatabaseTreatment newConnectionSelect = new DatabaseTreatment(statementSelect);
-				ArrayList<String> messagesSelect = new ArrayList<String>();
+				List<String> messagesSelect = new ArrayList<String>();
 				messagesSelect.add("\n--- Select no establishment Means ---\n");
 				String sqlSelectNoEstablishment = "SELECT * FROM Workflow.Clean_" + this.getNbSessionRandom() + " WHERE Clean_" + this.getNbSessionRandom() + ".establishmentMeans_=\"" + this.getInverseEstablishmentList().get(i) + "\";";
 				messagesSelect.addAll(newConnectionSelect.executeSQLcommand("executeQuery", sqlSelectNoEstablishment));
 
-				ArrayList<String> establishmentResults = newConnectionSelect.getResultatSelect();
+				List<String> establishmentResults = newConnectionSelect.getResultatSelect();
 				if(establishmentResults.size() > 1){
 					for(int m = 0 ; m < establishmentResults.size() ; m++){
 						if(!noEstablishment.contains(establishmentResults.get(m))){
@@ -153,7 +154,7 @@ public class EstablishmentTreatment {
 					e.printStackTrace();
 				}
 				DatabaseTreatment newConnection = new DatabaseTreatment(statement);
-				ArrayList<String> messagesDelete = new ArrayList<String>();
+				List<String> messagesDelete = new ArrayList<String>();
 				messagesDelete.add("\n--- establishment Means ---\n");
 				String sqlDeleteEstablishment = "DELETE FROM Workflow.Clean_" + this.getNbSessionRandom() + " WHERE Clean_" + this.getNbSessionRandom() + ".establishmentMeans_=\"" + this.getInverseEstablishmentList().get(i) + "\";";
 				messagesDelete.addAll(newConnection.executeSQLcommand("executeUpdate", sqlDeleteEstablishment));
@@ -182,7 +183,7 @@ public class EstablishmentTreatment {
 		this.nbSessionRandom = nbSessionRandom;
 	}
 
-	public ArrayList<String> getListEstablishmentChecked() {
+	public List<String> getListEstablishmentChecked() {
 		return listEstablishmentChecked;
 	}
 
@@ -191,20 +192,20 @@ public class EstablishmentTreatment {
 		this.listEstablishmentChecked = listEstablishmentChecked;
 	}
 
-	public ArrayList<String> getInverseEstablishmentList() {
+	public List<String> getInverseEstablishmentList() {
 		return inverseEstablishmentList;
 	}
 
 	public void setInverseEstablishmentList(
-			ArrayList<String> inverseEstablishmentList) {
+			List<String> inverseEstablishmentList) {
 		this.inverseEstablishmentList = inverseEstablishmentList;
 	}
 
-	public ArrayList<String> getNoEstablishmentList() {
+	public List<String> getNoEstablishmentList() {
 		return noEstablishmentList;
 	}
 
-	public void setNoEstablishmentList(ArrayList<String> noEstablishmentList) {
+	public void setNoEstablishmentList(List<String> noEstablishmentList) {
 		this.noEstablishmentList = noEstablishmentList;
 	}
 

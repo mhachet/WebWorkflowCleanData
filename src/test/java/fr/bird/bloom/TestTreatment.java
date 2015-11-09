@@ -11,7 +11,7 @@ import fr.bird.bloom.model.MappingDwC;
 import fr.bird.bloom.model.Treatment;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.fail;
 /**
@@ -43,7 +43,7 @@ public class TestTreatment {
      */
     @Test
     public void testMappingDwC() {
-	ArrayList<MappingDwC> listMappingDWC = prepareTest.getListMappedDWC();
+	List<MappingDwC> listMappingDWC = prepareTest.getListMappedDWC();
 	File mappedFileTest1 = new File(DIRECTORY_PATH + "intermediate_files/mappedDWC_test1NoDWC.csv");
 	for(int i = 0 ; i < listMappingDWC.size() ; i++){
 	    MappingDwC mappingDwc = listMappingDWC.get(i);
@@ -52,7 +52,7 @@ public class TestTreatment {
 		/*try {
 		    treatment.mappingDwC(mappingDwc, );
 		    File mappedFile = mappingDwc.getMappedFile();
-		    HashMap<String, ArrayList<String>> testConnectionTagsValues = mappingDwc.getConnectionValuesTags();
+		    HashMap<String, List<String>> testConnectionTagsValues = mappingDwc.getConnectionValuesTags();
 		    HashMap<String, String> connectionTags = mappingDwc.getConnectionTags();
 		    //System.out.println(connectionTags);
 		    FileAssert.assertEquals("mapping ok", mappedFile, mappedFileTest1);

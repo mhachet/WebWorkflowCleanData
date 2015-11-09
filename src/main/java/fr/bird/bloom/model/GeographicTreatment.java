@@ -4,6 +4,18 @@
  */
 package fr.bird.bloom.model;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
+import fr.bird.bloom.utils.BloomConfig;
+import org.geotools.geojson.geom.GeometryJSON;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,20 +25,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import fr.bird.bloom.utils.BloomConfig;
-import org.geotools.geojson.geom.GeometryJSON;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
+import java.util.List;
+import java.util.Map;
 
 /**
  * src.model
@@ -41,9 +41,9 @@ public class GeographicTreatment {
 	private int nbWrongCoordinates = 0;
 	private int nbWrongIso2 = 0;
 	private DarwinCore darwinCore;
-	private ArrayList<String> wrongGeoList;
-	private ArrayList<String> wrongCoordinatesList;
-	private ArrayList<String> wrongPolygonList;
+	private List<String> wrongGeoList;
+	private List<String> wrongCoordinatesList;
+	private List<String> wrongPolygonList;
 	private File wrongGeoFile;
 	private File wrongCoordinatesFile;
 	private File wrongPolygonFile;
@@ -60,20 +60,20 @@ public class GeographicTreatment {
 	 * 
 	 * @return ArrayList<String>
 	 */
-	public ArrayList<String> geoGraphicTreatment(){
-		ArrayList<String> infosSummary = new ArrayList<>();
+	public List<String> geoGraphicTreatment(){
+		List<String> infosSummary = new ArrayList<>();
 
 		this.deleteWrongIso2();
 		this.createTableClean();
 
-		ArrayList<String> wrongCoordinates = this.deleteWrongCoordinates();
+		List<String> wrongCoordinates = this.deleteWrongCoordinates();
 		this.setWrongCoordinatesList(wrongCoordinates);
 		infosSummary.add("error number : " + Integer.toString(wrongCoordinates.size()));
 
-		ArrayList<String> wrongGeoSpatial = this.deleteWrongGeospatial();
+		List<String> wrongGeoSpatial = this.deleteWrongGeospatial();
 		this.setWrongGeoList(wrongGeoSpatial);
 
-		ArrayList<String> wrongPolygon = this.checkCoordinatesIso2Code();
+		List<String> wrongPolygon = this.checkCoordinatesIso2Code();
 		this.setWrongPolygonList(wrongPolygon);
 
 		return infosSummary;
@@ -84,14 +84,14 @@ public class GeographicTreatment {
 	 * 
 	 * @return void
 	 */
-	public ArrayList<String> checkCoordinatesIso2Code(){
+	public List<String> checkCoordinatesIso2Code(){
 
 
 		this.getDarwinCore().associateIdData();
 
-		ArrayList<String> listToDelete = new ArrayList<>();
+		List<String> listToDelete = new ArrayList<>();
 
-		HashMap<String, ArrayList<String>> idAssoData = this.getDarwinCore().getIdAssoData();
+		Map<String, List<String>> idAssoData = this.getDarwinCore().getIdAssoData();
 		final String resourcePath = BloomConfig.getResourcePath();
 
 		int iLatitude = this.getDarwinCore().getIndiceFromTag("decimalLatitude_");
@@ -102,7 +102,7 @@ public class GeographicTreatment {
 
 		for (String id_ : idAssoData.keySet()) {
 			if(!id_ .equals("id_")){
-				ArrayList<String> listInfos = idAssoData.get(id_);
+				List<String> listInfos = idAssoData.get(id_);
 
 				float latitude = 0;
 				float longitude = 0;
@@ -139,10 +139,10 @@ public class GeographicTreatment {
 						e.printStackTrace();
 					}
 					DatabaseTreatment newConnectionSelectID = new DatabaseTreatment(statement);
-					ArrayList<String> messagesSelectID = new ArrayList<String>();
+					List<String> messagesSelectID = new ArrayList<String>();
 					String sqlSelectID = "SELECT abstract_,acceptedNameUsage_,acceptedNameUsageID_,accessRights_,accrualMethod_,accrualPeriodicity_,accrualPolicy_,alternative_,associatedMedia_,associatedOccurrences_,associatedOrganisms_,associatedReferences_,associatedSequences_,associatedTaxa_,audience_,available_,basisOfRecord_,bed_,behavior_,bibliographicCitation_,catalogNumber_,class_,classKey_,collectionCode_,collectionID_,conformsTo_,continent_,contributor_,coordinateAccuracy_,coordinatePrecision_,coordinateUncertaintyInMeters_,country_,countryCode_,county_,coverage_,created_,creator_,dataGeneralizations_,datasetID_,datasetKey_,datasetName_,date_,dateAccepted_,dateCopyrighted_,dateIdentified_,dateSubmitted_,day_,decimalLatitude_,decimalLongitude_,depth_,depthAccuracy_,description_,disposition_,distanceAboveSurface_,distanceAboveSurfaceAccuracy_,dynamicProperties_,earliestAgeOrLowestStage_,earliestEonOrLowestEonothem_,earliestEpochOrLowestSeries_,earliestEraOrLowestErathem_,earliestPeriodOrLowestSystem_,educationLevel_,elevation_,elevationAccuracy_,endDayOfYear_,establishmentMeans_,event_,eventDate_,eventID_,eventRemarks_,eventTime_,extent_,family_,familyKey_,fieldNotes_,fieldNumber_,footprintSpatialFit_,footprintSRS_,footprintWKT_,format_,formation_,gbifID_,genericName_,genus_,genusKey_,geodeticDatum_,geologicalContext_,geologicalContextID_,georeferencedBy_,georeferencedDate_,georeferenceProtocol_,georeferenceRemarks_,georeferenceSources_,georeferenceVerificationStatus_,group_,habitat_,hasCoordinate_,hasFormat_,hasGeospatialIssues_,hasPart_,hasVersion_,higherClassification_,higherGeography_,higherGeographyID_,highestBiostratigraphicZone_,identification_,identificationID_,identificationQualifier_,identificationReferences_,identificationRemarks_,identificationVerificationStatus_,identifiedBy_,identifier_,idFile_,individualCount_,individualID_,informationWithheld_,infraspecificEpithet_,institutionCode_,institutionID_,instructionalMethod_,isFormatOf_,island_,islandGroup_,isPartOf_,isReferencedBy_,isReplacedBy_,isRequiredBy_,issue_,issued_,isVersionOf_,kingdom_,kingdomKey_,language_,lastCrawled_,lastInterpreted_,lastParsed_,latestAgeOrHighestStage_,latestEonOrHighestEonothem_,latestEpochOrHighestSeries_,latestEraOrHighestErathem_,latestPeriodOrHighestSystem_,license_,lifeStage_,lithostratigraphicTerms_,livingSpecimen_,locality_,locationAccordingTo_,locationID_,locationRemarks_,lowestBiostratigraphicZone_,machineObservation_,materialSample_,materialSampleID_,maximumDepthinMeters_,maximumDistanceAboveSurfaceInMeters_,maximumElevationInMeters_,measurementAccuracy_,measurementDeterminedBy_,measurementDeterminedDate_,measurementID_,measurementMethod_,measurementOrFact_,measurementRemarks_,measurementType_,measurementUnit_,mediator_,mediaType_,medium_,member_,minimumDepthinMeters_,minimumDistanceAboveSurfaceInMeters_,minimumElevationInMeters_,modified_,month_,municipality_,nameAccordingTo_,nameAccordingToID_,namePublishedIn_,namePublishedInID_,namePublishedInYear_,nomenclaturalCode_,nomenclaturalStatus_,occurrence_,occurrenceDetails_,occurrenceID_,occurrenceRemarks_,occurrenceStatus_,order_,orderKey_,organism_,organismID_,organismName_,organismRemarks_,organismScope_,originalNameUsage_,originalNameUsageID_,otherCatalogNumbers_,ownerInstitutionCode_,parentNameUsage_,parentNameUsageID_,phylum_,phylumKey_,pointRadiusSpatialFit_,preparations_,preservedSpecimen_,previousIdentifications_,protocol_,provenance_,publisher_,publishingCountry_,recordedBy_,recordNumber_,references_,relatedResourceID_,relationshipAccordingTo_,relationshipEstablishedDate_,relationshipRemarks_,relation_,replaces_,reproductiveCondition_,requires_,resourceID_,resourceRelationship_,resourceRelationshipID_,rights_,rightsHolder_,samplingEffort_,samplingProtocol_,scientificName_,scientificNameAuthorship_,scientificNameID_,sex_,source_,spatial_,species_,speciesKey_,specificEpithet_,startDayOfYear_,stateProvince_,subgenus_,subgenusKey_,subject_,tableOfContents_,taxon_,taxonConceptID_,taxonID_,taxonKey_,taxonomicStatus_,taxonRank_,taxonRemarks_,temporal_,title_,type_,typeStatus_,typifiedName_,valid_,verbatimCoordinates_,verbatimCoordinateSystem_,verbatimDate_,verbatimDepth_,verbatimElevation_,verbatimEventDate_,verbatimLatitude_,verbatimLocality_,verbatimLongitude_,verbatimSRS_,verbatimTaxonRank_,vernacularName_,waterBody_,year_ FROM Workflow.Clean_" + this.getNbSessionRandom() + " WHERE Clean_" + this.getNbSessionRandom() + ".id_=" + id_ + ";";
 					messagesSelectID.addAll(newConnectionSelectID.executeSQLcommand("executeQuery", sqlSelectID));
-					ArrayList<String> selectIDResults = newConnectionSelectID.getResultatSelect();
+					List<String> selectIDResults = newConnectionSelectID.getResultatSelect();
 
 					for(int j = 0 ; j < messagesSelectID.size() ; j++){
 						System.out.println(messagesSelectID.get(j));
@@ -163,7 +163,7 @@ public class GeographicTreatment {
 						e.printStackTrace();
 					}
 					DatabaseTreatment newConnectionDeleteID = new DatabaseTreatment(statementDelete);
-					ArrayList<String> messagesDeleteID = new ArrayList<String>();
+					List<String> messagesDeleteID = new ArrayList<String>();
 					String sqlDeleteID = "DELETE FROM Workflow.Clean_" + this.getNbSessionRandom() + " WHERE id_=" + id_ + ";";
 					messagesDeleteID.addAll(newConnectionDeleteID.executeSQLcommand("executeUpdate", sqlDeleteID));
 
@@ -198,12 +198,12 @@ public class GeographicTreatment {
 		}
 		DatabaseTreatment newConnection = new DatabaseTreatment(statement);
 
-		ArrayList<String> messages = new ArrayList<String>();
+		List<String> messages = new ArrayList<String>();
 		messages.add("\n--- Convert iso2 code to iso3 code ---");
 		String sqlConvertIso2Iso3 = "SELECT iso3_ FROM Workflow.IsoCode WHERE iso2_ = \"" + iso2.replaceAll("\"", "") + "\";";
 		messages.addAll(newConnection.executeSQLcommand("executeQuery", sqlConvertIso2Iso3));
 
-		ArrayList<String> resultatConvert = newConnection.getResultatSelect();
+		List<String> resultatConvert = newConnection.getResultatSelect();
 		if(resultatConvert.size() != 2){
 			System.err.println("Several iso2");
 		}
@@ -304,7 +304,7 @@ public class GeographicTreatment {
 			e.printStackTrace();
 		}
 		DatabaseTreatment newConnectionTemp = new DatabaseTreatment(statement);
-		ArrayList<String> messages = new ArrayList<String>();
+		List<String> messages = new ArrayList<String>();
 		String choiceStatement = "executeUpdate";
 		messages.add("\n--- Create temporary table with correct ISO2 ---");
 		String sqlCreateTemp = "CREATE TABLE Workflow.temp_" + this.getNbSessionRandom() + " AS SELECT DarwinCoreInput.* FROM Workflow.DarwinCoreInput,Workflow.IsoCode WHERE countryCode_=IsoCode.iso2_;";
@@ -337,7 +337,7 @@ public class GeographicTreatment {
 			e.printStackTrace();
 		}
 		DatabaseTreatment newConnectionClean = new DatabaseTreatment(statement);
-		ArrayList<String> messages = new ArrayList<String>();
+		List<String> messages = new ArrayList<String>();
 		String choiceStatement = "executeUpdate";
 		messages.add("\n--- Create Table Clean from temporary table ---");
 		String sqlCreateClean = "CREATE TABLE Workflow.Clean_" + this.getNbSessionRandom() + " AS SELECT * FROM Workflow.temp_" + this.getNbSessionRandom() + " WHERE " +
@@ -357,7 +357,7 @@ public class GeographicTreatment {
 	 * 
 	 * @return File wrong coordinates
 	 */
-	public ArrayList<String> deleteWrongCoordinates(){
+	public List<String> deleteWrongCoordinates(){
 		Statement statement = null;
 		try {
 			statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -367,12 +367,12 @@ public class GeographicTreatment {
 		}
 		DatabaseTreatment newConnection = new DatabaseTreatment(statement);
 
-		ArrayList<String> messages = new ArrayList<String>();
+		List<String> messages = new ArrayList<String>();
 		messages.add("\n--- Select wrong coordinates ---");
 
 		String sqlRetrieveWrongCoord = "SELECT abstract_,acceptedNameUsage_,acceptedNameUsageID_,accessRights_,accrualMethod_,accrualPeriodicity_,accrualPolicy_,alternative_,associatedMedia_,associatedOccurrences_,associatedOrganisms_,associatedReferences_,associatedSequences_,associatedTaxa_,audience_,available_,basisOfRecord_,bed_,behavior_,bibliographicCitation_,catalogNumber_,class_,classKey_,collectionCode_,collectionID_,conformsTo_,continent_,contributor_,coordinateAccuracy_,coordinatePrecision_,coordinateUncertaintyInMeters_,country_,countryCode_,county_,coverage_,created_,creator_,dataGeneralizations_,datasetID_,datasetKey_,datasetName_,date_,dateAccepted_,dateCopyrighted_,dateIdentified_,dateSubmitted_,day_,decimalLatitude_,decimalLongitude_,depth_,depthAccuracy_,description_,disposition_,distanceAboveSurface_,distanceAboveSurfaceAccuracy_,dynamicProperties_,earliestAgeOrLowestStage_,earliestEonOrLowestEonothem_,earliestEpochOrLowestSeries_,earliestEraOrLowestErathem_,earliestPeriodOrLowestSystem_,educationLevel_,elevation_,elevationAccuracy_,endDayOfYear_,establishmentMeans_,event_,eventDate_,eventID_,eventRemarks_,eventTime_,extent_,family_,familyKey_,fieldNotes_,fieldNumber_,footprintSpatialFit_,footprintSRS_,footprintWKT_,format_,formation_,gbifID_,genericName_,genus_,genusKey_,geodeticDatum_,geologicalContext_,geologicalContextID_,georeferencedBy_,georeferencedDate_,georeferenceProtocol_,georeferenceRemarks_,georeferenceSources_,georeferenceVerificationStatus_,group_,habitat_,hasCoordinate_,hasFormat_,hasGeospatialIssues_,hasPart_,hasVersion_,higherClassification_,higherGeography_,higherGeographyID_,highestBiostratigraphicZone_,identification_,identificationID_,identificationQualifier_,identificationReferences_,identificationRemarks_,identificationVerificationStatus_,identifiedBy_,identifier_,idFile_,individualCount_,individualID_,informationWithheld_,infraspecificEpithet_,institutionCode_,institutionID_,instructionalMethod_,isFormatOf_,island_,islandGroup_,isPartOf_,isReferencedBy_,isReplacedBy_,isRequiredBy_,issue_,issued_,isVersionOf_,kingdom_,kingdomKey_,language_,lastCrawled_,lastInterpreted_,lastParsed_,latestAgeOrHighestStage_,latestEonOrHighestEonothem_,latestEpochOrHighestSeries_,latestEraOrHighestErathem_,latestPeriodOrHighestSystem_,license_,lifeStage_,lithostratigraphicTerms_,livingSpecimen_,locality_,locationAccordingTo_,locationID_,locationRemarks_,lowestBiostratigraphicZone_,machineObservation_,materialSample_,materialSampleID_,maximumDepthinMeters_,maximumDistanceAboveSurfaceInMeters_,maximumElevationInMeters_,measurementAccuracy_,measurementDeterminedBy_,measurementDeterminedDate_,measurementID_,measurementMethod_,measurementOrFact_,measurementRemarks_,measurementType_,measurementUnit_,mediator_,mediaType_,medium_,member_,minimumDepthinMeters_,minimumDistanceAboveSurfaceInMeters_,minimumElevationInMeters_,modified_,month_,municipality_,nameAccordingTo_,nameAccordingToID_,namePublishedIn_,namePublishedInID_,namePublishedInYear_,nomenclaturalCode_,nomenclaturalStatus_,occurrence_,occurrenceDetails_,occurrenceID_,occurrenceRemarks_,occurrenceStatus_,order_,orderKey_,organism_,organismID_,organismName_,organismRemarks_,organismScope_,originalNameUsage_,originalNameUsageID_,otherCatalogNumbers_,ownerInstitutionCode_,parentNameUsage_,parentNameUsageID_,phylum_,phylumKey_,pointRadiusSpatialFit_,preparations_,preservedSpecimen_,previousIdentifications_,protocol_,provenance_,publisher_,publishingCountry_,recordedBy_,recordNumber_,references_,relatedResourceID_,relationshipAccordingTo_,relationshipEstablishedDate_,relationshipRemarks_,relation_,replaces_,reproductiveCondition_,requires_,resourceID_,resourceRelationship_,resourceRelationshipID_,rights_,rightsHolder_,samplingEffort_,samplingProtocol_,scientificName_,scientificNameAuthorship_,scientificNameID_,sex_,source_,spatial_,species_,speciesKey_,specificEpithet_,startDayOfYear_,stateProvince_,subgenus_,subgenusKey_,subject_,tableOfContents_,taxon_,taxonConceptID_,taxonID_,taxonKey_,taxonomicStatus_,taxonRank_,taxonRemarks_,temporal_,title_,type_,typeStatus_,typifiedName_,valid_,verbatimCoordinates_,verbatimCoordinateSystem_,verbatimDate_,verbatimDepth_,verbatimElevation_,verbatimEventDate_,verbatimLatitude_,verbatimLocality_,verbatimLongitude_,verbatimSRS_,verbatimTaxonRank_,vernacularName_,waterBody_,year_ FROM Workflow.DarwinCoreInput WHERE (UUID_=\"" + this.getNbSessionRandom() + "\") AND (decimalLatitude_=0 OR decimalLatitude_>90 OR decimalLatitude_<-90 OR decimalLongitude_=0 OR decimalLongitude_>180 OR decimalLongitude_<-180);";
 		messages.addAll(newConnection.executeSQLcommand("executeQuery", sqlRetrieveWrongCoord));
-		ArrayList<String> resultatSelect = newConnection.getResultatSelect();
+		List<String> resultatSelect = newConnection.getResultatSelect();
 		messages.add("nb lignes affectées :" + Integer.toString(resultatSelect.size() - 1));
 
 
@@ -402,7 +402,7 @@ public class GeographicTreatment {
 	 * 
 	 * @return File wrong geospatial
 	 */
-	public ArrayList<String> deleteWrongGeospatial(){
+	public List<String> deleteWrongGeospatial(){
 		Statement statement = null;
 		try {
 			statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -412,13 +412,13 @@ public class GeographicTreatment {
 		}
 		DatabaseTreatment newConnection = new DatabaseTreatment(statement);
 
-		ArrayList<String> messages = new ArrayList<String>();
+		List<String> messages = new ArrayList<String>();
 		messages.add("\n--- Select wrong geospatialIssues ---");
 
 		String sqlRetrieveWrongGeo = "SELECT abstract_,acceptedNameUsage_,acceptedNameUsageID_,accessRights_,accrualMethod_,accrualPeriodicity_,accrualPolicy_,alternative_,associatedMedia_,associatedOccurrences_,associatedOrganisms_,associatedReferences_,associatedSequences_,associatedTaxa_,audience_,available_,basisOfRecord_,bed_,behavior_,bibliographicCitation_,catalogNumber_,class_,classKey_,collectionCode_,collectionID_,conformsTo_,continent_,contributor_,coordinateAccuracy_,coordinatePrecision_,coordinateUncertaintyInMeters_,country_,countryCode_,county_,coverage_,created_,creator_,dataGeneralizations_,datasetID_,datasetKey_,datasetName_,date_,dateAccepted_,dateCopyrighted_,dateIdentified_,dateSubmitted_,day_,decimalLatitude_,decimalLongitude_,depth_,depthAccuracy_,description_,disposition_,distanceAboveSurface_,distanceAboveSurfaceAccuracy_,dynamicProperties_,earliestAgeOrLowestStage_,earliestEonOrLowestEonothem_,earliestEpochOrLowestSeries_,earliestEraOrLowestErathem_,earliestPeriodOrLowestSystem_,educationLevel_,elevation_,elevationAccuracy_,endDayOfYear_,establishmentMeans_,event_,eventDate_,eventID_,eventRemarks_,eventTime_,extent_,family_,familyKey_,fieldNotes_,fieldNumber_,footprintSpatialFit_,footprintSRS_,footprintWKT_,format_,formation_,gbifID_,genericName_,genus_,genusKey_,geodeticDatum_,geologicalContext_,geologicalContextID_,georeferencedBy_,georeferencedDate_,georeferenceProtocol_,georeferenceRemarks_,georeferenceSources_,georeferenceVerificationStatus_,group_,habitat_,hasCoordinate_,hasFormat_,hasGeospatialIssues_,hasPart_,hasVersion_,higherClassification_,higherGeography_,higherGeographyID_,highestBiostratigraphicZone_,identification_,identificationID_,identificationQualifier_,identificationReferences_,identificationRemarks_,identificationVerificationStatus_,identifiedBy_,identifier_,idFile_,individualCount_,individualID_,informationWithheld_,infraspecificEpithet_,institutionCode_,institutionID_,instructionalMethod_,isFormatOf_,island_,islandGroup_,isPartOf_,isReferencedBy_,isReplacedBy_,isRequiredBy_,issue_,issued_,isVersionOf_,kingdom_,kingdomKey_,language_,lastCrawled_,lastInterpreted_,lastParsed_,latestAgeOrHighestStage_,latestEonOrHighestEonothem_,latestEpochOrHighestSeries_,latestEraOrHighestErathem_,latestPeriodOrHighestSystem_,license_,lifeStage_,lithostratigraphicTerms_,livingSpecimen_,locality_,locationAccordingTo_,locationID_,locationRemarks_,lowestBiostratigraphicZone_,machineObservation_,materialSample_,materialSampleID_,maximumDepthinMeters_,maximumDistanceAboveSurfaceInMeters_,maximumElevationInMeters_,measurementAccuracy_,measurementDeterminedBy_,measurementDeterminedDate_,measurementID_,measurementMethod_,measurementOrFact_,measurementRemarks_,measurementType_,measurementUnit_,mediator_,mediaType_,medium_,member_,minimumDepthinMeters_,minimumDistanceAboveSurfaceInMeters_,minimumElevationInMeters_,modified_,month_,municipality_,nameAccordingTo_,nameAccordingToID_,namePublishedIn_,namePublishedInID_,namePublishedInYear_,nomenclaturalCode_,nomenclaturalStatus_,occurrence_,occurrenceDetails_,occurrenceID_,occurrenceRemarks_,occurrenceStatus_,order_,orderKey_,organism_,organismID_,organismName_,organismRemarks_,organismScope_,originalNameUsage_,originalNameUsageID_,otherCatalogNumbers_,ownerInstitutionCode_,parentNameUsage_,parentNameUsageID_,phylum_,phylumKey_,pointRadiusSpatialFit_,preparations_,preservedSpecimen_,previousIdentifications_,protocol_,provenance_,publisher_,publishingCountry_,recordedBy_,recordNumber_,references_,relatedResourceID_,relationshipAccordingTo_,relationshipEstablishedDate_,relationshipRemarks_,relation_,replaces_,reproductiveCondition_,requires_,resourceID_,resourceRelationship_,resourceRelationshipID_,rights_,rightsHolder_,samplingEffort_,samplingProtocol_,scientificName_,scientificNameAuthorship_,scientificNameID_,sex_,source_,spatial_,species_,speciesKey_,specificEpithet_,startDayOfYear_,stateProvince_,subgenus_,subgenusKey_,subject_,tableOfContents_,taxon_,taxonConceptID_,taxonID_,taxonKey_,taxonomicStatus_,taxonRank_,taxonRemarks_,temporal_,title_,type_,typeStatus_,typifiedName_,valid_,verbatimCoordinates_,verbatimCoordinateSystem_,verbatimDate_,verbatimDepth_,verbatimElevation_,verbatimEventDate_,verbatimLatitude_,verbatimLocality_,verbatimLongitude_,verbatimSRS_,verbatimTaxonRank_,vernacularName_,waterBody_,year_ FROM Workflow.DarwinCoreInput WHERE hasGeospatialIssues_='true' AND !(decimalLatitude_=0 OR decimalLatitude_>90 OR decimalLatitude_<-90 OR decimalLongitude_=0 OR decimalLongitude_>180 OR decimalLongitude_<-180);";
 		messages.addAll(newConnection.executeSQLcommand("executeQuery", sqlRetrieveWrongGeo));
 
-		ArrayList<String> resultatSelect = newConnection.getResultatSelect();
+		List<String> resultatSelect = newConnection.getResultatSelect();
 
 		messages.add("nb lignes affectées : " + Integer.toString(resultatSelect.size() - 1));
 
@@ -479,27 +479,27 @@ public class GeographicTreatment {
 		this.darwinCore = darwinCore;
 	}
 
-	public ArrayList<String> getWrongGeoList() {
+	public List<String> getWrongGeoList() {
 		return wrongGeoList;
 	}
 
-	public void setWrongGeoList(ArrayList<String> wrongGeoList) {
+	public void setWrongGeoList(List<String> wrongGeoList) {
 		this.wrongGeoList = wrongGeoList;
 	}
 
-	public ArrayList<String> getWrongCoordinatesList() {
+	public List<String> getWrongCoordinatesList() {
 		return wrongCoordinatesList;
 	}
 
-	public void setWrongCoordinatesList(ArrayList<String> wrongCoordinatesList) {
+	public void setWrongCoordinatesList(List<String> wrongCoordinatesList) {
 		this.wrongCoordinatesList = wrongCoordinatesList;
 	}
 
-	public ArrayList<String> getWrongPolygonList() {
+	public List<String> getWrongPolygonList() {
 		return wrongPolygonList;
 	}
 
-	public void setWrongPolygonList(ArrayList<String> wrongPolygonList) {
+	public void setWrongPolygonList(List<String> wrongPolygonList) {
 		this.wrongPolygonList = wrongPolygonList;
 	}
 

@@ -121,7 +121,7 @@ public class CSVFile {
     /**
      * @return ArrayList<String>
      */
-    public ArrayList<String> getLines() {
+    public List<String> getLines() {
         return lines;
     }
 

@@ -5,6 +5,7 @@
 package fr.bird.bloom.beans;
 
 import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -20,7 +21,7 @@ public class Step8_CheckCoordinatesRaster {
     private int nbFound = 0;
     private String pathWrongRaster = "";
     private String pathMatrixResultRaster = "";
-    private HashMap<String, Boolean> processRaster = new HashMap<>();
+    private Map<String, Boolean> processRaster = new HashMap<>();
     
     public Step8_CheckCoordinatesRaster(){
 	
@@ -66,11 +67,11 @@ public class Step8_CheckCoordinatesRaster {
         this.pathMatrixResultRaster = pathMatrixResultRaster;
     }
 
-	public HashMap<String, Boolean> getProcessRaster() {
+	public Map<String, Boolean> getProcessRaster() {
 		return processRaster;
 	}
 
-	public void setProcessRaster(HashMap<String, Boolean> processRaster) {
+	public void setProcessRaster(Map<String, Boolean> processRaster) {
 		this.processRaster = processRaster;
 	}
     
