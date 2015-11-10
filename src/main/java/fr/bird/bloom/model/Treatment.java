@@ -318,14 +318,14 @@ public class Treatment {
 
 		if(includeSynonyms != null){
 			treatmentSynonyms = new SynonymsTreatment(includeSynonyms);
-			treatmentSynonyms.setNbSessionRandom(this.getNbSessionRandom());
+			treatmentSynonyms.setUuid(this.getNbSessionRandom());
 			//treatmentSynonyms.getTagsSynonymsTempTable();
 			treatmentSynonyms.createSynonymTempTable();
 			treatmentSynonyms.updateCleanFromSynonymTemp();
 		}
 		else{
 			treatmentSynonyms = new SynonymsTreatment();
-			treatmentSynonyms.setNbSessionRandom(this.getNbSessionRandom());
+			treatmentSynonyms.setUuid(this.getNbSessionRandom());
 			treatmentSynonyms.updateClean();
 
 		}
@@ -340,7 +340,7 @@ public class Treatment {
 	 */
 	public boolean tdwgCodeOption(){
 		TdwgTreatment tdwg4Treatment = new TdwgTreatment();
-		tdwg4Treatment.setNbSessionRandom(this.getNbSessionRandom());
+		tdwg4Treatment.setUuid(this.getNbSessionRandom());
 
 		tdwg4Treatment.checkIsoTdwgCode(fileDarwinCore);
 
@@ -357,7 +357,7 @@ public class Treatment {
 	public GeographicTreatment checkGeographicOption(){
 		GeographicTreatment geoTreatment = new GeographicTreatment(this.getFileDarwinCore());
 
-		geoTreatment.setNbSessionRandom(this.getNbSessionRandom());
+		geoTreatment.setUuid(this.getNbSessionRandom());
 
 		geoTreatment.geoGraphicTreatment();
 
@@ -401,7 +401,7 @@ public class Treatment {
 	 */
 	public EstablishmentTreatment establishmentMeansOption(List<String> listEstablishmentChecked){
 		EstablishmentTreatment establishTreatment = new EstablishmentTreatment(listEstablishmentChecked);
-		establishTreatment.setNbSessionRandom(this.getNbSessionRandom());
+		establishTreatment.setUuid(this.getNbSessionRandom());
 
 		establishTreatment.establishmentMeansTreatment();
 		List<String> noEstablishment = establishTreatment.getNoEstablishmentList();

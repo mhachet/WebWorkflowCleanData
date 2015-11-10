@@ -70,7 +70,7 @@ public class LaunchWorkflow {
 	public void initialiseLaunchWorkflow() throws IOException{
 		//System.out.println("repCourant : "  + repCourant);
 		this.dataTreatment = new Treatment();
-		this.dataTreatment.setNbSessionRandom(initialisation.getNbSessionRandom());
+		this.dataTreatment.setNbSessionRandom(initialisation.getUuid());
 
 		finalisation = new Finalisation();
 		step1 = new Step1_MappingDwc();
@@ -458,8 +458,8 @@ public class LaunchWorkflow {
 		List<File> listFinalOutput = new ArrayList<>();
 		List<String> listPathsOutput = new ArrayList<>();
 
-		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + initialisation.getNbSessionRandom() + "/final_results/").exists()){
-			new File(BloomConfig.getDirectoryPath() + "temp/" + initialisation.getNbSessionRandom() + "/final_results/").mkdir();
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + initialisation.getUuid() + "/final_results/").exists()){
+			new File(BloomConfig.getDirectoryPath() + "temp/" + initialisation.getUuid() + "/final_results/").mkdir();
 		}
 
 		int nbFiles = this.initialisation.getNbFiles();
@@ -477,8 +477,8 @@ public class LaunchWorkflow {
 			}
 			DatabaseTreatment newConnection = new DatabaseTreatment(statement);
 			
-			List<String > resultCleanTable = newConnection.getCleanTableFromIdFile(idFile, initialisation.getNbSessionRandom());
-			String nameFile = originalName.replace("." + originalExtension, "") + "_" + initialisation.getNbSessionRandom() + "_clean.csv";
+			List<String > resultCleanTable = newConnection.getCleanTableFromIdFile(idFile, initialisation.getUuid());
+			String nameFile = originalName.replace("." + originalExtension, "") + "_" + initialisation.getUuid() + "_clean.csv";
 			File cleanOutput = this.dataTreatment.createFileCsv(resultCleanTable, nameFile, "final_results");
 
 			listFinalOutput.add(cleanOutput);

@@ -25,7 +25,7 @@ public class SynonymsTreatment {
 	private File synonymsFile;
 	private ArrayList<String> tagsList;
 	private int nbSynonymInvolved;
-	private String nbSessionRandom;
+	private String uuid;
 
 	public SynonymsTreatment (File fileSynonyms){
 		this.synonymsFile = fileSynonyms;
@@ -84,9 +84,9 @@ public class SynonymsTreatment {
 		List<String> messages = new ArrayList<String>();
 		messages.add("\n--- Select to include synonyms ---");
 
-		String sqlRetrieveSynonyms = "SELECT Clean_" + this.getNbSessionRandom() + ".*,Taxon.taxonID_ ,Taxon.acceptedNameUsageID_,Taxon.acceptedNameUsage_," +
+		String sqlRetrieveSynonyms = "SELECT Clean_" + this.getUuid() + ".*,Taxon.taxonID_ ,Taxon.acceptedNameUsageID_,Taxon.acceptedNameUsage_," +
 				"Taxon.taxonomicStatus_,Taxon.scientificNameProper_ " +
-				"FROM Workflow.Clean_" + this.getNbSessionRandom() + ",Workflow.Taxon WHERE Clean_" + this.getNbSessionRandom() + ".scientificName_=Taxon.scientificNameProper_"; 
+				"FROM Workflow.Clean_" + this.getUuid() + ",Workflow.Taxon WHERE Clean_" + this.getUuid() + ".scientificName_=Taxon.scientificNameProper_";
 		messages.addAll(newConnection.executeSQLcommand("executeQuery", sqlRetrieveSynonyms));
 		List<String> resultatSelect = newConnection.getResultatSelect();
 		if(resultatSelect != null){
@@ -118,8 +118,8 @@ public class SynonymsTreatment {
 			String acceptedNameUsage_ = data[275];
 			String taxonomicStatus_ = data[276];
 
-			String sqlUpdateClean = "UPDATE Workflow.Clean_" + this.getNbSessionRandom() + " SET Clean_" + this.getNbSessionRandom() + ".taxonID_=" + taxonID_ + ",Clean_" + this.getNbSessionRandom() + ".acceptedNameUsageID_=" 
-					+ acceptedNameUsageID_ + ",Clean_" + this.getNbSessionRandom() + ".acceptedNameUsage_=" + acceptedNameUsage_ + ",Clean_" + this.getNbSessionRandom() + ".taxonomicStatus_=" + taxonomicStatus_ 
+			String sqlUpdateClean = "UPDATE Workflow.Clean_" + this.getUuid() + " SET Clean_" + this.getUuid() + ".taxonID_=" + taxonID_ + ",Clean_" + this.getUuid() + ".acceptedNameUsageID_="
+					+ acceptedNameUsageID_ + ",Clean_" + this.getUuid() + ".acceptedNameUsage_=" + acceptedNameUsage_ + ",Clean_" + this.getUuid() + ".taxonomicStatus_=" + taxonomicStatus_
 					+ " WHERE Clean.id_=" + id_ + ";"; 
 			messagesUpdate.add(sqlUpdateClean);
 			messagesUpdate.addAll(newConnectionUpdate.executeSQLcommand("executeUpdate", sqlUpdateClean));
@@ -149,8 +149,8 @@ public class SynonymsTreatment {
 		List<String> messages = new ArrayList<String>();
 		messages.add("\n--- Select to include synonyms ---");
 
-		String sqlRetrieveSynonyms = "SELECT Clean_" + this.getNbSessionRandom() + ".*,SynonymTemp_" + this.getNbSessionRandom() + ".* " +
-				"FROM Workflow.Clean_" + this.getNbSessionRandom() + ",Workflow.SynonymTemp_" + this.getNbSessionRandom() + " WHERE Clean_" + this.getNbSessionRandom() + ".scientificName_=SynonymTemp_" + this.getNbSessionRandom() + ".scientificNameProper_"; 
+		String sqlRetrieveSynonyms = "SELECT Clean_" + this.getUuid() + ".*,SynonymTemp_" + this.getUuid() + ".* " +
+				"FROM Workflow.Clean_" + this.getUuid() + ",Workflow.SynonymTemp_" + this.getUuid() + " WHERE Clean_" + this.getUuid() + ".scientificName_=SynonymTemp_" + this.getUuid() + ".scientificNameProper_";
 		messages.addAll(newConnection.executeSQLcommand("executeQuery", sqlRetrieveSynonyms));
 		List<String> resultatSelect = newConnection.getResultatSelect();
 		if(resultatSelect != null){
@@ -191,7 +191,7 @@ public class SynonymsTreatment {
 
 		for(int i = 0 ; i < tags.length ; i++){
 			if(i == 0){
-				sqlCreateSynonymTemp += "CREATE TABLE Workflow.SynonymTemp_" + this.getNbSessionRandom() + " (id_ BIGINT NOT NULL AUTO_INCREMENT PRIMARY_KEY,";
+				sqlCreateSynonymTemp += "CREATE TABLE Workflow.SynonymTemp_" + this.getUuid() + " (id_ BIGINT NOT NULL AUTO_INCREMENT PRIMARY_KEY,";
 			}
 			else if(i < tags.length - 1){
 				sqlCreateSynonymTemp += tags[i] + " " + type + ",";
@@ -245,12 +245,12 @@ public class SynonymsTreatment {
 		this.nbSynonymInvolved = nbSynonymInvolved;
 	}
 
-	public String getNbSessionRandom() {
-		return nbSessionRandom;
+	public String getUuid() {
+		return uuid;
 	}
 
-	public void setNbSessionRandom(String nbSessionRandom) {
-		this.nbSessionRandom = nbSessionRandom;
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
 }

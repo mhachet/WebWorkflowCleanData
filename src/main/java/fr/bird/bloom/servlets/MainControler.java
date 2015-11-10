@@ -55,7 +55,7 @@ import java.util.UUID;
 public class MainControler extends HttpServlet {
 
     private Initialise initialisation;
-    private String nbSessionRandom;
+    private String uuid;
     private Finalisation finalisation;
 
 
@@ -99,10 +99,10 @@ public class MainControler extends HttpServlet {
         response.setContentType("text/plain");
         initialisation = new Initialise();
 
-        //this.setNbSessionRandom(this.generateRandomKey());
-        //this.initialisation.setNbSessionRandom(this.getNbSessionRandom());
+        //this.setUuid(this.generateRandomKey());
+        //this.initialisation.setUuid(this.getUuid());
 
-        List<FileItem> listFileItems = initialiseRequest(request);
+        List<FileItem> listFileItems = getMultipartRequestParameters(request);
 
         this.initialiseParameters(listFileItems, response, request);
         request.setAttribute("initialise", initialisation);
@@ -143,7 +143,7 @@ public class MainControler extends HttpServlet {
      * @param request
      * @return List<FileItem>
      */
-    public List<FileItem> initialiseRequest(HttpServletRequest request) {
+    public List<FileItem> getMultipartRequestParameters(HttpServletRequest request) {
 
 
         DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
@@ -162,17 +162,17 @@ public class MainControler extends HttpServlet {
     /**
      * Initialise parameters/options
      *
-     * @param items
+     * @param fileItems
      * @param response
      * @return void
      * @throws IOException
      */
-    public void initialiseParameters(List<FileItem> items, HttpServletResponse response, HttpServletRequest request) throws IOException {
+    public void initialiseParameters(List<FileItem> fileItems, HttpServletResponse response, HttpServletRequest request) throws IOException {
 
         response.setContentType("text/html");
         response.addHeader("Access-Control-Allow-Origin", "*");
 
-        Iterator<FileItem> iterator = items.iterator();
+        Iterator<FileItem> iterator = fileItems.iterator();
         List<MappingDwC> listMappingFiles = new ArrayList<>();
         List<ReconciliationService> listReconcileFiles = new ArrayList<>();
         List<MappingReconcilePreparation> listMappingReconcileDWC = new ArrayList<>();
@@ -200,28 +200,28 @@ public class MainControler extends HttpServlet {
             String fieldName = item.getFieldName();
             //System.out.println("fieldName : " + fieldName + " item : " + item.getString());
             if (fieldName.contains("formulaire")) {
-                this.setNbSessionRandom(item.getString());
-                this.initialisation.setNbSessionRandom(this.getNbSessionRandom());
+                this.setUuid(item.getString());
+                this.initialisation.setUuid(this.getUuid());
                 if (!new File(getDirectoryPath() + "temp/").exists()) {
                     new File(getDirectoryPath() + "temp/").mkdirs();
                 }
-                if (!new File(getDirectoryPath() + "temp/" + this.getNbSessionRandom()).exists()) {
-                    new File(getDirectoryPath() + "temp/" + this.getNbSessionRandom());
+                if (!new File(getDirectoryPath() + "temp/" + this.getUuid()).exists()) {
+                    new File(getDirectoryPath() + "temp/" + this.getUuid());
                 }
-                if (!new File(getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/").exists()) {
-                    new File(getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/").mkdirs();
+                if (!new File(getDirectoryPath() + "temp/" + this.getUuid() + "/data/").exists()) {
+                    new File(getDirectoryPath() + "temp/" + this.getUuid() + "/data/").mkdirs();
                 }
-                if (!new File(getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/wrong/").exists()) {
-                    new File(getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/wrong/").mkdirs();
+                if (!new File(getDirectoryPath() + "temp/" + this.getUuid() + "/wrong/").exists()) {
+                    new File(getDirectoryPath() + "temp/" + this.getUuid() + "/wrong/").mkdirs();
                 }
-                if (!new File(getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/final_results/").exists()) {
-                    new File(getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/final_results/").mkdirs();
+                if (!new File(getDirectoryPath() + "temp/" + this.getUuid() + "/final_results/").exists()) {
+                    new File(getDirectoryPath() + "temp/" + this.getUuid() + "/final_results/").mkdirs();
                 }
             } else if (fieldName.equals(input)) {
                 DiskFileItem itemFile = (DiskFileItem) item;
                 String fileExtensionName = itemFile.getName();
                 fileExtensionName = FilenameUtils.getExtension(fileExtensionName);
-                File file = new File(getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/input_" + nbFilesInput + "_" + this.getNbSessionRandom() + ".csv");
+                File file = new File(getDirectoryPath() + "temp/" + this.getUuid() + "/data/input_" + nbFilesInput + "_" + this.getUuid() + ".csv");
                 if (!file.exists()) {
                     try {
                         System.out.println("writing");
@@ -237,7 +237,7 @@ public class MainControler extends HttpServlet {
 
                 listMappingFiles.add(newMappingDWC);
 
-                newMappingDWC.initialiseMapping(this.getNbSessionRandom());
+                newMappingDWC.initialiseMapping(this.getUuid());
                 HashMap<String, String> connectionTags = new HashMap<>();
                 List<String> tagsNoMapped = newMappingDWC.getTagsListNoMapped();
                 for (int i = 0; i < tagsNoMapped.size(); i++) {
@@ -265,7 +265,7 @@ public class MainControler extends HttpServlet {
                 fileExtensionName = FilenameUtils.getExtension(fileExtensionName);
                 String fileName = item.getName();
                 if (!Objects.equals(fileName, "")) {
-                    File file = new File(getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/" + fileName);
+                    File file = new File(getDirectoryPath() + "temp/" + this.getUuid() + "/data/" + fileName);
                     try {
                         item.write(file);
                     } catch (Exception e) {
@@ -283,7 +283,7 @@ public class MainControler extends HttpServlet {
                 fileExtensionName = FilenameUtils.getExtension(fileExtensionName);
                 String fileName = item.getName();
                 if (!Objects.equals(fileName, "")) {
-                    File file = new File(getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/" + fileName);
+                    File file = new File(getDirectoryPath() + "temp/" + this.getUuid() + "/data/" + fileName);
                     try {
                         item.write(file);
                     } catch (Exception e) {
@@ -473,16 +473,16 @@ public class MainControler extends HttpServlet {
     /**
      * @return int
      */
-    public String getNbSessionRandom() {
-        return nbSessionRandom;
+    public String getUuid() {
+        return uuid;
     }
 
     /**
-     * @param nbSessionRandom
+     * @param uuid
      * @return void
      */
-    public void setNbSessionRandom(String nbSessionRandom) {
-        this.nbSessionRandom = nbSessionRandom;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     /**
