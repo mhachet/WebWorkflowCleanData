@@ -85,17 +85,6 @@ public class MainControler extends HttpServlet {
      * @throws ServletException
      */
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        processRequest(request, response);
-    }
-
-    /**
-     * @param request
-     * @param response
-     * @return void
-     * @throws ServletException
-     * @throws IOException
-     */
-    public void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/plain");
         initialisation = new Initialise();
 
@@ -104,7 +93,9 @@ public class MainControler extends HttpServlet {
 
         List<FileItem> listFileItems = getMultipartRequestParameters(request);
 
-        this.initialiseParameters(listFileItems, response, request);
+        initialiseParameters(listFileItems, response, request);
+
+
         request.setAttribute("initialise", initialisation);
 
         LaunchWorkflow newLaunch = new LaunchWorkflow(this.initialisation);
@@ -134,7 +125,6 @@ public class MainControler extends HttpServlet {
         request.setAttribute("step9", step9);
 
         this.getServletContext().getRequestDispatcher("/finalWorkflow.jsp").forward(request, response);
-
     }
 
     /**
@@ -143,7 +133,7 @@ public class MainControler extends HttpServlet {
      * @param request
      * @return List<FileItem>
      */
-    public List<FileItem> getMultipartRequestParameters(HttpServletRequest request) {
+    private List<FileItem> getMultipartRequestParameters(HttpServletRequest request) {
 
 
         DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
@@ -167,7 +157,7 @@ public class MainControler extends HttpServlet {
      * @return void
      * @throws IOException
      */
-    public void initialiseParameters(List<FileItem> fileItems, HttpServletResponse response, HttpServletRequest request) throws IOException {
+    private void initialiseParameters(List<FileItem> fileItems, HttpServletResponse response, HttpServletRequest request) throws IOException {
 
         response.setContentType("text/html");
         response.addHeader("Access-Control-Allow-Origin", "*");
