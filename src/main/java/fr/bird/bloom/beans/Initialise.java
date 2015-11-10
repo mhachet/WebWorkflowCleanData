@@ -27,7 +27,7 @@ public class Initialise {
     private boolean tdwg4Code;
     private boolean raster;
     private boolean establishment;
-    private String nbSessionRandom;
+    private String uuid;
     private int nbInput;
     private String emailUser;
     private boolean sendEmail;
@@ -215,17 +215,17 @@ public class Initialise {
      *
      * @return int
      */
-    public String getNbSessionRandom() {
-        return nbSessionRandom;
+    public String getUuid() {
+        return uuid;
     }
 
     /**
      *
-     * @param nbSessionRandom
+     * @param uuid
      * @return void
      */
-    public void setNbSessionRandom(String nbSessionRandom) {
-        this.nbSessionRandom = nbSessionRandom;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public int getNbFiles(){

@@ -30,7 +30,7 @@ import java.util.Map;
 public class DarwinCore extends CSVFile{
 
 	private int idFile_;
-	private String nbSessionRandom;
+	private String uuid;
 	private HashMap<String, List<String>> idAssoData;
 	private ArrayList<String> darwinLines;
 	private File darwinCoreFileTemp;
@@ -54,11 +54,11 @@ public class DarwinCore extends CSVFile{
 	 * @param file
 	 * @param idFile
 	 */
-	public DarwinCore(File file, int idFile, String nbSessionRandom){
+	public DarwinCore(File file, int idFile, String uuid){
 		super(file);
 		this.idFile_ = idFile;
 		//this.darwinLines = super.getLines();
-		this.nbSessionRandom = nbSessionRandom;
+		this.uuid = uuid;
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class DarwinCore extends CSVFile{
 		try {
 			statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			newConnection = new DatabaseTreatment(statement);
-			String sqlID = "SELECT * FROM Workflow.Clean_" + this.getNbSessionRandom() + " WHERE UUID_=\"" + this.getNbSessionRandom() + "\";";
+			String sqlID = "SELECT * FROM Workflow.Clean_" + this.getUuid() + " WHERE UUID_=\"" + this.getUuid() + "\";";
 			messages.addAll(newConnection.executeSQLcommand("executeQuery", sqlID));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -108,14 +108,14 @@ public class DarwinCore extends CSVFile{
 		if(!new File(BloomConfig.getDirectoryPath() + "temp/").exists()){
 			new File(BloomConfig.getDirectoryPath() + "temp/").mkdirs();
 		}
-		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom()).exists()){
-			new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom());
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid()).exists()){
+			new File(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid());
 		}
-		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/").exists()){
-			new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/").mkdirs();
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/data/").exists()){
+			new File(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/data/").mkdirs();
 		}
 		
-		File tempFile = new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/inputFile_" + Integer.toString(this.getIdFile_()) + ".csv");
+		File tempFile = new File(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/data/inputFile_" + Integer.toString(this.getIdFile_()) + ".csv");
 		FileWriter writer = null;
 		File darwinCoreFile = super.getCsvFile();
 		super.setSeparator(Separator.fromString(separator));
@@ -147,7 +147,7 @@ public class DarwinCore extends CSVFile{
 						for(int j = 0 ; j < lineSplit.length ; j++){
 							newLine += "\"" + lineSplit[j] + "\",";
 						}
-						newLine += Integer.toString(idFile_) + ",0,\"" + this.getNbSessionRandom() + "\"\n";
+						newLine += Integer.toString(idFile_) + ",0,\"" + this.getUuid() + "\"\n";
 						
 						writer.write(newLine);
 					}
@@ -192,7 +192,7 @@ public class DarwinCore extends CSVFile{
 	public File createTemporaryFile(List<String> linesInputModified, int nbFile) throws IOException{
 
 
-		File tempFile = new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/inputFile_" + Integer.toString(nbFile) + ".csv");
+		File tempFile = new File(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/data/inputFile_" + Integer.toString(nbFile) + ".csv");
 		FileWriter writer = null;
 		try{
 			writer = new FileWriter(tempFile);
@@ -225,7 +225,7 @@ public class DarwinCore extends CSVFile{
 		try {
 			statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			newConnection = new DatabaseTreatment(statement);
-			String sqlLatitude = "SELECT decimalLatitude_ FROM Workflow.Clean_" + this.getNbSessionRandom() + " WHERE UUID_=\"" + this.getNbSessionRandom() + "\";";
+			String sqlLatitude = "SELECT decimalLatitude_ FROM Workflow.Clean_" + this.getUuid() + " WHERE UUID_=\"" + this.getUuid() + "\";";
 			messages.addAll(newConnection.executeSQLcommand("executeQuery", sqlLatitude));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -252,7 +252,7 @@ public class DarwinCore extends CSVFile{
 		try {
 			statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			newConnection = new DatabaseTreatment(statement);
-			String sqlLongitude = "SELECT decimalLongitude_ FROM Workflow.Clean_" + this.getNbSessionRandom() + " WHERE UUID_=\"" + this.getNbSessionRandom() + "\";";
+			String sqlLongitude = "SELECT decimalLongitude_ FROM Workflow.Clean_" + this.getUuid() + " WHERE UUID_=\"" + this.getUuid() + "\";";
 			messages.addAll(newConnection.executeSQLcommand("executeQuery", sqlLongitude));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -276,7 +276,7 @@ public class DarwinCore extends CSVFile{
 		try {
 			statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			newConnection = new DatabaseTreatment(statement);
-			String sqlID= "SELECT id_ FROM Workflow.Clean_" + this.getNbSessionRandom() + " WHERE UUID_=\"" + this.getNbSessionRandom() + "\";";
+			String sqlID= "SELECT id_ FROM Workflow.Clean_" + this.getUuid() + " WHERE UUID_=\"" + this.getUuid() + "\";";
 			messages.addAll(newConnection.executeSQLcommand("executeQuery", sqlID));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -301,7 +301,7 @@ public class DarwinCore extends CSVFile{
 		try {
 			statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			newConnection = new DatabaseTreatment(statement);
-			String sqlID= "SELECT gbifID_ FROM Workflow.Clean_" + this.getNbSessionRandom() + " WHERE=UUID_=\"" + this.getNbSessionRandom() + "\";";
+			String sqlID= "SELECT gbifID_ FROM Workflow.Clean_" + this.getUuid() + " WHERE=UUID_=\"" + this.getUuid() + "\";";
 			messages.addAll(newConnection.executeSQLcommand("executeQuery", sqlID));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -326,7 +326,7 @@ public class DarwinCore extends CSVFile{
 		try {
 			statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			newConnection = new DatabaseTreatment(statement);
-			String sqlID= "SELECT id_ FROM Workflow.DarwinCoreInput WHERE=UUID_=\"" + this.getNbSessionRandom() + "\";";
+			String sqlID= "SELECT id_ FROM Workflow.DarwinCoreInput WHERE=UUID_=\"" + this.getUuid() + "\";";
 			messages.addAll(newConnection.executeSQLcommand("executeQuery", sqlID));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -352,7 +352,7 @@ public class DarwinCore extends CSVFile{
 		try {
 			statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			newConnection = new DatabaseTreatment(statement);
-			String sqlISO2 = "SELECT countryCode_ FROM Workflow.Clean_" + this.getNbSessionRandom() + " WHERE=UUID_=\"" + this.getNbSessionRandom() + "\";";
+			String sqlISO2 = "SELECT countryCode_ FROM Workflow.Clean_" + this.getUuid() + " WHERE=UUID_=\"" + this.getUuid() + "\";";
 			messages.addAll(newConnection.executeSQLcommand("executeQuery", sqlISO2));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -440,12 +440,12 @@ public class DarwinCore extends CSVFile{
 		this.darwinLines = darwinLines;
 	}
 
-	public String getNbSessionRandom() {
-		return nbSessionRandom;
+	public String getUuid() {
+		return uuid;
 	}
 
-	public void setNbSessionRandom(String nbSessionRandom) {
-		this.nbSessionRandom = nbSessionRandom;
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
 	public File getDarwinCoreFileTemp() {

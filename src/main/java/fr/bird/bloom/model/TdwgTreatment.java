@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
  */
 public class TdwgTreatment {
 
-	private String nbSessionRandom;
+	private String uuid;
 	private boolean sucessTdwgTreatment;
 
 	public TdwgTreatment(){
@@ -89,7 +89,7 @@ public class TdwgTreatment {
 					e.printStackTrace();
 				}
 				DatabaseTreatment newConnectionSelectID = new DatabaseTreatment(statement);
-				String sqlSelectID = "SELECT locationID_ FROM Workflow.Clean_" + this.getNbSessionRandom() + " WHERE Clean_" + this.getNbSessionRandom() + ".id_=" + id_ + ";";
+				String sqlSelectID = "SELECT locationID_ FROM Workflow.Clean_" + this.getUuid() + " WHERE Clean_" + this.getUuid() + ".id_=" + id_ + ";";
 				newConnectionSelectID.executeSQLcommand("executeQuery", sqlSelectID);
 				List<String> selectIDResults = newConnectionSelectID.getResultatSelect();
 
@@ -101,7 +101,7 @@ public class TdwgTreatment {
 					newLocationID = "TDWG=" + tdwg4Code;
 				}
 
-				String sqlUpdateTDWG = "UPDATE Workflow.Clean_" + this.getNbSessionRandom() + " SET Clean_" + this.getNbSessionRandom() + ".locationID_=\"" + newLocationID + "\" WHERE Clean_" + this.getNbSessionRandom() + ".id_=" + id_ + ";";
+				String sqlUpdateTDWG = "UPDATE Workflow.Clean_" + this.getUuid() + " SET Clean_" + this.getUuid() + ".locationID_=\"" + newLocationID + "\" WHERE Clean_" + this.getUuid() + ".id_=" + id_ + ";";
 
 				Statement statementUpdateClean = null;
 				try {
@@ -162,12 +162,12 @@ public class TdwgTreatment {
 
 	}
 
-	public String getNbSessionRandom() {
-		return nbSessionRandom;
+	public String getUuid() {
+		return uuid;
 	}
 
-	public void setNbSessionRandom(String nbSessionRandom) {
-		this.nbSessionRandom = nbSessionRandom;
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
 	public boolean isSucessTdwgTreatment() {

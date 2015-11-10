@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class EstablishmentTreatment {
 
-	private String nbSessionRandom;
+	private String uuid;
 	private List<String> listEstablishmentChecked;
 	private List<String> inverseEstablishmentList;
 	private List<String> noEstablishmentList;
@@ -93,12 +93,12 @@ public class EstablishmentTreatment {
 				DatabaseTreatment newConnectionOthers = new DatabaseTreatment(statement);
 				List<String> messagesOthers = new ArrayList<String>();
 
-				String sqlOthers = "SELECT * FROM Workflow.Clean_" + this.getNbSessionRandom() + " WHERE Clean_" + this.getNbSessionRandom() + ".establishmentMeans_!=\"native\" && " +
-						"Clean_" + this.getNbSessionRandom() + ".establishmentMeans_!=\"introduced\" && " +
-						"Clean_" + this.getNbSessionRandom() + ".establishmentMeans_!=\"naturalised\" && " +
-						"Clean_" + this.getNbSessionRandom() + ".establishmentMeans_!=\"invasive\" && " +
-						"Clean_" + this.getNbSessionRandom() + ".establishmentMeans_!=\"managed\" && " +
-						"Clean_" + this.getNbSessionRandom() + ".establishmentMeans_!=\"uncertain\";" ;
+				String sqlOthers = "SELECT * FROM Workflow.Clean_" + this.getUuid() + " WHERE Clean_" + this.getUuid() + ".establishmentMeans_!=\"native\" && " +
+						"Clean_" + this.getUuid() + ".establishmentMeans_!=\"introduced\" && " +
+						"Clean_" + this.getUuid() + ".establishmentMeans_!=\"naturalised\" && " +
+						"Clean_" + this.getUuid() + ".establishmentMeans_!=\"invasive\" && " +
+						"Clean_" + this.getUuid() + ".establishmentMeans_!=\"managed\" && " +
+						"Clean_" + this.getUuid() + ".establishmentMeans_!=\"uncertain\";" ;
 				messagesOthers.addAll(newConnectionOthers.executeSQLcommand("executeQuery", sqlOthers));
 
 				List<String> othersResults = newConnectionOthers.getResultatSelect();
@@ -129,7 +129,7 @@ public class EstablishmentTreatment {
 				DatabaseTreatment newConnectionSelect = new DatabaseTreatment(statementSelect);
 				List<String> messagesSelect = new ArrayList<String>();
 				messagesSelect.add("\n--- Select no establishment Means ---\n");
-				String sqlSelectNoEstablishment = "SELECT * FROM Workflow.Clean_" + this.getNbSessionRandom() + " WHERE Clean_" + this.getNbSessionRandom() + ".establishmentMeans_=\"" + this.getInverseEstablishmentList().get(i) + "\";";
+				String sqlSelectNoEstablishment = "SELECT * FROM Workflow.Clean_" + this.getUuid() + " WHERE Clean_" + this.getUuid() + ".establishmentMeans_=\"" + this.getInverseEstablishmentList().get(i) + "\";";
 				messagesSelect.addAll(newConnectionSelect.executeSQLcommand("executeQuery", sqlSelectNoEstablishment));
 
 				List<String> establishmentResults = newConnectionSelect.getResultatSelect();
@@ -156,7 +156,7 @@ public class EstablishmentTreatment {
 				DatabaseTreatment newConnection = new DatabaseTreatment(statement);
 				List<String> messagesDelete = new ArrayList<String>();
 				messagesDelete.add("\n--- establishment Means ---\n");
-				String sqlDeleteEstablishment = "DELETE FROM Workflow.Clean_" + this.getNbSessionRandom() + " WHERE Clean_" + this.getNbSessionRandom() + ".establishmentMeans_=\"" + this.getInverseEstablishmentList().get(i) + "\";";
+				String sqlDeleteEstablishment = "DELETE FROM Workflow.Clean_" + this.getUuid() + " WHERE Clean_" + this.getUuid() + ".establishmentMeans_=\"" + this.getInverseEstablishmentList().get(i) + "\";";
 				messagesDelete.addAll(newConnection.executeSQLcommand("executeUpdate", sqlDeleteEstablishment));
 
 				for(int j = 0; j < messagesDelete.size() ; j++){
@@ -175,12 +175,12 @@ public class EstablishmentTreatment {
 
 	}
 
-	public String getNbSessionRandom() {
-		return nbSessionRandom;
+	public String getUuid() {
+		return uuid;
 	}
 
-	public void setNbSessionRandom(String nbSessionRandom) {
-		this.nbSessionRandom = nbSessionRandom;
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
 	public List<String> getListEstablishmentChecked() {
