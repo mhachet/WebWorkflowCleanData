@@ -55,22 +55,6 @@ import java.util.UUID;
 @WebServlet(name = "MainControler")
 public class MainControler extends HttpServlet {
 
-    private Initialise initialisation;
-    private String uuid;
-    private Finalisation finalisation;
-
-
-    // TODO FIX THESE INSTANCE VARIABLES, THEY ARE NOT THREAD SAFE !
-    private Step1_MappingDwc step1;
-    private Step2_ReconciliationService step2;
-    private Step3_CheckCoordinates step3;
-    private Step4_CheckGeoIssue step4;
-    private Step5_IncludeSynonym step5;
-    private Step6_CheckTDWG step6;
-    private Step7_CheckISo2Coordinates step7;
-    private Step8_CheckCoordinatesRaster step8;
-    private Step9_EstablishmentMeans step9;
-
     /**
      * @param request
      * @param response
@@ -80,42 +64,41 @@ public class MainControler extends HttpServlet {
      */
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         response.setContentType("text/plain");
-        initialisation = new Initialise();
 
         //this.setUuid(this.generateRandomKey());
-        //this.initialisation.setUuid(this.getUuid());
+        //this.initialisation.setUuid(uuid);
 
         List<FileItem> listFileItems = getMultipartRequestParameters(request);
 
-        initialiseParameters(listFileItems, response, request);
+        Initialise initialisation = initialiseParameters(listFileItems, response);
 
 
         request.setAttribute("initialise", initialisation);
 
-        LaunchWorkflow newLaunch = new LaunchWorkflow(this.initialisation);
+        LaunchWorkflow newLaunch = new LaunchWorkflow(initialisation);
 
         newLaunch.initialiseLaunchWorkflow();
 
-        finalisation = newLaunch.getFinalisation();
+        Finalisation finalisation = newLaunch.getFinalisation();
         request.setAttribute("finalisation", finalisation);
 
-        step1 = newLaunch.getStep1();
+        Step1_MappingDwc step1 = newLaunch.getStep1();
         request.setAttribute("step1", step1);
-        step2 = newLaunch.getStep2();
+        Step2_ReconciliationService step2 = newLaunch.getStep2();
         request.setAttribute("step2", step2);
-        step3 = newLaunch.getStep3();
+        Step3_CheckCoordinates step3 = newLaunch.getStep3();
         request.setAttribute("step3", step3);
-        step4 = newLaunch.getStep4();
+        Step4_CheckGeoIssue step4 = newLaunch.getStep4();
         request.setAttribute("step4", step4);
-        step5 = newLaunch.getStep5();
+        Step5_IncludeSynonym step5 = newLaunch.getStep5();
         request.setAttribute("step5", step5);
-        step6 = newLaunch.getStep6();
+        Step6_CheckTDWG step6 = newLaunch.getStep6();
         request.setAttribute("step6", step6);
-        step7 = newLaunch.getStep7();
+        Step7_CheckISo2Coordinates step7 = newLaunch.getStep7();
         request.setAttribute("step7", step7);
-        step8 = newLaunch.getStep8();
+        Step8_CheckCoordinatesRaster step8 = newLaunch.getStep8();
         request.setAttribute("step8", step8);
-        step9 = newLaunch.getStep9();
+        Step9_EstablishmentMeans step9 = newLaunch.getStep9();
         request.setAttribute("step9", step9);
 
         this.getServletContext().getRequestDispatcher("/finalWorkflow.jsp").forward(request, response);
@@ -158,8 +141,8 @@ public class MainControler extends HttpServlet {
      * @return void
      * @throws IOException
      */
-    private void initialiseParameters(List<FileItem> fileItems, HttpServletResponse response, HttpServletRequest request) throws IOException {
-
+    private Initialise initialiseParameters(List<FileItem> fileItems, HttpServletResponse response) throws IOException {
+        Initialise initialisation = new Initialise();
         response.setContentType("text/html");
         response.addHeader("Access-Control-Allow-Origin", "*");
 
@@ -174,7 +157,7 @@ public class MainControler extends HttpServlet {
         int nbFilesSynonyms = 0;
         int nbMappingInput = 0;
 
-
+        String uuid = "";
         while (iterator.hasNext()) {
             // DiskFileItem item = (DiskFileItem) iterator.next();
             FileItem item = iterator.next();
@@ -191,28 +174,28 @@ public class MainControler extends HttpServlet {
             String fieldName = item.getFieldName();
             //System.out.println("fieldName : " + fieldName + " item : " + item.getString());
             if (fieldName.contains("formulaire")) {
-                this.setUuid(item.getString());
-                this.initialisation.setUuid(this.getUuid());
+                uuid = item.getString();
+                initialisation.setUuid(uuid);
                 if (!new File(getDirectoryPath() + "temp/").exists()) {
                     BloomUtils.createDirectory(getDirectoryPath() + "temp/");
                 }
-                if (!new File(getDirectoryPath() + "temp/" + this.getUuid()).exists()) {
-                    new File(getDirectoryPath() + "temp/" + this.getUuid());
+                if (!new File(getDirectoryPath() + "temp/" + uuid).exists()) {
+                    new File(getDirectoryPath() + "temp/" + uuid);
                 }
-                if (!new File(getDirectoryPath() + "temp/" + this.getUuid() + "/data/").exists()) {
-                    BloomUtils.createDirectory(getDirectoryPath() + "temp/" + this.getUuid() + "/data/");
+                if (!new File(getDirectoryPath() + "temp/" + uuid + "/data/").exists()) {
+                    BloomUtils.createDirectory(getDirectoryPath() + "temp/" + uuid + "/data/");
                 }
-                if (!new File(getDirectoryPath() + "temp/" + this.getUuid() + "/wrong/").exists()) {
-                    BloomUtils.createDirectory(getDirectoryPath() + "temp/" + this.getUuid() + "/wrong/");
+                if (!new File(getDirectoryPath() + "temp/" + uuid + "/wrong/").exists()) {
+                    BloomUtils.createDirectory(getDirectoryPath() + "temp/" + uuid + "/wrong/");
                 }
-                if (!new File(getDirectoryPath() + "temp/" + this.getUuid() + "/final_results/").exists()) {
-                    BloomUtils.createDirectory(getDirectoryPath() + "temp/" + this.getUuid() + "/final_results/");
+                if (!new File(getDirectoryPath() + "temp/" + uuid + "/final_results/").exists()) {
+                    BloomUtils.createDirectory(getDirectoryPath() + "temp/" + uuid + "/final_results/");
                 }
             } else if (fieldName.equals(input)) {
                 DiskFileItem itemFile = (DiskFileItem) item;
                 String fileExtensionName = itemFile.getName();
                 fileExtensionName = FilenameUtils.getExtension(fileExtensionName);
-                File file = new File(getDirectoryPath() + "temp/" + this.getUuid() + "/data/input_" + nbFilesInput + "_" + this.getUuid() + ".csv");
+                File file = new File(getDirectoryPath() + "temp/" + uuid + "/data/input_" + nbFilesInput + "_" + uuid + ".csv");
                 if (!file.exists()) {
                     try {
                         System.out.println("writing");
@@ -228,7 +211,7 @@ public class MainControler extends HttpServlet {
 
                 listMappingFiles.add(newMappingDWC);
 
-                newMappingDWC.initialiseMapping(this.getUuid());
+                newMappingDWC.initialiseMapping(uuid);
                 HashMap<String, String> connectionTags = new HashMap<>();
                 List<String> tagsNoMapped = newMappingDWC.getTagsListNoMapped();
                 for (int i = 0; i < tagsNoMapped.size(); i++) {
@@ -256,14 +239,14 @@ public class MainControler extends HttpServlet {
                 fileExtensionName = FilenameUtils.getExtension(fileExtensionName);
                 String fileName = item.getName();
                 if (!Objects.equals(fileName, "")) {
-                    File file = new File(getDirectoryPath() + "temp/" + this.getUuid() + "/data/" + fileName);
+                    File file = new File(getDirectoryPath() + "temp/" + uuid + "/data/" + fileName);
                     try {
                         item.write(file);
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
-                    this.initialisation.getInputRastersList().add(file);
+                    initialisation.getInputRastersList().add(file);
                     nbFilesRaster++;
                 }
 
@@ -274,14 +257,14 @@ public class MainControler extends HttpServlet {
                 fileExtensionName = FilenameUtils.getExtension(fileExtensionName);
                 String fileName = item.getName();
                 if (!Objects.equals(fileName, "")) {
-                    File file = new File(getDirectoryPath() + "temp/" + this.getUuid() + "/data/" + fileName);
+                    File file = new File(getDirectoryPath() + "temp/" + uuid + "/data/" + fileName);
                     try {
                         item.write(file);
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
-                    this.initialisation.getHeaderRasterList().add(file);
+                    initialisation.getHeaderRasterList().add(file);
                     nbFilesHeader++;
                 }
             } else if ("raster".equals(fieldName)) {
@@ -408,72 +391,39 @@ public class MainControler extends HttpServlet {
                 //System.out.println(param);
                 switch (param) {
                     case "native":
-                        this.initialisation.getEstablishmentList().add("native");
+                        initialisation.getEstablishmentList().add("native");
                         break;
                     case "introduced":
-                        this.initialisation.getEstablishmentList().add("introduced");
+                        initialisation.getEstablishmentList().add("introduced");
                         break;
                     case "naturalised":
-                        this.initialisation.getEstablishmentList().add("naturalised");
+                        initialisation.getEstablishmentList().add("naturalised");
                         break;
                     case "invasive":
-                        this.initialisation.getEstablishmentList().add("invasive");
+                        initialisation.getEstablishmentList().add("invasive");
                         break;
                     case "managed":
-                        this.initialisation.getEstablishmentList().add("managed");
+                        initialisation.getEstablishmentList().add("managed");
                         break;
                     case "uncertain":
-                        this.initialisation.getEstablishmentList().add("uncertain");
+                        initialisation.getEstablishmentList().add("uncertain");
                         break;
                     case "others":
-                        this.initialisation.getEstablishmentList().add("others");
+                        initialisation.getEstablishmentList().add("others");
                         break;
                 }
             }
         }
 
-        this.initialisation.setNbInput(nbFilesInput);
+        initialisation.setNbInput(nbFilesInput);
 
-        this.initialisation.setListMappingReconcileFiles(listMappingReconcileDWC);
+        initialisation.setListMappingReconcileFiles(listMappingReconcileDWC);
 
-
-    }
-
-    /**
-     *
-     */
-    public void destroy() {
-        // do nothing.
-    }
-
-    /**
-     * @return Initialise
-     */
-    public Initialise getInitialisation() {
         return initialisation;
     }
 
-    /**
-     * @param initialisation
-     * @return void
-     */
-    public void setInitialisation(Initialise initialisation) {
-        this.initialisation = initialisation;
-    }
-
-    /**
-     * @return int
-     */
-    public String getUuid() {
-        return uuid;
-    }
-
-    /**
-     * @param uuid
-     * @return void
-     */
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void destroy() {
+        // do nothing.
     }
 
     /**
