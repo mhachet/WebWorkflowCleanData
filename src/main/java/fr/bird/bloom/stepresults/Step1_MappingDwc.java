@@ -2,7 +2,7 @@
  * fr.bird.bloom.beans
  * Step1_MappingDwc
  */
-package fr.bird.bloom.beans;
+package fr.bird.bloom.stepresults;
 
 import fr.bird.bloom.model.MappingDwC;
 

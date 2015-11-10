@@ -66,7 +66,7 @@
     </servlet-mapping>
     <!--<servlet>-->
         <!--<servlet-name>Step1_MappingDwc</servlet-name>-->
-        <!--<servlet-class>fr.bird.bloom.beans.Step1_MappingDwc</servlet-class>-->
+        <!--<servlet-class>fr.bird.bloom.stepresults.Step1_MappingDwc</servlet-class>-->
     <!--</servlet>-->
     <!--<servlet-mapping>-->
         <!--<servlet-name>Step1_MappingDwc</servlet-name>-->
@@ -74,7 +74,7 @@
     <!--</servlet-mapping>-->
     <!--<servlet>-->
         <!--<servlet-name>Step2_ReconciliationService</servlet-name>-->
-        <!--<servlet-class>fr.bird.bloom.beans.Step2_ReconciliationService</servlet-class>-->
+        <!--<servlet-class>fr.bird.bloom.stepresults.Step2_ReconciliationService</servlet-class>-->
     <!--</servlet>-->
     <!--<servlet-mapping>-->
         <!--<servlet-name>Step2_ReconciliationService</servlet-name>-->
@@ -82,7 +82,7 @@
     <!--</servlet-mapping>-->
     <!--<servlet>-->
         <!--<servlet-name>Step3_CheckCoordinates</servlet-name>-->
-        <!--<servlet-class>fr.bird.bloom.beans.Step3_CheckCoordinates</servlet-class>-->
+        <!--<servlet-class>fr.bird.bloom.stepresults.Step3_CheckCoordinates</servlet-class>-->
     <!--</servlet>-->
     <!--<servlet-mapping>-->
         <!--<servlet-name>Step3_CheckCoordinates</servlet-name>-->
@@ -90,7 +90,7 @@
     <!--</servlet-mapping>-->
     <!--<servlet>-->
         <!--<servlet-name>Step4_CheckGeoIssue</servlet-name>-->
-        <!--<servlet-class>fr.bird.bloom.beans.Step4_CheckGeoIssue</servlet-class>-->
+        <!--<servlet-class>fr.bird.bloom.stepresults.Step4_CheckGeoIssue</servlet-class>-->
     <!--</servlet>-->
     <!--<servlet-mapping>-->
         <!--<servlet-name>Step4_CheckGeoIssue</servlet-name>-->
@@ -98,7 +98,7 @@
     <!--</servlet-mapping>-->
     <!--<servlet>-->
         <!--<servlet-name>Step5_IncludeSynonym</servlet-name>-->
-        <!--<servlet-class>fr.bird.bloom.beans.Step5_IncludeSynonym</servlet-class>-->
+        <!--<servlet-class>fr.bird.bloom.stepresults.Step5_IncludeSynonym</servlet-class>-->
     <!--</servlet>-->
     <!--<servlet-mapping>-->
         <!--<servlet-name>Step5_IncludeSynonym</servlet-name>-->
@@ -106,7 +106,7 @@
     <!--</servlet-mapping>-->
     <!--<servlet>-->
         <!--<servlet-name>Step6_CheckTDWG</servlet-name>-->
-        <!--<servlet-class>fr.bird.bloom.beans.Step6_CheckTDWG</servlet-class>-->
+        <!--<servlet-class>fr.bird.bloom.stepresults.Step6_CheckTDWG</servlet-class>-->
     <!--</servlet>-->
     <!--<servlet-mapping>-->
         <!--<servlet-name>Step6_CheckTDWG</servlet-name>-->
@@ -114,7 +114,7 @@
     <!--</servlet-mapping>-->
     <!--<servlet>-->
         <!--<servlet-name>Step7_CheckISo2Coordinates</servlet-name>-->
-        <!--<servlet-class>fr.bird.bloom.beans.Step7_CheckISo2Coordinates</servlet-class>-->
+        <!--<servlet-class>fr.bird.bloom.stepresults.Step7_CheckISo2Coordinates</servlet-class>-->
     <!--</servlet>-->
     <!--<servlet-mapping>-->
         <!--<servlet-name>Step7_CheckISo2Coordinates</servlet-name>-->
@@ -122,7 +122,7 @@
     <!--</servlet-mapping>-->
     <!--<servlet>-->
         <!--<servlet-name>Step8_CheckCoordinatesRaster</servlet-name>-->
-        <!--<servlet-class>fr.bird.bloom.beans.Step8_CheckCoordinatesRaster</servlet-class>-->
+        <!--<servlet-class>fr.bird.bloom.stepresults.Step8_CheckCoordinatesRaster</servlet-class>-->
     <!--</servlet>-->
     <!--<servlet-mapping>-->
         <!--<servlet-name>Step8_CheckCoordinatesRaster</servlet-name>-->
@@ -130,7 +130,7 @@
     <!--</servlet-mapping>-->
     <!--<servlet>-->
         <!--<servlet-name>Step9_EstablishmentMeans</servlet-name>-->
-        <!--<servlet-class>fr.bird.bloom.beans.Step9_EstablishmentMeans</servlet-class>-->
+        <!--<servlet-class>fr.bird.bloom.stepresults.Step9_EstablishmentMeans</servlet-class>-->
     <!--</servlet>-->
     <!--<servlet-mapping>-->
         <!--<servlet-name>Step9_EstablishmentMeans</servlet-name>-->

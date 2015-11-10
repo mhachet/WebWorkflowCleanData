@@ -2,7 +2,7 @@
  * fr.bird.bloom.beans
  * Step2_ReconciliationService
  */
-package fr.bird.bloom.beans;
+package fr.bird.bloom.stepresults;
 
 import fr.bird.bloom.model.ReconciliationService;
 

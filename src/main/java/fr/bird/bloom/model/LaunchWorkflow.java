@@ -7,15 +7,15 @@ package fr.bird.bloom.model;
 
 import fr.bird.bloom.beans.Finalisation;
 import fr.bird.bloom.beans.Initialise;
-import fr.bird.bloom.beans.Step1_MappingDwc;
-import fr.bird.bloom.beans.Step2_ReconciliationService;
-import fr.bird.bloom.beans.Step3_CheckCoordinates;
-import fr.bird.bloom.beans.Step4_CheckGeoIssue;
-import fr.bird.bloom.beans.Step5_IncludeSynonym;
-import fr.bird.bloom.beans.Step6_CheckTDWG;
-import fr.bird.bloom.beans.Step7_CheckISo2Coordinates;
-import fr.bird.bloom.beans.Step8_CheckCoordinatesRaster;
-import fr.bird.bloom.beans.Step9_EstablishmentMeans;
+import fr.bird.bloom.stepresults.Step1_MappingDwc;
+import fr.bird.bloom.stepresults.Step2_ReconciliationService;
+import fr.bird.bloom.stepresults.Step3_CheckCoordinates;
+import fr.bird.bloom.stepresults.Step4_CheckGeoIssue;
+import fr.bird.bloom.stepresults.Step5_IncludeSynonym;
+import fr.bird.bloom.stepresults.Step6_CheckTDWG;
+import fr.bird.bloom.stepresults.Step7_CheckISo2Coordinates;
+import fr.bird.bloom.stepresults.Step8_CheckCoordinatesRaster;
+import fr.bird.bloom.stepresults.Step9_EstablishmentMeans;
 import fr.bird.bloom.utils.BloomConfig;
 
 import java.io.File;
@@ -68,7 +68,6 @@ public class LaunchWorkflow {
 	 * @return void
 	 */
 	public void initialiseLaunchWorkflow() throws IOException{
-		File repCourant = new java.io.File(new java.io.File("").getAbsolutePath());
 		//System.out.println("repCourant : "  + repCourant);
 		this.dataTreatment = new Treatment();
 		this.dataTreatment.setNbSessionRandom(initialisation.getNbSessionRandom());
@@ -504,96 +503,54 @@ public class LaunchWorkflow {
 	 * @param dataTreatment
 	 * @return void
 	 */
-	public void setDataTreatment(Treatment dataTreatment) {
-		this.dataTreatment = dataTreatment;
-	}
-
-	public Initialise getInitialisation() {
-		return initialisation;
-	}
-
-	public void setInitialisation(Initialise initialisation) {
-		this.initialisation = initialisation;
-	}
 
 	public Finalisation getFinalisation() {
 		return finalisation;
-	}
-
-	public void setFinalisation(Finalisation finalisation) {
-		this.finalisation = finalisation;
 	}
 
 	public Step1_MappingDwc getStep1() {
 		return step1;
 	}
 
-	public void setStep1(Step1_MappingDwc step1) {
-		this.step1 = step1;
-	}
 
 	public Step2_ReconciliationService getStep2() {
 		return step2;
 	}
 
-	public void setStep2(Step2_ReconciliationService step2) {
-		this.step2 = step2;
-	}
 
 	public Step3_CheckCoordinates getStep3() {
 		return step3;
 	}
 
-	public void setStep3(Step3_CheckCoordinates step3) {
-		this.step3 = step3;
-	}
 
 	public Step4_CheckGeoIssue getStep4() {
 		return step4;
 	}
 
-	public void setStep4(Step4_CheckGeoIssue step4) {
-		this.step4 = step4;
-	}
 
 	public Step5_IncludeSynonym getStep5() {
 		return step5;
 	}
 
-	public void setStep5(Step5_IncludeSynonym step5) {
-		this.step5 = step5;
-	}
 
 	public Step6_CheckTDWG getStep6() {
 		return step6;
 	}
 
-	public void setStep6(Step6_CheckTDWG step6) {
-		this.step6 = step6;
-	}
 
 	public Step7_CheckISo2Coordinates getStep7() {
 		return step7;
 	}
 
-	public void setStep7(Step7_CheckISo2Coordinates step7) {
-		this.step7 = step7;
-	}
 
 	public Step8_CheckCoordinatesRaster getStep8() {
 		return step8;
 	}
 
-	public void setStep8(Step8_CheckCoordinatesRaster step8) {
-		this.step8 = step8;
-	}
 
 	public Step9_EstablishmentMeans getStep9() {
 		return step9;
 	}
 
-	public void setStep9(Step9_EstablishmentMeans step9) {
-		this.step9 = step9;
-	}
 
 }

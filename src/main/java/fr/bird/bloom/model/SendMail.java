@@ -1,14 +1,14 @@
 package fr.bird.bloom.model;
 
-import fr.bird.bloom.beans.Step1_MappingDwc;
-import fr.bird.bloom.beans.Step2_ReconciliationService;
-import fr.bird.bloom.beans.Step3_CheckCoordinates;
-import fr.bird.bloom.beans.Step4_CheckGeoIssue;
-import fr.bird.bloom.beans.Step5_IncludeSynonym;
-import fr.bird.bloom.beans.Step6_CheckTDWG;
-import fr.bird.bloom.beans.Step7_CheckISo2Coordinates;
-import fr.bird.bloom.beans.Step8_CheckCoordinatesRaster;
-import fr.bird.bloom.beans.Step9_EstablishmentMeans;
+import fr.bird.bloom.stepresults.Step1_MappingDwc;
+import fr.bird.bloom.stepresults.Step2_ReconciliationService;
+import fr.bird.bloom.stepresults.Step3_CheckCoordinates;
+import fr.bird.bloom.stepresults.Step4_CheckGeoIssue;
+import fr.bird.bloom.stepresults.Step5_IncludeSynonym;
+import fr.bird.bloom.stepresults.Step6_CheckTDWG;
+import fr.bird.bloom.stepresults.Step7_CheckISo2Coordinates;
+import fr.bird.bloom.stepresults.Step8_CheckCoordinatesRaster;
+import fr.bird.bloom.stepresults.Step9_EstablishmentMeans;
 import fr.bird.bloom.utils.BloomConfig;
 
 import javax.mail.Message;
