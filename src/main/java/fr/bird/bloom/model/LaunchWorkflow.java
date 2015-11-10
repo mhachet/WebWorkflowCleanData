@@ -6,7 +6,7 @@
 package fr.bird.bloom.model;
 
 import fr.bird.bloom.beans.Finalisation;
-import fr.bird.bloom.beans.Initialise;
+import fr.bird.bloom.beans.InputParameters;
 import fr.bird.bloom.stepresults.Step1_MappingDwc;
 import fr.bird.bloom.stepresults.Step2_ReconciliationService;
 import fr.bird.bloom.stepresults.Step3_CheckCoordinates;
@@ -38,7 +38,7 @@ import java.util.Map.Entry;
 public class LaunchWorkflow {
 
 	private Treatment dataTreatment;
-	private Initialise initialisation;
+	private InputParameters initialisation;
 	private Finalisation finalisation;
 	//private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/WebContent/output/";
 
@@ -57,8 +57,8 @@ public class LaunchWorkflow {
 	 * src.model
 	 * LaunchWorkflow
 	 */
-	public LaunchWorkflow(Initialise initialise){
-		this.initialisation = initialise;
+	public LaunchWorkflow(InputParameters inputParameters){
+		this.initialisation = inputParameters;
 	}
 
 	/**

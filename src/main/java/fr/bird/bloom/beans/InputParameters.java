@@ -14,7 +14,7 @@ import fr.bird.bloom.model.MappingReconcilePreparation;
  *
  * Initiliaze
  */
-public class Initialise {
+public class InputParameters {
 
     private List<File> inputMappedFilesList = new ArrayList<>();
     private List<File> inputRastersList = new ArrayList<>();
@@ -35,9 +35,9 @@ public class Initialise {
     /**
      *
      * src.beans
-     * Initialise
+     * InputParameters
      */
-    public Initialise(){
+    public InputParameters(){
 
     }
 
