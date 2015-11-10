@@ -258,13 +258,23 @@ public class Treatment {
 		int countLine = 0;
 		String firstLine = ""; 
 		String line;
+		String lines = "";
+		boolean largeFile = false;
 		try {
 			while ((line = buff.readLine()) != null) {
 				if(countLine == 0){
 					firstLine = line;
 				}
-				else{
-					String sqlInsert = "INSERT INTO Workflow.DarwinCoreInput (" + firstLine + ") VALUES (" + line + ");";
+				else {
+					lines += "(" + line + "),";
+				}
+				if(countLine % 5000 == 0 && countLine != 0){
+					largeFile = true;
+					lines = lines.substring(0,lines.length()-1);
+
+					//String sqlInsert = "INSERT INTO Workflow.DarwinCoreInput (" + firstLine + ") VALUES (" + line + ");";
+					String sqlInsert = "INSERT INTO Workflow.DarwinCoreInput (" + firstLine + ") VALUES " + lines + ";";
+					//System.out.println("large : " + sqlInsert);
 					Statement statement = null;
 					try {
 						statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -281,9 +291,30 @@ public class Treatment {
 					/*for(int i = 0 ; i < messages.size() ; i++){
 						writer.write(messages.get(i));
 					}*/
+					lines = "";
+				}
+				if(countLine % 100000 == 0){
+					System.out.println(countLine + " insert");
 				}
 				countLine ++;
 			}
+			lines = lines.substring(0,lines.length()-1);
+			String sqlInsert = "INSERT INTO Workflow.DarwinCoreInput (" + firstLine + ") VALUES " + lines + ";";
+			//System.out.println("small : " + sqlInsert);
+			Statement statement = null;
+			try {
+				statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			DatabaseTreatment newConnection = new DatabaseTreatment(statement);
+			String choiceStatement = "execute";
+			ArrayList<String> messages = new ArrayList<String>();
+			messages.add("\n--- Insert line " + countLine + " in DarwinCoreInput table ---");
+			messages.add(countLine + " => " + sqlInsert);
+			messages.addAll(newConnection.executeSQLcommand(choiceStatement, sqlInsert));
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
