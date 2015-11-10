@@ -377,7 +377,7 @@ public class DarwinCore extends CSVFile{
 		Map<String, List<String>> idAssoData = this.getIdAssoData();
 
 		for(String id_ : idAssoData.keySet()){
-			if(id_.equals("id_")){
+			if("id_".equals(id_)){
 				List<String> tagsList = idAssoData.get(id_);
 				for(int i = 0 ; i < tagsList.size() ; i++){
 					if(tagsList.get(i).equals(tagName)){

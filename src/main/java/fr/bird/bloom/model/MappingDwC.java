@@ -94,7 +94,7 @@ public class MappingDwC {
 
             if (!listInvalidColumns.contains(idColumn)) {
                 String valueNoMapped = entryDwC.getValue();
-                if (!valueNoMapped.equals(" ")) {
+                if (!" ".equals(valueNoMapped)) {
                     firstNewLine += valueNoMapped + ",";
                 }
                 countCol++;
@@ -220,7 +220,7 @@ public class MappingDwC {
 
         for (Entry<String, String> entryDwC : this.getConnectionTags().entrySet()) {
             String valueNoMapped = entryDwC.getValue();
-            if (valueNoMapped.equals(" ")) {
+            if (" ".equals(valueNoMapped)) {
                 String[] splitKey = entryDwC.getKey().split("_");
                 int idColumn = Integer.parseInt(splitKey[splitKey.length - 1]);
                 invalidColumns.add(idColumn);

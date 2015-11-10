@@ -102,7 +102,7 @@ public class GeographicTreatment {
 		int nbWrongIso2 = 0;
 
 		for (String id_ : idAssoData.keySet()) {
-			if(!id_ .equals("id_")){
+			if(!"id_".equals(id_ )){
 				List<String> listInfos = idAssoData.get(id_);
 
 				float latitude = 0;
@@ -235,7 +235,7 @@ public class GeographicTreatment {
 			e1.printStackTrace();
 		}
 		GeometryJSON geometryJSON = new GeometryJSON();
-		if(polygonType.equals("Polygon")){
+		if("Polygon".equals(polygonType)){
 			try {
 				Polygon polygon = geometryJSON.readPolygon(jsonInput);
 				isContained = polygon.contains(geoPoint);
@@ -244,7 +244,7 @@ public class GeographicTreatment {
 				e.printStackTrace();
 			}
 		}
-		if (polygonType.equals("MultiPolygon")){
+		if ("MultiPolygon".equals(polygonType)){
 			try {
 				MultiPolygon multipolygon = geometryJSON.readMultiPolygon(jsonInput);
 				isContained = multipolygon.contains(geoPoint);
