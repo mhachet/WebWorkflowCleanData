@@ -22,6 +22,7 @@ import fr.bird.bloom.model.MappingDwC;
 import fr.bird.bloom.model.MappingReconcilePreparation;
 import fr.bird.bloom.model.ReconciliationService;
 import fr.bird.bloom.utils.BloomConfig;
+import fr.bird.bloom.utils.BloomUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItem;
@@ -69,13 +70,6 @@ public class MainControler extends HttpServlet {
     private Step7_CheckISo2Coordinates step7;
     private Step8_CheckCoordinatesRaster step8;
     private Step9_EstablishmentMeans step9;
-
-    private String getDirectoryPath() {
-        if (BloomConfig.getDirectoryPath() == null) {
-            BloomConfig.initializeDirectoryPath(getServletContext().getRealPath("/"));
-        }
-        return BloomConfig.getDirectoryPath();
-    }
 
     /**
      * @param request
@@ -125,6 +119,13 @@ public class MainControler extends HttpServlet {
         request.setAttribute("step9", step9);
 
         this.getServletContext().getRequestDispatcher("/finalWorkflow.jsp").forward(request, response);
+    }
+
+    private String getDirectoryPath() {
+        if (BloomConfig.getDirectoryPath() == null) {
+            BloomConfig.initializeDirectoryPath(getServletContext().getRealPath("/"));
+        }
+        return BloomConfig.getDirectoryPath();
     }
 
     /**
@@ -193,19 +194,19 @@ public class MainControler extends HttpServlet {
                 this.setUuid(item.getString());
                 this.initialisation.setUuid(this.getUuid());
                 if (!new File(getDirectoryPath() + "temp/").exists()) {
-                    new File(getDirectoryPath() + "temp/").mkdirs();
+                    BloomUtils.createDirectory(getDirectoryPath() + "temp/");
                 }
                 if (!new File(getDirectoryPath() + "temp/" + this.getUuid()).exists()) {
                     new File(getDirectoryPath() + "temp/" + this.getUuid());
                 }
                 if (!new File(getDirectoryPath() + "temp/" + this.getUuid() + "/data/").exists()) {
-                    new File(getDirectoryPath() + "temp/" + this.getUuid() + "/data/").mkdirs();
+                    BloomUtils.createDirectory(getDirectoryPath() + "temp/" + this.getUuid() + "/data/");
                 }
                 if (!new File(getDirectoryPath() + "temp/" + this.getUuid() + "/wrong/").exists()) {
-                    new File(getDirectoryPath() + "temp/" + this.getUuid() + "/wrong/").mkdirs();
+                    BloomUtils.createDirectory(getDirectoryPath() + "temp/" + this.getUuid() + "/wrong/");
                 }
                 if (!new File(getDirectoryPath() + "temp/" + this.getUuid() + "/final_results/").exists()) {
-                    new File(getDirectoryPath() + "temp/" + this.getUuid() + "/final_results/").mkdirs();
+                    BloomUtils.createDirectory(getDirectoryPath() + "temp/" + this.getUuid() + "/final_results/");
                 }
             } else if (fieldName.equals(input)) {
                 DiskFileItem itemFile = (DiskFileItem) item;

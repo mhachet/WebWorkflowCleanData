@@ -1,6 +1,7 @@
 package fr.bird.bloom.servlets;
 
 import fr.bird.bloom.utils.BloomConfig;
+import fr.bird.bloom.utils.BloomUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItem;
@@ -63,13 +64,13 @@ public class UploadControler  extends HttpServlet{
 			if(count == 0){
 				uuid = itemFile.getString();
 				if(!new File(getDirectoryPath() + "temp/").exists()){
-					new File(getDirectoryPath() + "temp/").mkdirs();
+					BloomUtils.createDirectory(getDirectoryPath() + "temp/");
 				}
 				if(!new File(getDirectoryPath() + "temp/" + uuid + "/").exists()){
-					new File(getDirectoryPath() + "temp/" + uuid + "/").mkdirs();
+					BloomUtils.createDirectory(getDirectoryPath() + "temp/" + uuid + "/");
 				}
 				if(!new File(getDirectoryPath() + "temp/" + uuid + "/data/").exists()){
-					new File(getDirectoryPath() + "temp/" + uuid + "/data/").mkdirs();
+					BloomUtils.createDirectory(getDirectoryPath() + "temp/" + uuid + "/data/");
 				}
 				System.out.println(uuid);
 			}

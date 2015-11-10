@@ -4,6 +4,7 @@
 package fr.bird.bloom.model;
 
 import fr.bird.bloom.utils.BloomConfig;
+import fr.bird.bloom.utils.BloomUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -106,13 +107,13 @@ public class DarwinCore extends CSVFile{
 	public File readDarwinCoreFile(String separator) throws IOException {
 
 		if(!new File(BloomConfig.getDirectoryPath() + "temp/").exists()){
-			new File(BloomConfig.getDirectoryPath() + "temp/").mkdirs();
+			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/");
 		}
 		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid()).exists()){
 			new File(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid());
 		}
 		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/data/").exists()){
-			new File(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/data/").mkdirs();
+			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/data/");
 		}
 		
 		File tempFile = new File(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/data/inputFile_" + Integer.toString(this.getIdFile_()) + ".csv");
