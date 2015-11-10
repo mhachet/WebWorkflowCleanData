@@ -101,7 +101,7 @@ public class ReconcileController extends HttpServlet {
 
 		String extension = this.getExtension(nbInput, uuid);
 		System.out.println("extension : " + extension);
-		if(action.equals("preparation")){
+		if("preparation".equals(action)){
 
 			File file = new File(getDirectoryPath() + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + "." + extension);
 			firstLine = this.getFirstLine(file);
@@ -110,7 +110,7 @@ public class ReconcileController extends HttpServlet {
 			response.setCharacterEncoding("UTF-8");
 			response.getWriter().write(firstLine);
 		}
-		else if(action.equals("reconciliation")){
+		else if("reconciliation".equals(action)){
 			FileReader reader = new FileReader(getDirectoryPath() + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + "." + extension);
 			BufferedReader br = null;
 			List<String> lines = new ArrayList<>();
