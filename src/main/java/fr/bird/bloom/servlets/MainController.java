@@ -381,12 +381,11 @@ public class MainController extends HttpServlet {
                     }
                 }
 
-            } else {
-                //System.out.println("fieldName : " + fieldName);
+            }else if(fieldName.contains("email")){
+                initialisation.setEmailUser(item.getString());
+                initialisation.setSendEmail(true);
             }
-
-
-            if (initialisation.isEstablishment()) {
+            else if (initialisation.isEstablishment()) {
                 String param = item.getFieldName();
                 //System.out.println(param);
                 switch (param) {

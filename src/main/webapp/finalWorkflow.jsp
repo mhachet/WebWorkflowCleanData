@@ -387,6 +387,14 @@
                                     <span class="title">Success</span>
                                     <span id="spanSuccessStep7" class="value"><c:out value='${step7.step7_ok}'/></span>
                                 </div>
+                                <div class="card-view">
+                                    <span class="title">Occurrences number deleted</span>
+                                    <span class="value"><c:out value='${step7.nbFound}'/></span>
+                                </div>
+                                <div class="card-view">
+                                    <span class="title">Download link</span>
+                                    <span class="value"><a href=<c:out value='${step7.pathWrongIso2}'/>>Wrong ISO2 code file</a></span>
+                                </div>
                             </td>
                         </tr>
                     </table>

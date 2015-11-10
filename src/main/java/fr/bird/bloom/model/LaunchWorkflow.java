@@ -28,7 +28,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.List;
 import java.util.Map.Entry;
+
+
+import fr.bird.bloom.utils.BloomConfig;
+
+import javax.mail.MessagingException;
 
 /**
  * src.model
@@ -131,16 +137,26 @@ public class LaunchWorkflow {
 		}
 
 		this.writeFinalOutput();
-		
-		if(initialisation.isSendEmail()){
+		System.out.println("reconcile involved : " + this.getStep2().isInvolved());
+		//if(initialisation.isSendEmail()){
 			SendMail mail = new SendMail();
-		/*	try {
-				mail.sendMessage();
+			try {
+				mail.setStep1(step1);
+				mail.setStep2(step2);
+				mail.setStep3(step3);
+				mail.setStep4(step4);
+				mail.setStep5(step5);
+				mail.setStep6(step6);
+				mail.setStep7(step7);
+				mail.setStep8(step8);
+				mail.setStep9(step9);
+				mail.setFinalisation(finalisation);
+				mail.sendMessage(initialisation.getEmailUser());
 			} catch (MessagingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}*/
-		}
+			}
+
+		//}
 		
 		this.dataTreatment.deleteTables();
 
