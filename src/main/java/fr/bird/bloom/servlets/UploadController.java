@@ -90,14 +90,14 @@ public class UploadController extends HttpServlet{
 				compressedFormat.add("tar.gz");
 				
 				File file = new File(getDirectoryPath() + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + "." + fileExtensionName);
-				if(action.equals("upload")){
+				if("upload".equals(action)){
 					try {
 						itemFile.write(file);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					if(fileExtensionName.equals("zip")){
+					if("zip".equals(fileExtensionName)){
 						String dezipFile = this.unzip(file, getDirectoryPath() + "temp/" + uuid + "/data/");
 						System.out.println("dezipfile : " + dezipFile);
 					}
@@ -110,7 +110,7 @@ public class UploadController extends HttpServlet{
 						response.getWriter().write(firstline);
 					}
 				}
-				else if(action.equals("cancel")){
+				else if("cancel".equals(action)){
 
 					file.delete();
 					response.getWriter().write("cancelDone");

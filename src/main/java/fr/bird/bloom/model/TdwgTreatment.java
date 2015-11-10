@@ -33,10 +33,6 @@ public class TdwgTreatment {
 	private String uuid;
 	private boolean sucessTdwgTreatment;
 
-	public TdwgTreatment(){
-
-	}
-
 	/**
 	 * 
 	 * Tdwg4 code is retrieved for each coordinates 

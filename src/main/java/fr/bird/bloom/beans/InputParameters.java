@@ -11,7 +11,7 @@ import fr.bird.bloom.model.MappingReconcilePreparation;
 
 /**
  * src.beans
- *
+ * <p>
  * Initiliaze
  */
 public class InputParameters {
@@ -33,16 +33,6 @@ public class InputParameters {
     private boolean sendEmail;
 
     /**
-     *
-     * src.beans
-     * InputParameters
-     */
-    public InputParameters(){
-
-    }
-
-    /**
-     *
      * @return ArrayList<MappingReconcilePreparation>
      */
     public List<MappingReconcilePreparation> getListMappingReconcileFiles() {
@@ -50,7 +40,6 @@ public class InputParameters {
     }
 
     /**
-     *
      * @param listMappingReconcileFiles
      * @return void
      */
@@ -59,7 +48,6 @@ public class InputParameters {
     }
 
     /**
-     *
      * @return ArrayList<File>
      */
     public List<File> getInputMappedFilesList() {
@@ -67,7 +55,6 @@ public class InputParameters {
     }
 
     /**
-     *
      * @param inputMappedFilesList
      * @return void
      */
@@ -76,7 +63,6 @@ public class InputParameters {
     }
 
     /**
-     *
      * @return ArrayList<File>
      */
     public List<File> getInputRastersList() {
@@ -84,7 +70,6 @@ public class InputParameters {
     }
 
     /**
-     *
      * @param inputRastersList
      * @return void
      */
@@ -93,7 +78,6 @@ public class InputParameters {
     }
 
     /**
-     *
      * @return ArrayList<File>
      */
     public List<File> getHeaderRasterList() {
@@ -101,7 +85,6 @@ public class InputParameters {
     }
 
     /**
-     *
      * @param headerRasterList
      * @return void
      */
@@ -110,7 +93,6 @@ public class InputParameters {
     }
 
     /**
-     *
      * @return ArrayList<File>
      */
     public List<File> getInputSynonymsList() {
@@ -118,7 +100,6 @@ public class InputParameters {
     }
 
     /**
-     *
      * @param inputSynonymsList
      * @return void
      */
@@ -127,7 +108,6 @@ public class InputParameters {
     }
 
     /**
-     *
      * @return boolean
      */
     public boolean isSynonym() {
@@ -135,7 +115,6 @@ public class InputParameters {
     }
 
     /**
-     *
      * @param synonym
      * @return void
      */
@@ -144,7 +123,6 @@ public class InputParameters {
     }
 
     /**
-     *
      * @return boolean
      */
     public boolean isTdwg4Code() {
@@ -152,7 +130,6 @@ public class InputParameters {
     }
 
     /**
-     *
      * @param tdwg4Code
      * @return void
      */
@@ -161,7 +138,6 @@ public class InputParameters {
     }
 
     /**
-     *
      * @return ArrayList<String>
      */
     public List<String> getEstablishmentList() {
@@ -169,7 +145,6 @@ public class InputParameters {
     }
 
     /**
-     *
      * @param establishmentList
      * @return void
      */
@@ -178,7 +153,6 @@ public class InputParameters {
     }
 
     /**
-     *
      * @return boolean
      */
     public boolean isEstablishment() {
@@ -186,7 +160,6 @@ public class InputParameters {
     }
 
     /**
-     *
      * @param establishment
      * @return void
      */
@@ -195,7 +168,6 @@ public class InputParameters {
     }
 
     /**
-     *
      * @return boolean
      */
     public boolean isRaster() {
@@ -203,7 +175,6 @@ public class InputParameters {
     }
 
     /**
-     *
      * @param raster
      * @return void
      */
@@ -212,7 +183,6 @@ public class InputParameters {
     }
 
     /**
-     *
      * @return int
      */
     public String getUuid() {
@@ -220,7 +190,6 @@ public class InputParameters {
     }
 
     /**
-     *
      * @param uuid
      * @return void
      */
@@ -228,35 +197,35 @@ public class InputParameters {
         this.uuid = uuid;
     }
 
-    public int getNbFiles(){
-	int nbFiles = this.getListMappingReconcileFiles().size();
+    public int getNbFiles() {
+        int nbFiles = this.getListMappingReconcileFiles().size();
 
-	return nbFiles;
+        return nbFiles;
     }
 
-	public int getNbInput() {
-		return nbInput;
-	}
+    public int getNbInput() {
+        return nbInput;
+    }
 
-	public void setNbInput(int nbInput) {
-		this.nbInput = nbInput;
-	}
+    public void setNbInput(int nbInput) {
+        this.nbInput = nbInput;
+    }
 
-	public String getEmailUser() {
-		return emailUser;
-	}
+    public String getEmailUser() {
+        return emailUser;
+    }
 
-	public void setEmailUser(String emailUser) {
-		this.emailUser = emailUser;
-	}
+    public void setEmailUser(String emailUser) {
+        this.emailUser = emailUser;
+    }
 
-	public boolean isSendEmail() {
-		return sendEmail;
-	}
+    public boolean isSendEmail() {
+        return sendEmail;
+    }
 
-	public void setSendEmail(boolean sendEmail) {
-		this.sendEmail = sendEmail;
-	}
+    public void setSendEmail(boolean sendEmail) {
+        this.sendEmail = sendEmail;
+    }
 
 
 }
