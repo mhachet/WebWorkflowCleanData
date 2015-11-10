@@ -1,37 +1,19 @@
 package fr.bird.bloom.model;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import javax.mail.*;
+import javax.mail.internet.*;
 
-import fr.bird.bloom.beans.Step1_MappingDwc;
-import fr.bird.bloom.beans.Step2_ReconciliationService;
-import fr.bird.bloom.beans.Step3_CheckCoordinates;
-import fr.bird.bloom.beans.Step4_CheckGeoIssue;
-import fr.bird.bloom.beans.Step5_IncludeSynonym;
-import fr.bird.bloom.beans.Step6_CheckTDWG;
-import fr.bird.bloom.beans.Step7_CheckISo2Coordinates;
-import fr.bird.bloom.beans.Step8_CheckCoordinatesRaster;
-import fr.bird.bloom.beans.Step9_EstablishmentMeans;
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import fr.bird.bloom.beans.*;
 import fr.bird.bloom.utils.BloomConfig;
 
 public class SendMail {
-
-
-	private static final String SMTP_HOST1 = "smtp.mnhn.fr";
-	private static final String LOGIN_SMTP1 = "mhachet";
-	private static final String IMAP_ACCOUNT1 = "mhachet@mnhn.fr";
 
 	private Step1_MappingDwc step1;
 	private Step2_ReconciliationService step2;
@@ -42,34 +24,42 @@ public class SendMail {
 	private Step7_CheckISo2Coordinates step7;
 	private Step8_CheckCoordinatesRaster step8;
 	private Step9_EstablishmentMeans step9;
+	private Finalisation finalisation;
 
+	private String getResourcePath() {
+		return BloomConfig.getResourcePath();
+	}
 
 	public SendMail(){
 
 	}
 
-	public void sendMessage() throws AddressException, MessagingException { 
+	public void sendMessage(String emailUser) throws AddressException, MessagingException {
 
 		String smtpHost = "";
 		String from = "";
-		String to = "melanie.hachet@gmail.com";
+		//String to = "melanie.hachet@gmail.com";
 		String username = "";
 		String password = "";
+		String smtpPort = "";
 		try{
-			BufferedReader buff = new BufferedReader(new FileReader(BloomConfig.getResourcePath() + ".properties_mail"));
+			System.out.println(getResourcePath());
+			BufferedReader buff = new BufferedReader(new FileReader(getResourcePath() + ".properties_mail"));
 			try {
 				String line;
 				int count = 0;
 				while ((line = buff.readLine()) != null) {
 					switch (count) {
-					case 0: smtpHost = line.split("\t")[1];
-					break;
-					case 1: from = line.split("\t")[1];
-					break;
-					case 2: username = line.split("\t")[1];
-					break;
-					case 3: password = line.split("\t")[1];
-					break;
+						case 0: smtpHost = line.split("\t")[1];
+							break;
+						case 1: from = line.split("\t")[1];
+							break;
+						case 2: username = line.split("\t")[1];
+							break;
+						case 3: password = line.split("\t")[1];
+							break;
+						/*case 4 : smtpPort = line.split("\t")[1];
+							break;*/
 					}
 					count ++;
 				}
@@ -82,20 +72,28 @@ public class SendMail {
 
 		System.out.println("smtpHost : " + smtpHost + "\nfrom : " + from + "\nusername : " + username + "\npassword : " + password);
 
-		Properties props = new Properties();
+		final Properties props = new Properties();
 		props.put("mail.smtp.host", smtpHost);
 		props.put("mail.smtp.auth", "true");
+		//props.put("mail.smtp.port", smtpPort);
+		props.put("mail.smtp.starttls.enable", "true");
+		props.put("username", username);
+		props.put("password", password);
 
-		Session session = Session.getDefaultInstance(props);
-		session.setDebug(true);
+		Session session = Session.getInstance(props,
+				new javax.mail.Authenticator() {
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(props.getProperty("username"),props.getProperty("password"));
+					}
+				});
 
-		MimeMessage message = new MimeMessage(session);   
+
+		MimeMessage message = new MimeMessage(session);
 		message.setFrom(new InternetAddress(from));
-		message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+		message.addRecipient(Message.RecipientType.TO, new InternetAddress(emailUser));
 		message.setSubject("BLOOM results");
 
-
-		message.setText("");
+		message = this.setTextMimeMessage(message);
 
 		Transport tr = session.getTransport("smtp");
 		tr.connect(smtpHost, username, password);
@@ -108,39 +106,67 @@ public class SendMail {
 
 	}
 
-	public MimeMessage setTextMimeMessage(MimeMessage message){
+	public MimeMessage setTextMimeMessage(MimeMessage message) throws MessagingException {
 		String content = "To download results from mapping to DarwinCore<br>";
+		ArrayList<String> filenameInputs = new ArrayList<>();
 		if(this.getStep1().isInvolved()){
-			HashMap<Integer,MappingDwC> infos_mapping = step1.getInfos_mapping();
+			HashMap<Integer,MappingDwC> infos_mapping = this.getStep1().getInfos_mapping();
 			for (Entry<Integer, MappingDwC> idFile : infos_mapping.entrySet()){
-				MappingDwC mappingDWC = infos_mapping.get(idFile);
-				content += "- " + idFile + " => " + mappingDWC.getFilepath();
+				MappingDwC mappingDWC = idFile.getValue();
+				if(mappingDWC.getMappingInvolved()) {
+					content += "Mapped file " + mappingDWC.getFilename() + " : <a href=\"http:localhost:8080/bloom/" + mappingDWC.getFilepath() + "\"> Download link</a><br>";
+				}
+				filenameInputs.add(mappingDWC.getFilename());
 			}
 		}
+		content += "<br></br>";
+		//System.out.println(content);
 		if(this.getStep2().isInvolved()){
-			
+			HashMap<Integer,ReconciliationService> infos_reconcile = this.getStep2().getInfos_reconcile();
+			for (Entry<Integer, ReconciliationService> idFile : infos_reconcile.entrySet()){
+				//ReconciliationService reconcile = infos_reconcile.get(idFile);
+				content += "Renamed file " + idFile.getValue().getFilename() + " => <a href=\"http:localhost:8080/bloom/" + idFile.getValue().getFilepath() + "\"> Download link</a><br>";
+			}
 		}
+		content += "<br></br>";
 		if(this.getStep3().isInvolved()){
-			
+			String pathWrongCoordinates = this.getStep3().getPathWrongCoordinates();
+			content += "File with wrong coordinates : <a href=\"http:localhost:8080/bloom/" + pathWrongCoordinates + "\"> Download link</a><br>";
 		}
-		if(this.getStep4().isInvolved()){
-			
+		content += "<br></br>";
+		if(this.getStep4().isInvolved()) {
+			String pathWrongGeoIssue = this.getStep3().getPathWrongCoordinates();
+			content += "File with wrong geo-issues : <a href=\"http:localhost:8080/bloom/" + pathWrongGeoIssue + "\"> Download link</a><br>";
 		}
-		if(this.getStep5().isInvolved()){
-			
-		}
-		if(this.getStep6().isInvolved()){
-			
-		}
+		content += "<br></br>";
 		if(this.getStep7().isInvolved()){
-			
+			String pathWrongIso2 = this.getStep7().getPathWrongIso2();
+			content += "File with wrong iso2 code : <a href=\"http:localhost:8080/bloom/" + pathWrongIso2 + "\"> Download link</a><br>";
 		}
+		content += "<br></br>";
 		if(this.getStep8().isInvolved()){
-			
+			String pathWrongRaster = this.getStep8().getPathWrongRaster();
+			String pathMatrixResultRaster = this.getStep8().getPathMatrixResultRaster();
+			content += "Wrong occurences for raster files : <a href=\"http:localhost:8080/bloom/" + pathWrongRaster + "\"> Download link</a><br>";
+			content += "Matrix result for raster analyse : <a href=\"http:localhost:8080/bloom/" + pathMatrixResultRaster + "\"> Download link</a><br>";
+
 		}
+		content += "<br></br>";
 		if(this.getStep9().isInvolved()){
-			
+			String pathWrongEstablishmentMeans = this.getStep9().getPathWrongEstablishmentMeans();
+			content += "File with wrong establishmentMeans option : <a href=\"http:localhost:8080/bloom/" + pathWrongEstablishmentMeans + "\"> Download link</a><br>";
 		}
+
+		content += "<br></br>";
+		ArrayList<File> finalOutputFile = this.getFinalisation().getFinalOutputFiles();
+
+		for(int i = 0; i < finalOutputFile.size(); i++){
+			String cleanFilePath = finalOutputFile.get(i).getAbsolutePath().replace(BloomConfig.getDirectoryPath(), "output/");
+			String filenameInput = filenameInputs.get(i);
+			content += "Clean file " + filenameInput + " : <a href=\"http:localhost:8080/bloom/" + cleanFilePath + "\"> Download link</a><br>";
+		}
+		message.setText(content, "UTF-8", "html");
+
 		return message;
 	}
 
@@ -216,17 +242,11 @@ public class SendMail {
 		this.step9 = step9;
 	}
 
-	public static String getSmtpHost1() {
-		return SMTP_HOST1;
+	public Finalisation getFinalisation() {
+		return finalisation;
 	}
 
-	public static String getLoginSmtp1() {
-		return LOGIN_SMTP1;
+	public void setFinalisation(Finalisation finalisation) {
+		this.finalisation = finalisation;
 	}
-
-	public static String getImapAccount1() {
-		return IMAP_ACCOUNT1;
-	} 
-
-
 }
