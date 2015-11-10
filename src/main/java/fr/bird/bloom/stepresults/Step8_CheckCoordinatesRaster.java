@@ -2,7 +2,7 @@
  * fr.bird.bloom.beans
  * Step8_CheckCoordinatesRaster
  */
-package fr.bird.bloom.beans;
+package fr.bird.bloom.stepresults;
 
 import java.util.HashMap;
 import java.util.Map;

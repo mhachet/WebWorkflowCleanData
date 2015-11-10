@@ -2,7 +2,7 @@
  * fr.bird.bloom.beans
  * Step4_CheckGeoIssue
  */
-package fr.bird.bloom.beans;
+package fr.bird.bloom.stepresults;
 
 /**
  * fr.bird.bloom.beans

@@ -7,15 +7,15 @@ package fr.bird.bloom.servlets;
 
 import fr.bird.bloom.beans.Finalisation;
 import fr.bird.bloom.beans.Initialise;
-import fr.bird.bloom.beans.Step1_MappingDwc;
-import fr.bird.bloom.beans.Step2_ReconciliationService;
-import fr.bird.bloom.beans.Step3_CheckCoordinates;
-import fr.bird.bloom.beans.Step4_CheckGeoIssue;
-import fr.bird.bloom.beans.Step5_IncludeSynonym;
-import fr.bird.bloom.beans.Step6_CheckTDWG;
-import fr.bird.bloom.beans.Step7_CheckISo2Coordinates;
-import fr.bird.bloom.beans.Step8_CheckCoordinatesRaster;
-import fr.bird.bloom.beans.Step9_EstablishmentMeans;
+import fr.bird.bloom.stepresults.Step1_MappingDwc;
+import fr.bird.bloom.stepresults.Step2_ReconciliationService;
+import fr.bird.bloom.stepresults.Step3_CheckCoordinates;
+import fr.bird.bloom.stepresults.Step4_CheckGeoIssue;
+import fr.bird.bloom.stepresults.Step5_IncludeSynonym;
+import fr.bird.bloom.stepresults.Step6_CheckTDWG;
+import fr.bird.bloom.stepresults.Step7_CheckISo2Coordinates;
+import fr.bird.bloom.stepresults.Step8_CheckCoordinatesRaster;
+import fr.bird.bloom.stepresults.Step9_EstablishmentMeans;
 import fr.bird.bloom.model.CSVFile;
 import fr.bird.bloom.model.LaunchWorkflow;
 import fr.bird.bloom.model.MappingDwC;
@@ -489,12 +489,7 @@ public class MainControler extends HttpServlet {
      * @return int
      */
     public String generateRandomKey() {
-        String nbUUID = UUID.randomUUID().toString().replace("-", "_");
-        //String nbSessionRandom =  UUID.randomUUID();
-        //Random random = new Random();
-        //nbFileRandom = random.nextInt();
-        //System.out.println(nbFileRandom);
-        return nbUUID;
+        return UUID.randomUUID().toString().replace("-", "_");
     }
 
 }
