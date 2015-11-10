@@ -50,7 +50,7 @@ public class TdwgTreatment {
 		int iIso2 = fileDarwinCore.getIndiceFromTag("countryCode_");
 
 		for (String id_ : idAssoData.keySet()) {
-			if(!id_ .equals("id_")){
+			if(!"id_".equals(id_ )){
 				List<String> listInfos = idAssoData.get(id_);
 
 				float latitude = 0;
