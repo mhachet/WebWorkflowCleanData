@@ -28,6 +28,8 @@ import fr.bird.bloom.beans.Step8_CheckCoordinatesRaster;
 import fr.bird.bloom.beans.Step9_EstablishmentMeans;
 import fr.bird.bloom.utils.BloomConfig;
 
+import javax.mail.MessagingException;
+
 /**
  * src.model
  * 
@@ -130,16 +132,26 @@ public class LaunchWorkflow {
 		}
 
 		this.writeFinalOutput();
-		
-		if(initialisation.isSendEmail()){
+		System.out.println("reconcile involved : " + this.getStep2().isInvolved());
+		//if(initialisation.isSendEmail()){
 			SendMail mail = new SendMail();
-		/*	try {
-				mail.sendMessage();
+			try {
+				mail.setStep1(this.getStep1());
+				mail.setStep2(this.getStep2());
+				mail.setStep3(this.getStep3());
+				mail.setStep4(this.getStep4());
+				mail.setStep5(this.getStep5());
+				mail.setStep6(this.getStep6());
+				mail.setStep7(this.getStep7());
+				mail.setStep8(this.getStep8());
+				mail.setStep9(this.getStep9());
+				mail.setFinalisation(this.getFinalisation());
+				mail.sendMessage(initialisation.getEmailUser());
 			} catch (MessagingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}*/
-		}
+			}
+
+		//}
 		
 		this.dataTreatment.deleteTables();
 
