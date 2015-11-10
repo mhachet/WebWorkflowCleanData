@@ -52,8 +52,8 @@ import java.util.UUID;
  * LaunchWorkflow
  */
 
-@WebServlet(name = "MainControler")
-public class MainControler extends HttpServlet {
+@WebServlet(name = "MainController")
+public class MainController extends HttpServlet {
 
     /**
      * @param request

@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@WebServlet(name = "ReconcileControler")
-public class ReconcileControler extends HttpServlet {
+@WebServlet(name = "ReconcileController")
+public class ReconcileController extends HttpServlet {
 
 	private String getDirectoryPath() {
 		if (BloomConfig.getDirectoryPath() == null) {

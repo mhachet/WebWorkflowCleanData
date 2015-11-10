@@ -9,30 +9,30 @@
         <welcome-file>finalWorkflow.jsp</welcome-file>
     </welcome-file-list>
     <servlet>
-        <servlet-name>MainControler</servlet-name>
-        <servlet-class>fr.bird.bloom.servlets.MainControler</servlet-class>
+        <servlet-name>MainController</servlet-name>
+        <servlet-class>fr.bird.bloom.servlets.MainController</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>MainControler</servlet-name>
-        <url-pattern>/mainControler</url-pattern>
+        <servlet-name>MainController</servlet-name>
+        <url-pattern>/mainController</url-pattern>
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>UploadControler</servlet-name>
-        <servlet-class>fr.bird.bloom.servlets.UploadControler</servlet-class>
+        <servlet-name>UploadController</servlet-name>
+        <servlet-class>fr.bird.bloom.servlets.UploadController</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>UploadControler</servlet-name>
-        <url-pattern>/uploadControler</url-pattern>
+        <servlet-name>UploadController</servlet-name>
+        <url-pattern>/uploadController</url-pattern>
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>ReconcileControler</servlet-name>
-        <servlet-class>fr.bird.bloom.servlets.ReconcileControler</servlet-class>
+        <servlet-name>ReconcileController</servlet-name>
+        <servlet-class>fr.bird.bloom.servlets.ReconcileController</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>ReconcileControler</servlet-name>
-        <url-pattern>/reconcileControler</url-pattern>
+        <servlet-name>ReconcileController</servlet-name>
+        <url-pattern>/reconcileController</url-pattern>
     </servlet-mapping>
 
     <servlet>
