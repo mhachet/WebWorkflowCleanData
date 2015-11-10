@@ -4,6 +4,7 @@
 package fr.bird.bloom.model;
 
 import fr.bird.bloom.utils.BloomConfig;
+import fr.bird.bloom.utils.BloomUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.BufferedReader;
@@ -421,19 +422,19 @@ public class Treatment {
 	 */
 	public File createFileCsv(List<String> linesFile, String fileName, String category){
 		if(!new File(BloomConfig.getDirectoryPath() + "temp/").exists()){
-			new File(BloomConfig.getDirectoryPath() + "temp/").mkdirs();
+			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/");
 		}
 		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom()).exists()){
 			new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom());
 		}
 		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/").exists()){
-			new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/").mkdirs();
+			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/");
 		}
 		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/wrong/").exists()){
-			new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/wrong/").mkdirs();
+			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/wrong/");
 		}
 		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/final_results/").exists()){
-			new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/final_results/").mkdirs();
+			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/final_results/");
 		}
 
 		//String fileRename = fileName + "_" + nbFileRandom + ".csv";

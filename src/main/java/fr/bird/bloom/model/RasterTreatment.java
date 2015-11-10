@@ -4,6 +4,7 @@
 package fr.bird.bloom.model;
 
 import fr.bird.bloom.utils.BloomConfig;
+import fr.bird.bloom.utils.BloomUtils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -133,7 +134,7 @@ public class RasterTreatment {
 		String scriptRaster = BloomConfig.getResourcePath() + "raster.R";
 		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").exists())
 		{
-			new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").mkdirs();
+			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/");
 		}
 		File dataInputFileRaster = new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/dataInputFileRaster.csv");
 		//System.out.println("dataInputFileRaster : " + dataInputFileRaster.getAbsolutePath());
@@ -179,7 +180,7 @@ public class RasterTreatment {
 
 		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").exists())
 		{
-			new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").mkdirs();
+			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/");
 		}
 		File validRaster = new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/validRaster.txt");
 		File errorRaster = new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/errorRaster.txt");
@@ -338,16 +339,16 @@ public class RasterTreatment {
 	 */
 	public File writeMatrixReport(){
 		if(!new File(BloomConfig.getDirectoryPath() + "temp/").exists()){
-			new File(BloomConfig.getDirectoryPath() + "temp/").mkdirs();
+			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/");
 		}
 		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom()).exists()){
 			new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom());
 		}
 		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/data/").exists()){
-			new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/data/").mkdirs();
+			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/data/");
 		}
 		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").exists()){
-			new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/").mkdirs();
+			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/");
 		}
 		File matrix = new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/rasterAnalyse/cells_proba_raster_" + dataTreatment.getNbSessionRandom() + ".csv");
 		FileWriter writer = null;
@@ -539,7 +540,7 @@ public class RasterTreatment {
 				messagesSelect.add("nb lignes affectées :" + Integer.toString(resultatSelect.size() - 1));
 				if(!new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/wrong/").exists())
 				{
-					new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/wrong/").mkdirs();
+					BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/wrong/");
 				}
 				File wrongRasterFile = dataTreatment.createFileCsv(resultatSelect, "/wrong_raster_" + this.dataTreatment.getNbSessionRandom() + ".csv", "wrong");
 				this.setWrongRasterFile(wrongRasterFile);
@@ -552,7 +553,7 @@ public class RasterTreatment {
 		else{
 			if(!new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/wrong/").exists())
 			{
-				new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/wrong/").mkdirs();
+				BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getNbSessionRandom() + "/wrong/");
 			}
 			File wrongRasterFile = dataTreatment.createFileCsv(new ArrayList<String>(), "/wrong_raster_" + this.dataTreatment.getNbSessionRandom() + ".csv", "wrong");
 

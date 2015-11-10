@@ -10,6 +10,7 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import fr.bird.bloom.utils.BloomConfig;
+import fr.bird.bloom.utils.BloomUtils;
 import org.geotools.geojson.geom.GeometryJSON;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -377,7 +378,7 @@ public class GeographicTreatment {
 
 
 		if (!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/wrong/").exists()) {
-			new File(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/wrong/").mkdirs();
+			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/wrong/");
 		}
 
 
@@ -425,7 +426,7 @@ public class GeographicTreatment {
 		this.setNbWrongGeospatialIssues(resultatSelect.size() - 1 );
 
 		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/wrong/").exists()) {
-			new File(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/wrong/").mkdirs();
+			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/wrong/");
 		}
 
 
