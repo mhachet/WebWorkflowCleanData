@@ -30,8 +30,8 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-@WebServlet(name = "UploadControler")
-public class UploadControler  extends HttpServlet{
+@WebServlet(name = "UploadController")
+public class UploadController extends HttpServlet{
 
 
 	private String getDirectoryPath() {

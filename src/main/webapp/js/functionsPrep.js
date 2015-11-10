@@ -486,7 +486,7 @@ function cancelInputFile(nb_input, action){
 
 		var xhrPOST = new XMLHttpRequest();
 
-		xhrPOST.open("POST","uploadControler", true);
+		xhrPOST.open("POST","uploadController", true);
 		xhrPOST.setRequestHeader("Content-Length", filesize);
 		//xhrPOST.addEventListener("progress", updateProgress, false);
 		xhrPOST.addEventListener("error", transferFailed, false);
@@ -623,7 +623,7 @@ function uploadInputFile(nb_input){
 		divSpinnerIcon.appendChild(divCircleLeft);
 		divSpinnerIcon.appendChild(divGapPatch);
 		divSpinnerIcon.appendChild(divClipperRight);
-		divLoadingIcon.appendChild(divSpinnerIcon)
+		divLoadingIcon.appendChild(divSpinnerIcon);
 		
 		var divAddLoad = document.getElementById("divAddLoad_" + nb_input);
 		divAddLoad.appendChild(divLoadingIcon);
@@ -636,7 +636,7 @@ function uploadInputFile(nb_input){
 		console.log(formdata);
 		var xhrPOST = new XMLHttpRequest();
 
-		xhrPOST.open("POST","uploadControler", true);
+		xhrPOST.open("POST","uploadController", true);
 		xhrPOST.setRequestHeader("Content-Length", filesize);
 		//xhrPOST.addEventListener("progress", updateProgress, false);
 		xhrPOST.addEventListener("error", transferFailed, false);
