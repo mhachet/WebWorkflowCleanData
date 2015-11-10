@@ -65,7 +65,7 @@
 					<h3 class="post-subtitle">All results can be downloaded</h3>
 				</div>
                 <div id="hiddenResults">
-                	<input type="hidden" id="nbTotalInput" value="${initialise.nbInput}" />
+                	<input type="hidden" id="nbTotalInput" value="${inputParameters.nbInput}" />
                     <c:set var="count0" value="0" scope="page"/>
                     <c:forEach var="info" items="${step1.infos_mapping}">
                         <c:if test="${info.value.mappingInvolved == false}">

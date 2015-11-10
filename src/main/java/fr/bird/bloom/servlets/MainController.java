@@ -6,7 +6,7 @@
 package fr.bird.bloom.servlets;
 
 import fr.bird.bloom.beans.Finalisation;
-import fr.bird.bloom.beans.Initialise;
+import fr.bird.bloom.beans.InputParameters;
 import fr.bird.bloom.stepresults.Step1_MappingDwc;
 import fr.bird.bloom.stepresults.Step2_ReconciliationService;
 import fr.bird.bloom.stepresults.Step3_CheckCoordinates;
@@ -65,17 +65,17 @@ public class MainController extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         response.setContentType("text/plain");
 
-        //this.setUuid(this.generateRandomKey());
-        //this.initialisation.setUuid(uuid);
+        //this.setUuid(this.generateUUID());
+        //this.inputParameters.setUuid(uuid);
 
         List<FileItem> listFileItems = getMultipartRequestParameters(request);
 
-        Initialise initialisation = initialiseParameters(listFileItems, response);
+        InputParameters inputParameters = initialiseParameters(listFileItems, response);
 
 
-        request.setAttribute("initialise", initialisation);
+        request.setAttribute("initialise", inputParameters);
 
-        LaunchWorkflow newLaunch = new LaunchWorkflow(initialisation);
+        LaunchWorkflow newLaunch = new LaunchWorkflow(inputParameters);
 
         newLaunch.initialiseLaunchWorkflow();
 
@@ -141,8 +141,8 @@ public class MainController extends HttpServlet {
      * @return void
      * @throws IOException
      */
-    private Initialise initialiseParameters(List<FileItem> fileItems, HttpServletResponse response) throws IOException {
-        Initialise initialisation = new Initialise();
+    private InputParameters initialiseParameters(List<FileItem> fileItems, HttpServletResponse response) throws IOException {
+        InputParameters initialisation = new InputParameters();
         response.setContentType("text/html");
         response.addHeader("Access-Control-Allow-Origin", "*");
 
@@ -429,7 +429,7 @@ public class MainController extends HttpServlet {
     /**
      * @return int
      */
-    public String generateRandomKey() {
+    public String generateUUID() {
         return UUID.randomUUID().toString().replace("-", "_");
     }
 

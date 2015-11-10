@@ -11,9 +11,9 @@ package fr.bird.bloom;
  * ExampleWebTestCase
  */
 
+import fr.bird.bloom.beans.InputParameters;
 import org.junit.Ignore;
 import org.junit.Test;
-import fr.bird.bloom.beans.Initialise;
 import fr.bird.bloom.model.CSVFile;
 import fr.bird.bloom.model.MappingDwC;
 
@@ -31,7 +31,7 @@ public class PrepareTests {
     private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/test/";
     private String RESSOURCES_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/";
 
-    private Initialise initialisation;
+    private InputParameters initialisation;
     public String nbSessionRandom;
     private ArrayList<File> inputFilesList;
     private ArrayList<File> inputsRasterList;
@@ -42,7 +42,7 @@ public class PrepareTests {
     public void prepare() {
 
 
-	initialisation = new Initialise();
+	initialisation = new InputParameters();
 	inputFilesList = new ArrayList<>();
 	inputHeaderList = new ArrayList<>();
 	inputsRasterList = new ArrayList<>();
@@ -202,12 +202,12 @@ public class PrepareTests {
 	DIRECTORY_PATH = dIRECTORY_PATH;
     }
 
-    public Initialise getInitialisation() {
+    public InputParameters getInitialisation() {
 	return initialisation;
     }
 
-    public void setInitialisation(Initialise initialise) {
-	initialisation = initialise;
+    public void setInitialisation(InputParameters inputParameters) {
+	initialisation = inputParameters;
     }
 
     public String getNbSessionRandom() {
