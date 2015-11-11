@@ -169,11 +169,11 @@ public class LaunchWorkflow {
 	 * @throws IOException
 	 * @return void
 	 */
-	public void launchWorkflow() throws IOException{
+	private void launchWorkflow() throws IOException{
 
 		List<MappingReconcilePreparation> listMappingReconcileDWC = this.initialisation.getListMappingReconcileFiles();
-		HashMap<Integer, ReconciliationService> reconcilePath = step2.getInfos_reconcile();
-		HashMap<Integer, MappingDwC> hashMapStep1 = step1.getInfos_mapping();
+		Map<Integer, ReconciliationService> reconcilePath = step2.getInfos_reconcile();
+		Map<Integer, MappingDwC> hashMapStep1 = step1.getInfos_mapping();
 		
 		/**
 		 * pre-treatment for mapping and reconcile
@@ -288,7 +288,7 @@ public class LaunchWorkflow {
 	 * 
 	 * @return boolean
 	 */
-	public void isValidInputFiles(){
+	private void isValidInputFiles(){
 
 		List<MappingReconcilePreparation> listMappingReconcileFiles = this.initialisation.getListMappingReconcileFiles();
 		
@@ -337,7 +337,7 @@ public class LaunchWorkflow {
 	 * 
 	 * @return boolean
 	 */
-	public boolean isValidRasterFiles(){
+	private boolean isValidRasterFiles(){
 		//System.out.println("size raster : " + this.initialisation.getInputRastersList().size());
 		//System.out.println("size header : " + this.initialisation.getHeaderRasterList().size());
 		boolean isValid = true;
@@ -390,7 +390,7 @@ public class LaunchWorkflow {
 	 * 
 	 * @return boolean
 	 */
-	public boolean isValidSynonymFile(){
+	private boolean isValidSynonymFile(){
 		//System.out.println("size synonym : " + this.initialisation.getInputSynonymsList());
 		if(this.initialisation.getInputSynonymsList().size() != 0){
 			return true;
@@ -406,7 +406,7 @@ public class LaunchWorkflow {
 	 * @param isValidSynonymFile
 	 * @return void
 	 */
-	public void launchSynonymOption(boolean isValidSynonymFile){
+	private void launchSynonymOption(boolean isValidSynonymFile){
 		if(isValidSynonymFile){
 			this.dataTreatment.includeSynonyms(this.initialisation.getInputSynonymsList().get(0));
 		}
@@ -422,7 +422,7 @@ public class LaunchWorkflow {
 	 * 
 	 * @return void
 	 */
-	public void launchRasterOption(){
+	private void launchRasterOption(){
 
 		RasterTreatment rasterTreatment = this.dataTreatment.checkWorldClimCell(initialisation.getInputRastersList());
 		finalisation.setMatrixFileValidCells(rasterTreatment.getMatrixFileValidCells());
@@ -451,7 +451,7 @@ public class LaunchWorkflow {
 	 * 
 	 * @return void
 	 */
-	public void launchEstablishmentMeansOption(){
+	private void launchEstablishmentMeansOption(){
 		if(this.initialisation.getEstablishmentList().size() != 0){
 			EstablishmentTreatment establishTreatment = this.dataTreatment.establishmentMeansOption(this.initialisation.getEstablishmentList());
 			List<String> noEstablishment = establishTreatment.getNoEstablishmentList();
@@ -470,7 +470,7 @@ public class LaunchWorkflow {
 	/**
 	 * Write clean file(s)
 	 */
-	public void writeFinalOutput(){
+	private void writeFinalOutput(){
 		List<File> listFinalOutput = new ArrayList<>();
 		List<String> listPathsOutput = new ArrayList<>();
 
