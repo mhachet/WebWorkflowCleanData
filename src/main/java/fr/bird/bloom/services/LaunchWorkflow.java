@@ -3,10 +3,22 @@
  * LaunchWorkflow
  * TODO
  */
-package fr.bird.bloom.model;
+package fr.bird.bloom.services;
 
 import fr.bird.bloom.beans.Finalisation;
 import fr.bird.bloom.beans.InputParameters;
+import fr.bird.bloom.model.CSVFile;
+import fr.bird.bloom.model.ConnectionDatabase;
+import fr.bird.bloom.model.DarwinCore;
+import fr.bird.bloom.model.DatabaseTreatment;
+import fr.bird.bloom.model.EstablishmentTreatment;
+import fr.bird.bloom.model.GeographicTreatment;
+import fr.bird.bloom.model.MappingDwC;
+import fr.bird.bloom.model.MappingReconcilePreparation;
+import fr.bird.bloom.model.RasterTreatment;
+import fr.bird.bloom.model.ReconciliationService;
+import fr.bird.bloom.model.SendMail;
+import fr.bird.bloom.model.Treatment;
 import fr.bird.bloom.stepresults.Step1_MappingDwc;
 import fr.bird.bloom.stepresults.Step2_ReconciliationService;
 import fr.bird.bloom.stepresults.Step3_CheckCoordinates;
