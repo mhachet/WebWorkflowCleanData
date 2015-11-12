@@ -31,7 +31,7 @@ public class PrepareTests {
     private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/test/";
     private String RESSOURCES_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/";
 
-    private InputParameters initialisation;
+    private InputParameters inputParameters;
     public String nbSessionRandom;
     private ArrayList<File> inputFilesList;
     private ArrayList<File> inputsRasterList;
@@ -42,7 +42,7 @@ public class PrepareTests {
     public void prepare() {
 
 
-	initialisation = new InputParameters();
+	inputParameters = new InputParameters();
 	inputFilesList = new ArrayList<>();
 	inputHeaderList = new ArrayList<>();
 	inputsRasterList = new ArrayList<>();
@@ -50,15 +50,15 @@ public class PrepareTests {
 	setNbSessionRandom(generateRandomKey());
 	prepareInputFiles();
 
-	initialisation.setRaster(true);
+	inputParameters.setRaster(true);
 	prepareInputsRaster();
 	prepareInputsHeader();
 
-	initialisation.setEstablishment(true);
+	inputParameters.setEstablishment(true);
 	prepareEstablishment();
 
-	initialisation.setSynonym(true);
-	initialisation.setTdwg4Code(true);
+	inputParameters.setSynonym(true);
+	inputParameters.setTdwg4Code(true);
 
 	System.out.println("beforeclass 1 ");
 	//setBaseUrl("http://localhost:8080/WebWorkflowCleanData/HomePage.jsp");	
@@ -110,7 +110,7 @@ public class PrepareTests {
 	    }
 	    newMappingDWC.setConnectionTags(connectionTags);
 	    newMappingDWC.getNoMappedFile().setCsvName(file.getName());
-	    //initialisation.getInputFilesList().add(csvFile.getCsvFile());
+	    //inputParameters.getInputFilesList().add(csvFile.getCsvFile());
 
 	    boolean doMapping = newMappingDWC.doMapping();
 	    newMappingDWC.setMappingInvolved(doMapping);
@@ -133,18 +133,18 @@ public class PrepareTests {
 
 	}
 	
-	//initialisation.setListMappingFiles(listMappedDWC);
+	//inputParameters.setListMappingFiles(listMappedDWC);
     }
 
     public void prepareInputsRaster(){
 
-	initialisation.setRaster(true);
+	inputParameters.setRaster(true);
 
 	inputsRasterList.add(new File(DIRECTORY_PATH + "inputs_data/alt_22.bil"));
 	inputsRasterList.add(new File(DIRECTORY_PATH + "inputs_data/prec1_46.bil"));
 	inputsRasterList.add(new File(DIRECTORY_PATH + "inputs_data/tmean1.bil"));
 
-	initialisation.setInputRastersList(inputsRasterList);
+	inputParameters.setInputRastersList(inputsRasterList);
     }
 
     public void prepareInputsHeader(){
@@ -152,7 +152,7 @@ public class PrepareTests {
 	inputHeaderList.add(new File(DIRECTORY_PATH + "inputs_data/prec1_46.hdr"));
 	inputHeaderList.add(new File(DIRECTORY_PATH + "inputs_data/tmean1.hdr"));
 
-	initialisation.setHeaderRasterList(inputHeaderList);
+	inputParameters.setHeaderRasterList(inputHeaderList);
 
     }
 
@@ -163,7 +163,7 @@ public class PrepareTests {
 	listEstablishment.add("native");
 	listEstablishment.add("managed");
 
-	initialisation.setEstablishmentList(listEstablishment);
+	inputParameters.setEstablishmentList(listEstablishment);
     }
 
     public List<String> getLinesFile(File file){
@@ -202,12 +202,12 @@ public class PrepareTests {
 	DIRECTORY_PATH = dIRECTORY_PATH;
     }
 
-    public InputParameters getInitialisation() {
-	return initialisation;
+    public InputParameters getInputParameters() {
+	return inputParameters;
     }
 
-    public void setInitialisation(InputParameters inputParameters) {
-	initialisation = inputParameters;
+    public void setInputParameters(InputParameters inputParameters) {
+	this.inputParameters = inputParameters;
     }
 
     public String getNbSessionRandom() {

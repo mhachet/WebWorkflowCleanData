@@ -25,14 +25,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.List;
 import java.util.Map.Entry;
 
-
-import fr.bird.bloom.utils.BloomConfig;
 
 import javax.mail.MessagingException;
 
@@ -44,7 +40,7 @@ import javax.mail.MessagingException;
 public class LaunchWorkflow {
 
 	private Treatment dataTreatment;
-	private InputParameters initialisation;
+	private InputParameters inputParameters;
 	private Finalisation finalisation;
 	//private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/WebContent/output/";
 
@@ -64,7 +60,7 @@ public class LaunchWorkflow {
 	 * LaunchWorkflow
 	 */
 	public LaunchWorkflow(InputParameters inputParameters){
-		this.initialisation = inputParameters;
+		this.inputParameters = inputParameters;
 	}
 
 	/**
@@ -76,7 +72,7 @@ public class LaunchWorkflow {
 	public void initialiseLaunchWorkflow() throws IOException{
 		//System.out.println("repCourant : "  + repCourant);
 		this.dataTreatment = new Treatment();
-		this.dataTreatment.setNbSessionRandom(initialisation.getUuid());
+		this.dataTreatment.setNbSessionRandom(inputParameters.getUuid());
 
 		finalisation = new Finalisation();
 		step1 = new Step1_MappingDwc();
@@ -98,20 +94,20 @@ public class LaunchWorkflow {
 		step4.setInvolved(true);
 		step7.setInvolved(true);
 
-		if(this.initialisation.isSynonym()){
+		if(this.inputParameters.isSynonym()){
 
 			boolean synonymFileIsValid = this.isValidSynonymFile();
 			this.launchSynonymOption(synonymFileIsValid);
 			step5.setInvolved(true);
 		}
 
-		if(this.initialisation.isTdwg4Code()){
+		if(this.inputParameters.isTdwg4Code()){
 			boolean sucessTdwgTreatment = dataTreatment.tdwgCodeOption();
 			step6.setStep6_ok(sucessTdwgTreatment);
 			step6.setInvolved(true);
 		}
 
-		if(this.initialisation.isRaster()){
+		if(this.inputParameters.isRaster()){
 			step8.setInvolved(true);
 			boolean rasterFilesIsValid = this.isValidRasterFiles();
 			if(rasterFilesIsValid){
@@ -120,25 +116,25 @@ public class LaunchWorkflow {
 			else{
 				final String resourcePath = BloomConfig.getResourcePath();
 				File defaultRaster = new File(resourcePath + "test/inputs_data/tmean1.bil");
-				this.initialisation.getInputRastersList().add(defaultRaster);
+				this.inputParameters.getInputRastersList().add(defaultRaster);
 				File defaultHeader = new File(resourcePath + "test/inputs_data/tmean1.hdr");
-				this.initialisation.getHeaderRasterList().add(defaultHeader);
+				this.inputParameters.getHeaderRasterList().add(defaultHeader);
 				this.launchRasterOption();
 				//step8.setStep8_ok(false);
 			}
 			
 		}
 
-		//System.out.println("establishment : " + this.initialisation.getEstablishmentList());accessRight
+		//System.out.println("establishment : " + this.inputParameters.getEstablishmentList());accessRight
 		//keep introduced data
-		if(this.initialisation.isEstablishment()){
+		if(this.inputParameters.isEstablishment()){
 			this.launchEstablishmentMeansOption();
 			step9.setInvolved(true);
 		}
 
 		this.writeFinalOutput();
 		System.out.println("reconcile involved : " + this.getStep2().isInvolved());
-		//if(initialisation.isSendEmail()){
+		//if(inputParameters.isSendEmail()){
 			SendMail mail = new SendMail();
 			try {
 				mail.setStep1(step1);
@@ -151,7 +147,7 @@ public class LaunchWorkflow {
 				mail.setStep8(step8);
 				mail.setStep9(step9);
 				mail.setFinalisation(finalisation);
-				mail.sendMessage(initialisation.getEmailUser());
+				mail.sendMessage(inputParameters.getEmailUser());
 			} catch (MessagingException e) {
 				e.printStackTrace();
 			}
@@ -171,7 +167,7 @@ public class LaunchWorkflow {
 	 */
 	private void launchWorkflow() throws IOException{
 
-		List<MappingReconcilePreparation> listMappingReconcileDWC = this.initialisation.getListMappingReconcileFiles();
+		List<MappingReconcilePreparation> listMappingReconcileDWC = this.inputParameters.getListMappingReconcileFiles();
 		Map<Integer, ReconciliationService> reconcilePath = step2.getInfos_reconcile();
 		Map<Integer, MappingDwC> hashMapStep1 = step1.getInfos_mapping();
 		
@@ -230,8 +226,8 @@ public class LaunchWorkflow {
 		/**
 		 * pre-treatment for any input (mapping or not, reconcile or not)
 		 */
-		for(int i = 0 ; i < this.initialisation.getListMappingReconcileFiles().size() ; i++){
-			MappingReconcilePreparation mappingReconcilePrep = this.initialisation.getListMappingReconcileFiles().get(i);
+		for(int i = 0; i < this.inputParameters.getListMappingReconcileFiles().size() ; i++){
+			MappingReconcilePreparation mappingReconcilePrep = this.inputParameters.getListMappingReconcileFiles().get(i);
 			int idFile = mappingReconcilePrep.getIdFile();
 			DarwinCore darwinCoreModified = null;
 			MappingDwC mappingFile = mappingReconcilePrep.getMappingDWC();
@@ -290,7 +286,7 @@ public class LaunchWorkflow {
 	 */
 	private void isValidInputFiles(){
 
-		List<MappingReconcilePreparation> listMappingReconcileFiles = this.initialisation.getListMappingReconcileFiles();
+		List<MappingReconcilePreparation> listMappingReconcileFiles = this.inputParameters.getListMappingReconcileFiles();
 		
 		for(int i = 0; i < listMappingReconcileFiles.size(); i++){
 
@@ -338,11 +334,11 @@ public class LaunchWorkflow {
 	 * @return boolean
 	 */
 	private boolean isValidRasterFiles(){
-		//System.out.println("size raster : " + this.initialisation.getInputRastersList().size());
-		//System.out.println("size header : " + this.initialisation.getHeaderRasterList().size());
+		//System.out.println("size raster : " + this.inputParameters.getInputRastersList().size());
+		//System.out.println("size header : " + this.inputParameters.getHeaderRasterList().size());
 		boolean isValid = true;
-		if(this.initialisation.getInputRastersList().size() == this.initialisation.getHeaderRasterList().size()){
-			if(this.initialisation.getInputRastersList().size() == 0){
+		if(this.inputParameters.getInputRastersList().size() == this.inputParameters.getHeaderRasterList().size()){
+			if(this.inputParameters.getInputRastersList().size() == 0){
 				System.err.println("You have to put a raster file (format : bil, ...) if you desire to match your point and cells data.");
 				isValid = false;
 			}
@@ -352,8 +348,8 @@ public class LaunchWorkflow {
 			isValid = false;
 		}
 
-		for(int i = 0 ; i < this.initialisation.getInputRastersList().size() ; i++){
-			File raster = this.initialisation.getInputRastersList().get(i);
+		for(int i = 0; i < this.inputParameters.getInputRastersList().size() ; i++){
+			File raster = this.inputParameters.getInputRastersList().get(i);
 			String extensionRaster = raster.getName().substring(raster.getName().lastIndexOf("."));
 			String [] extensionsRaster = {".bil", ".grd", ".asc", ".sdat", ".rsc", ".nc", ".cdf", ".bsq", ".bip", ".adf"};
 			List<String> extensionsRasterList = new ArrayList(Arrays.asList(extensionsRaster));
@@ -363,8 +359,8 @@ public class LaunchWorkflow {
 			}
 
 		}
-		for(int i = 0 ; i < this.initialisation.getHeaderRasterList().size() ; i++){
-			File header = this.initialisation.getHeaderRasterList().get(i);
+		for(int i = 0; i < this.inputParameters.getHeaderRasterList().size() ; i++){
+			File header = this.inputParameters.getHeaderRasterList().get(i);
 			String extensionHeader = header.getName().substring(header.getName().lastIndexOf("."));
 			String headerName = header.getName();
 
@@ -391,8 +387,8 @@ public class LaunchWorkflow {
 	 * @return boolean
 	 */
 	private boolean isValidSynonymFile(){
-		//System.out.println("size synonym : " + this.initialisation.getInputSynonymsList());
-		if(this.initialisation.getInputSynonymsList().size() != 0){
+		//System.out.println("size synonym : " + this.inputParameters.getInputSynonymsList());
+		if(this.inputParameters.getInputSynonymsList().size() != 0){
 			return true;
 		}
 		else{
@@ -408,7 +404,7 @@ public class LaunchWorkflow {
 	 */
 	private void launchSynonymOption(boolean isValidSynonymFile){
 		if(isValidSynonymFile){
-			this.dataTreatment.includeSynonyms(this.initialisation.getInputSynonymsList().get(0));
+			this.dataTreatment.includeSynonyms(this.inputParameters.getInputSynonymsList().get(0));
 		}
 		else{
 			this.dataTreatment.includeSynonyms(null);
@@ -424,7 +420,7 @@ public class LaunchWorkflow {
 	 */
 	private void launchRasterOption(){
 
-		RasterTreatment rasterTreatment = this.dataTreatment.checkWorldClimCell(initialisation.getInputRastersList());
+		RasterTreatment rasterTreatment = this.dataTreatment.checkWorldClimCell(inputParameters.getInputRastersList());
 		finalisation.setMatrixFileValidCells(rasterTreatment.getMatrixFileValidCells());
 		finalisation.setPathMatrixFile(rasterTreatment.getMatrixFileValidCells().getAbsolutePath().replace(BloomConfig.getDirectoryPath(), "output/")); //change to 'output/'
 		Map<String, Boolean> errorProcessRaster = rasterTreatment.getCheckProcess();
@@ -452,8 +448,8 @@ public class LaunchWorkflow {
 	 * @return void
 	 */
 	private void launchEstablishmentMeansOption(){
-		if(this.initialisation.getEstablishmentList().size() != 0){
-			EstablishmentTreatment establishTreatment = this.dataTreatment.establishmentMeansOption(this.initialisation.getEstablishmentList());
+		if(this.inputParameters.getEstablishmentList().size() != 0){
+			EstablishmentTreatment establishTreatment = this.dataTreatment.establishmentMeansOption(this.inputParameters.getEstablishmentList());
 			List<String> noEstablishment = establishTreatment.getNoEstablishmentList();
 			step9.setNbFound(noEstablishment.size());
 			File wrongEstablishmentMeans = establishTreatment.getWrongEstablishmentMeansFile();
@@ -474,15 +470,15 @@ public class LaunchWorkflow {
 		List<File> listFinalOutput = new ArrayList<>();
 		List<String> listPathsOutput = new ArrayList<>();
 
-		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + initialisation.getUuid() + "/final_results/").exists()){
-			new File(BloomConfig.getDirectoryPath() + "temp/" + initialisation.getUuid() + "/final_results/").mkdir();
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + inputParameters.getUuid() + "/final_results/").exists()){
+			new File(BloomConfig.getDirectoryPath() + "temp/" + inputParameters.getUuid() + "/final_results/").mkdir();
 		}
 
-		int nbFiles = this.initialisation.getNbFiles();
+		int nbFiles = this.inputParameters.getNbFiles();
 		for(int i = 0 ; i < nbFiles ; i++){
-			int idFile = this.initialisation.getListMappingReconcileFiles().get(i).getIdFile();
-			String originalName = this.initialisation.getListMappingReconcileFiles().get(i).getOriginalName();
-			String originalExtension = this.initialisation.getListMappingReconcileFiles().get(i).getOriginalExtension();
+			int idFile = this.inputParameters.getListMappingReconcileFiles().get(i).getIdFile();
+			String originalName = this.inputParameters.getListMappingReconcileFiles().get(i).getOriginalName();
+			String originalExtension = this.inputParameters.getListMappingReconcileFiles().get(i).getOriginalExtension();
 
 			Statement statement = null;
 			try {
@@ -493,8 +489,8 @@ public class LaunchWorkflow {
 			}
 			DatabaseTreatment newConnection = new DatabaseTreatment(statement);
 			
-			List<String > resultCleanTable = newConnection.getCleanTableFromIdFile(idFile, initialisation.getUuid());
-			String nameFile = originalName.replace("." + originalExtension, "") + "_" + initialisation.getUuid() + "_clean.csv";
+			List<String > resultCleanTable = newConnection.getCleanTableFromIdFile(idFile, inputParameters.getUuid());
+			String nameFile = originalName.replace("." + originalExtension, "") + "_" + inputParameters.getUuid() + "_clean.csv";
 			File cleanOutput = this.dataTreatment.createFileCsv(resultCleanTable, nameFile, "final_results");
 
 			listFinalOutput.add(cleanOutput);
