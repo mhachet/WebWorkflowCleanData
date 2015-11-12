@@ -17,7 +17,7 @@ import fr.bird.bloom.stepresults.Step7_CheckISo2Coordinates;
 import fr.bird.bloom.stepresults.Step8_CheckCoordinatesRaster;
 import fr.bird.bloom.stepresults.Step9_EstablishmentMeans;
 import fr.bird.bloom.model.CSVFile;
-import fr.bird.bloom.model.LaunchWorkflow;
+import fr.bird.bloom.services.LaunchWorkflow;
 import fr.bird.bloom.model.MappingDwC;
 import fr.bird.bloom.model.MappingReconcilePreparation;
 import fr.bird.bloom.model.ReconciliationService;
