@@ -54,7 +54,6 @@ public class LaunchWorkflow {
 	private Treatment dataTreatment;
 	private InputParameters inputParameters;
 	private Finalisation finalisation;
-	//private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/WebContent/output/";
 
 	private Step1_MappingDwc step1;
 	private Step2_ReconciliationService step2;
@@ -81,7 +80,7 @@ public class LaunchWorkflow {
 	 * @throws IOException
 	 * @return void
 	 */
-	public void initialiseLaunchWorkflow() throws IOException{
+	public void executeWorkflow() throws IOException{
 		//System.out.println("repCourant : "  + repCourant);
 		this.dataTreatment = new Treatment();
 		this.dataTreatment.setNbSessionRandom(inputParameters.getUuid());
@@ -99,7 +98,7 @@ public class LaunchWorkflow {
 
 		this.isValidInputFiles();
 
-		
+
 		
 		this.launchWorkflow();
 		step3.setInvolved(true);
