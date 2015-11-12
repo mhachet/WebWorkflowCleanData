@@ -75,30 +75,30 @@ public class MainController extends HttpServlet {
 
         request.setAttribute("initialise", inputParameters);
 
-        LaunchWorkflow newLaunch = new LaunchWorkflow(inputParameters);
+        LaunchWorkflow workflow = new LaunchWorkflow(inputParameters);
 
-        newLaunch.initialiseLaunchWorkflow();
+        workflow.executeWorkflow();
 
-        Finalisation finalisation = newLaunch.getFinalisation();
+        Finalisation finalisation = workflow.getFinalisation();
         request.setAttribute("finalisation", finalisation);
 
-        Step1_MappingDwc step1 = newLaunch.getStep1();
+        Step1_MappingDwc step1 = workflow.getStep1();
         request.setAttribute("step1", step1);
-        Step2_ReconciliationService step2 = newLaunch.getStep2();
+        Step2_ReconciliationService step2 = workflow.getStep2();
         request.setAttribute("step2", step2);
-        Step3_CheckCoordinates step3 = newLaunch.getStep3();
+        Step3_CheckCoordinates step3 = workflow.getStep3();
         request.setAttribute("step3", step3);
-        Step4_CheckGeoIssue step4 = newLaunch.getStep4();
+        Step4_CheckGeoIssue step4 = workflow.getStep4();
         request.setAttribute("step4", step4);
-        Step5_IncludeSynonym step5 = newLaunch.getStep5();
+        Step5_IncludeSynonym step5 = workflow.getStep5();
         request.setAttribute("step5", step5);
-        Step6_CheckTDWG step6 = newLaunch.getStep6();
+        Step6_CheckTDWG step6 = workflow.getStep6();
         request.setAttribute("step6", step6);
-        Step7_CheckISo2Coordinates step7 = newLaunch.getStep7();
+        Step7_CheckISo2Coordinates step7 = workflow.getStep7();
         request.setAttribute("step7", step7);
-        Step8_CheckCoordinatesRaster step8 = newLaunch.getStep8();
+        Step8_CheckCoordinatesRaster step8 = workflow.getStep8();
         request.setAttribute("step8", step8);
-        Step9_EstablishmentMeans step9 = newLaunch.getStep9();
+        Step9_EstablishmentMeans step9 = workflow.getStep9();
         request.setAttribute("step9", step9);
 
         this.getServletContext().getRequestDispatcher("/finalWorkflow.jsp").forward(request, response);
