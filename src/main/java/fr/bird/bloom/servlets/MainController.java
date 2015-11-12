@@ -142,7 +142,7 @@ public class MainController extends HttpServlet {
      * @throws IOException
      */
     private InputParameters initialiseParameters(List<FileItem> fileItems, HttpServletResponse response) throws IOException {
-        InputParameters initialisation = new InputParameters();
+        InputParameters inputParameters = new InputParameters();
         response.setContentType("text/html");
         response.addHeader("Access-Control-Allow-Origin", "*");
 
@@ -175,7 +175,7 @@ public class MainController extends HttpServlet {
             //System.out.println("fieldName : " + fieldName + " item : " + item.getString());
             if (fieldName.contains("formulaire")) {
                 uuid = item.getString();
-                initialisation.setUuid(uuid);
+                inputParameters.setUuid(uuid);
                 if (!new File(getDirectoryPath() + "temp/").exists()) {
                     BloomUtils.createDirectory(getDirectoryPath() + "temp/");
                 }
@@ -220,7 +220,7 @@ public class MainController extends HttpServlet {
                 //System.out.println("connectionTagsControler : " + connectionTags);
                 newMappingDWC.setConnectionTags(connectionTags);
                 newMappingDWC.getNoMappedFile().setCsvName(file.getName());
-                //initialisation.getInputFilesList().add(csvFile.getCsvFile());
+                //inputParameters.getInputFilesList().add(csvFile.getCsvFile());
                 //newMappingDWC.setFilename(itemFile.getName());
                 ReconciliationService reconciliationService = new ReconciliationService();
                 listReconcileFiles.add(reconciliationService);
@@ -233,7 +233,7 @@ public class MainController extends HttpServlet {
                 nbFilesInput++;
             } else if (fieldName.equals(raster)) {
                 System.out.println("if raster : " + item);
-                initialisation.setRaster(true);
+                inputParameters.setRaster(true);
 
                 String fileExtensionName = item.getName();
                 fileExtensionName = FilenameUtils.getExtension(fileExtensionName);
@@ -246,7 +246,7 @@ public class MainController extends HttpServlet {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
-                    initialisation.getInputRastersList().add(file);
+                    inputParameters.getInputRastersList().add(file);
                     nbFilesRaster++;
                 }
 
@@ -264,17 +264,17 @@ public class MainController extends HttpServlet {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
-                    initialisation.getHeaderRasterList().add(file);
+                    inputParameters.getHeaderRasterList().add(file);
                     nbFilesHeader++;
                 }
             } else if ("raster".equals(fieldName)) {
-                initialisation.setRaster(true);
+                inputParameters.setRaster(true);
             } else if (synonyms.equals(fieldName)) {
-                initialisation.setSynonym(true);
+                inputParameters.setSynonym(true);
             } else if ("tdwg4".equals(fieldName)) {
-                initialisation.setTdwg4Code(true);
+                inputParameters.setTdwg4Code(true);
             } else if ("establishment".equals(fieldName)) {
-                initialisation.setEstablishment(true);
+                inputParameters.setEstablishment(true);
             } else if (fieldName.contains("dropdownDwC_")) {
                 //System.out.println("fieldName : " + fieldName);
                 String valueDropdown = item.getString();
@@ -382,43 +382,43 @@ public class MainController extends HttpServlet {
                 }
 
             }else if(fieldName.contains("email")){
-                initialisation.setEmailUser(item.getString());
-                initialisation.setSendEmail(true);
+                inputParameters.setEmailUser(item.getString());
+                inputParameters.setSendEmail(true);
             }
-            else if (initialisation.isEstablishment()) {
+            else if (inputParameters.isEstablishment()) {
                 String param = item.getFieldName();
                 //System.out.println(param);
                 switch (param) {
                     case "native":
-                        initialisation.getEstablishmentList().add("native");
+                        inputParameters.getEstablishmentList().add("native");
                         break;
                     case "introduced":
-                        initialisation.getEstablishmentList().add("introduced");
+                        inputParameters.getEstablishmentList().add("introduced");
                         break;
                     case "naturalised":
-                        initialisation.getEstablishmentList().add("naturalised");
+                        inputParameters.getEstablishmentList().add("naturalised");
                         break;
                     case "invasive":
-                        initialisation.getEstablishmentList().add("invasive");
+                        inputParameters.getEstablishmentList().add("invasive");
                         break;
                     case "managed":
-                        initialisation.getEstablishmentList().add("managed");
+                        inputParameters.getEstablishmentList().add("managed");
                         break;
                     case "uncertain":
-                        initialisation.getEstablishmentList().add("uncertain");
+                        inputParameters.getEstablishmentList().add("uncertain");
                         break;
                     case "others":
-                        initialisation.getEstablishmentList().add("others");
+                        inputParameters.getEstablishmentList().add("others");
                         break;
                 }
             }
         }
 
-        initialisation.setNbInput(nbFilesInput);
+        inputParameters.setNbInput(nbFilesInput);
 
-        initialisation.setListMappingReconcileFiles(listMappingReconcileDWC);
+        inputParameters.setListMappingReconcileFiles(listMappingReconcileDWC);
 
-        return initialisation;
+        return inputParameters;
     }
 
     public void destroy() {
