@@ -4,7 +4,6 @@ import java.util.Map;
 
 public class ServiceInput {
 
-    private String uuid;
     private boolean synonym;
     private boolean tdwg4Code;
     private boolean raster;
@@ -15,11 +14,11 @@ public class ServiceInput {
 
     private String inputFileUrl;
 
+    private Map<String, String> csvHeaderToDarwinCoreHeaderMapping;
 
-    public ServiceInput(String uuid, boolean synonym, boolean tdwg4Code, boolean raster, boolean establishment,
+    public ServiceInput(boolean synonym, boolean tdwg4Code, boolean raster, boolean establishment,
                         int nbInput, boolean sendEmail, String userEmail, String inputFileUrl,
                         Map<String, String> csvHeaderToDarwinCoreHeaderMapping) {
-        this.uuid = uuid;
         this.synonym = synonym;
         this.tdwg4Code = tdwg4Code;
         this.raster = raster;
@@ -32,11 +31,7 @@ public class ServiceInput {
     }
 
     public ServiceInput() {
-        this(null, false, false, false, false, 0, false, null, null, null);
-    }
-
-    public String getUuid() {
-        return uuid;
+        this(false, false, false, false, 0, false, null, null, null);
     }
 
     public boolean isSynonym() {
@@ -75,6 +70,5 @@ public class ServiceInput {
         return csvHeaderToDarwinCoreHeaderMapping;
     }
 
-    private Map<String, String> csvHeaderToDarwinCoreHeaderMapping;
 
 }

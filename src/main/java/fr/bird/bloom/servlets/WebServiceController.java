@@ -10,7 +10,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-@Path("/bloomWorkflow")
+@Path("/workflow")
 public class WebServiceController {
 
 
@@ -23,7 +23,6 @@ public class WebServiceController {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/")
     public String process(ServiceInput input) {
 
 
