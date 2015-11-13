@@ -1,0 +1,9 @@
+hasCoordinate,nomScientifique,decimalLatitude,decimalLongitude,hasGeospatialIssues,gbifID,locationID,countryCode,establishmentMeans
+valid,Aceras anthropophorum,20.706412,-103.361475,FALSE,10,magna;mexique,MX,introduced
+invalid,Fabaceae,49.55365,6.240743,FALSE,11,,FR,invasive
+valid,Cetacea Brisson,49.55365,6.240743,FALSE,12,crin,LU,invasive
+invalid,Noctuoidea,,,FALSE,13,,GL,
+valid,Lamiaceae,50.553998,8.009385,FALSE,14,,DE,invasive
+valid,Septicollarina zezinae Bitner,49.215842,4.050479,beuh,35,reims,FR,
+invalid,Stenosarina globosa Laurin,58.35575,16.467214,TRUE,,lac,SE,
+valid,Carex caryophyllea Latourr.,36.23777,55.583472,beuh,120,iran,IR,

@@ -1,0 +1,21 @@
+{
+  "synonym": false,
+  "tdwg4Code": false,
+  "raster": false,
+  "establishment": false,
+  "nbInput": 5,
+  "sendEmail": false,
+  "userEmail": "email",
+  "inputFileUrl": "url",
+  "csvHeaderToDarwinCoreHeaderMapping": {
+    "hasCoordinate": "hasCoordinate",
+    "nomScientifique": "scientificName",
+    "decimalLatitude": "decimalLatitude",
+    "decimalLongitude": "decimalLongitude",
+    "hasGeospatialIssues": "hasGeospatialIssues",
+    "gbifID": "gbifID",
+    "locationID": "locationID",
+    "countryCode": "countryCode",
+    "establishmentMeans": "establishmentMeans"
+  }
+}
