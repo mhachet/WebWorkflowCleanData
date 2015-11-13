@@ -1,4 +1,4 @@
-package fr.bird.bloom.servlets;
+package fr.bird.bloom.rest;
 
 
 import fr.bird.bloom.dto.ServiceInput;
@@ -12,7 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @Path("/workflow")
-public class WebServiceController {
+public class WorkflowService {
 
 
     @GET
