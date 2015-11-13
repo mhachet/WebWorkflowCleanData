@@ -4,6 +4,10 @@ import fr.bird.bloom.model.DwcHeaders;
 
 import java.util.Map;
 
+/**
+ * This class is a Data Transfer Object used to pass all the information needed to run the bloom workflow for a single
+ * input file (including the DarwinCore header mapping)
+ */
 public class ServiceInput {
 
     private boolean synonym;
