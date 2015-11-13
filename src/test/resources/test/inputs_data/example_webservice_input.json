@@ -8,14 +8,14 @@
   "userEmail": "email",
   "inputFileUrl": "url",
   "csvHeaderToDarwinCoreHeaderMapping": {
-    "hasCoordinate": "hasCoordinate",
-    "nomScientifique": "scientificName",
-    "decimalLatitude": "decimalLatitude",
-    "decimalLongitude": "decimalLongitude",
-    "hasGeospatialIssues": "hasGeospatialIssues",
-    "gbifID": "gbifID",
-    "locationID": "locationID",
-    "countryCode": "countryCode",
-    "establishmentMeans": "establishmentMeans"
+    "hasCoordinate": "HAS_COORDINATE",
+    "nomScientifique": "SCIENTIFIC_NAME",
+    "decimalLatitude": "DECIMAL_LATITUDE",
+    "decimalLongitude": "DECIMAL_LONGITUDE",
+    "hasGeospatialIssues": "HAS_GEOSPATIAL_ISSUES",
+    "gbifID": "GBIF_ID",
+    "locationID": "LOCATION_ID",
+    "countryCode": "COUNTRY_CODE",
+    "establishmentMeans": "ESTABLISHMENT_MEANS"
   }
 }

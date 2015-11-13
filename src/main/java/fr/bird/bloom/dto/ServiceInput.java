@@ -1,5 +1,7 @@
 package fr.bird.bloom.dto;
 
+import fr.bird.bloom.model.DwcHeaders;
+
 import java.util.Map;
 
 public class ServiceInput {
@@ -14,11 +16,11 @@ public class ServiceInput {
 
     private String inputFileUrl;
 
-    private Map<String, String> csvHeaderToDarwinCoreHeaderMapping;
+    private Map<String, DwcHeaders> csvHeaderToDarwinCoreHeaderMapping;
 
     public ServiceInput(boolean synonym, boolean tdwg4Code, boolean raster, boolean establishment,
                         int nbInput, boolean sendEmail, String userEmail, String inputFileUrl,
-                        Map<String, String> csvHeaderToDarwinCoreHeaderMapping) {
+                        Map<String, DwcHeaders> csvHeaderToDarwinCoreHeaderMapping) {
         this.synonym = synonym;
         this.tdwg4Code = tdwg4Code;
         this.raster = raster;
@@ -66,7 +68,7 @@ public class ServiceInput {
         return inputFileUrl;
     }
 
-    public Map<String, String> getCsvHeaderToDarwinCoreHeaderMapping() {
+    public Map<String, DwcHeaders> getCsvHeaderToDarwinCoreHeaderMapping() {
         return csvHeaderToDarwinCoreHeaderMapping;
     }
 
