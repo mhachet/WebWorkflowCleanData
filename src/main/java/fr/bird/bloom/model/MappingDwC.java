@@ -59,8 +59,8 @@ public class MappingDwC {
      *
      * @return void
      */
-    public void initialiseMapping(String nbSessionRandom) {
-        this.setTagsListDwC(this.initialiseDwCTags(nbSessionRandom));
+    public void initialiseMapping(String uuid) {
+        this.setTagsListDwC(this.initialiseDwCTags(uuid));
         this.setTagsListNoMapped(this.initialiseNoMappedTags());
         this.setPresentTags(this.initialisePresentTags());
     }
@@ -135,7 +135,7 @@ public class MappingDwC {
      *
      * @return ArrayList<String>
      */
-    public List<String> initialiseDwCTags(String nbSessionRandom) {
+    public List<String> initialiseDwCTags(String uuid) {
 
         List<String> tagsListDwCInit = new ArrayList<>();
         List<String> tempList = new ArrayList<>();

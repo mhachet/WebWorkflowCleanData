@@ -32,7 +32,7 @@ public class PrepareTests {
     private String RESSOURCES_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/";
 
     private InputParameters inputParameters;
-    public String nbSessionRandom;
+    public String uuid;
     private ArrayList<File> inputFilesList;
     private ArrayList<File> inputsRasterList;
     private ArrayList<File> inputHeaderList;
@@ -47,7 +47,7 @@ public class PrepareTests {
 	inputHeaderList = new ArrayList<>();
 	inputsRasterList = new ArrayList<>();
 
-	setNbSessionRandom(generateRandomKey());
+	setUuid(generateRandomKey());
 	prepareInputFiles();
 
 	inputParameters.setRaster(true);
@@ -78,7 +78,7 @@ public class PrepareTests {
 	inputFilesList.add(new File(DIRECTORY_PATH + "inputs_data/test3_DWC.csv"));
 
 	for(int i = 0 ; i < inputFilesList.size() ; i++){
-	    File file = new File(DIRECTORY_PATH + "temp/noMappedDWC_" + getNbSessionRandom() + "_" + (i + 1 ) + ".csv");
+	    File file = new File(DIRECTORY_PATH + "temp/noMappedDWC_" + getUuid() + "_" + (i + 1 ) + ".csv");
 	    FileWriter writer = null;
 	    try {
 		writer = new FileWriter(file.getAbsoluteFile());
@@ -102,7 +102,7 @@ public class PrepareTests {
 	    String nameFile = inputFilesList.get(i).getName();
 	    //newMappingDWC.setOriginalExtension(nameFile.substring(nameFile.indexOf('.')+1,nameFile.length()));
 	    listMappedDWC.add(newMappingDWC);
-	    newMappingDWC.initialiseMapping(getNbSessionRandom());
+	    newMappingDWC.initialiseMapping(getUuid());
 	    HashMap<String, String> connectionTags = new HashMap<>();
 	    List<String> tagsNoMapped = newMappingDWC.getTagsListNoMapped();
 	    for(int k = 0 ; k < tagsNoMapped.size() ; k++){
@@ -190,8 +190,8 @@ public class PrepareTests {
      * @return int
      */
     private String generateRandomKey() {
-	String nbSessionRandom = UUID.randomUUID().toString().replace("-","_");
-	return nbSessionRandom;
+	String uuid = UUID.randomUUID().toString().replace("-","_");
+	return uuid;
     }
 
     public String getDIRECTORY_PATH() {
@@ -210,12 +210,12 @@ public class PrepareTests {
 	this.inputParameters = inputParameters;
     }
 
-    public String getNbSessionRandom() {
-	return nbSessionRandom;
+    public String getUuid() {
+	return uuid;
     }
 
-    public void setNbSessionRandom(String nbSession) {
-	nbSessionRandom = nbSession;
+    public void setUuid(String nbSession) {
+	uuid = nbSession;
     }
 
 
