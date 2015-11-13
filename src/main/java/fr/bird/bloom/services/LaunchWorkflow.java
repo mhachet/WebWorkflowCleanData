@@ -83,7 +83,7 @@ public class LaunchWorkflow {
 	public void executeWorkflow() throws IOException{
 		//System.out.println("repCourant : "  + repCourant);
 		this.dataTreatment = new Treatment();
-		this.dataTreatment.setNbSessionRandom(inputParameters.getUuid());
+		this.dataTreatment.setUuid(inputParameters.getUuid());
 
 		finalisation = new Finalisation();
 		step1 = new Step1_MappingDwc();

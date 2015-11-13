@@ -28,14 +28,14 @@ public class TestTreatment {
     private String RESSOURCES_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/";
     private static Treatment treatment;
     private static PrepareTests prepareTest;
-    private static String nbSessionRandom;
+    private static String uuid;
     
     @BeforeClass
     public static void beforeTestClass(){
 	treatment = new Treatment();
 	prepareTest = new PrepareTests();
 	prepareTest.prepare();
-	nbSessionRandom = "test_junit";
+	uuid = "test_junit";
     }
     
     /**

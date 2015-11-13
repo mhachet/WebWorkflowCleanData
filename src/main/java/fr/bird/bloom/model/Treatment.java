@@ -36,7 +36,7 @@ public class Treatment {
 	private DarwinCore fileDarwinCore;
 	private ArrayList<File> rasterFiles;
 	private HashMap<Integer, HashMap<String, Boolean>> hashMapValidOrNot;
-	private String nbSessionRandom;
+	private String uuid;
 	private int nbSynonymInvolved = 0;
 
 
@@ -66,7 +66,7 @@ public class Treatment {
 		DatabaseTreatment newConnectionDeleteClean = new DatabaseTreatment(statementDeleteClean);
 		List<String> messagesClean = new ArrayList<String>();
 		messagesClean.add("\n--- Delete Clean table ---");
-		messagesClean.addAll(newConnectionDeleteClean.dropTable("Workflow.Clean_" + this.getNbSessionRandom()));
+		messagesClean.addAll(newConnectionDeleteClean.dropTable("Workflow.Clean_" + this.getUuid()));
 
 		for(int i = 0 ; i < messagesClean.size() ; i++){
 			System.out.println(messagesClean.get(i));
@@ -83,7 +83,7 @@ public class Treatment {
 		DatabaseTreatment newConnectionDeleteDarwin = new DatabaseTreatment(statementDeleteDarwin);
 		List<String> messagesDarwin = new ArrayList<String>();
 		messagesDarwin.add("\n--- Delete DarwinCoreInput table ---");
-		messagesDarwin.addAll(newConnectionDeleteDarwin.deleteTable("Workflow.DarwinCoreInput", this.getNbSessionRandom()));
+		messagesDarwin.addAll(newConnectionDeleteDarwin.deleteTable("Workflow.DarwinCoreInput", this.getUuid()));
 
 		for(int i = 0 ; i < messagesDarwin.size() ; i++){
 			System.out.println(messagesDarwin.get(i));
@@ -100,7 +100,7 @@ public class Treatment {
 		DatabaseTreatment newConnectionDeleteTemp = new DatabaseTreatment(statementDeleteTemp);
 		List<String> messagesTemp = new ArrayList<String>();
 		messagesTemp.add("\n--- Delete temp table ---");
-		messagesTemp.addAll(newConnectionDeleteTemp.dropTable("Workflow.temp_" + this.getNbSessionRandom()));
+		messagesTemp.addAll(newConnectionDeleteTemp.dropTable("Workflow.temp_" + this.getUuid()));
 
 		for(int i = 0 ; i < messagesTemp.size() ; i++){
 			System.out.println(messagesTemp.get(i));
@@ -120,7 +120,7 @@ public class Treatment {
 
 		mappingDWC.setConnectionValuesTags(mappingDWC.doConnectionValuesTags());
 		mappingDWC.findInvalidColumns();
-		File mappedFile = mappingDWC.createNewDwcFile(this.getNbSessionRandom(), idFile);
+		File mappedFile = mappingDWC.createNewDwcFile(this.getUuid(), idFile);
 
 		mappingDWC.setMappedFile(mappedFile);
 	}
@@ -178,7 +178,7 @@ public class Treatment {
 			reconcileService.setSuccessReconcile(Boolean.toString(false));
 			
 		}
-		File reconcileFile = this.createFileCsv(listLinesReconciled, "reconcile_" + this.getNbSessionRandom() + "_" + idFile + ".csv", "data");
+		File reconcileFile = this.createFileCsv(listLinesReconciled, "reconcile_" + this.getUuid() + "_" + idFile + ".csv", "data");
 		reconcileService.setReconcileFile(reconcileFile);
 	}
 
@@ -193,7 +193,7 @@ public class Treatment {
 	 */
 	public DarwinCore initialiseFile(File inputFile, int nbFile, String separator) throws IOException{
 
-		fileDarwinCore = new DarwinCore(inputFile, nbFile, this.getNbSessionRandom());
+		fileDarwinCore = new DarwinCore(inputFile, nbFile, this.getUuid());
 		File darwinCoreFileTemp = fileDarwinCore.readDarwinCoreFile(separator);
 		fileDarwinCore.setDarwinCoreFileTemp(darwinCoreFileTemp);
 		System.out.println("filename : " + darwinCoreFileTemp.getAbsolutePath());
@@ -350,14 +350,14 @@ public class Treatment {
 
 		if(includeSynonyms != null){
 			treatmentSynonyms = new SynonymsTreatment(includeSynonyms);
-			treatmentSynonyms.setUuid(this.getNbSessionRandom());
+			treatmentSynonyms.setUuid(this.getUuid());
 			//treatmentSynonyms.getTagsSynonymsTempTable();
 			treatmentSynonyms.createSynonymTempTable();
 			treatmentSynonyms.updateCleanFromSynonymTemp();
 		}
 		else{
 			treatmentSynonyms = new SynonymsTreatment();
-			treatmentSynonyms.setUuid(this.getNbSessionRandom());
+			treatmentSynonyms.setUuid(this.getUuid());
 			treatmentSynonyms.updateClean();
 
 		}
@@ -372,7 +372,7 @@ public class Treatment {
 	 */
 	public boolean tdwgCodeOption(){
 		TdwgTreatment tdwg4Treatment = new TdwgTreatment();
-		tdwg4Treatment.setUuid(this.getNbSessionRandom());
+		tdwg4Treatment.setUuid(this.getUuid());
 
 		tdwg4Treatment.checkIsoTdwgCode(fileDarwinCore);
 
@@ -389,17 +389,17 @@ public class Treatment {
 	public GeographicTreatment checkGeographicOption(){
 		GeographicTreatment geoTreatment = new GeographicTreatment(this.getFileDarwinCore());
 
-		geoTreatment.setUuid(this.getNbSessionRandom());
+		geoTreatment.setUuid(this.getUuid());
 
 		geoTreatment.geoGraphicTreatment();
 
-		File wrongGeo = this.createFileCsv(geoTreatment.getWrongGeoList(), "wrong_geospatialIssues_" + this.getNbSessionRandom() + ".csv", "wrong");
+		File wrongGeo = this.createFileCsv(geoTreatment.getWrongGeoList(), "wrong_geospatialIssues_" + this.getUuid() + ".csv", "wrong");
 		geoTreatment.setWrongGeoFile(wrongGeo);
 
-		File wrongCoord = this.createFileCsv(geoTreatment.getWrongCoordinatesList(), "wrong_coordinates_" + this.getNbSessionRandom() + ".csv", "wrong");
+		File wrongCoord = this.createFileCsv(geoTreatment.getWrongCoordinatesList(), "wrong_coordinates_" + this.getUuid() + ".csv", "wrong");
 		geoTreatment.setWrongCoordinatesFile(wrongCoord);
 
-		File wrongPolygon = this.createFileCsv(geoTreatment.getWrongPolygonList(), "wrong_polygon_" + this.getNbSessionRandom() + ".csv", "wrong");
+		File wrongPolygon = this.createFileCsv(geoTreatment.getWrongPolygonList(), "wrong_polygon_" + this.getUuid() + ".csv", "wrong");
 		geoTreatment.setWrongPolygonFile(wrongPolygon);
 
 		return geoTreatment;
@@ -433,11 +433,11 @@ public class Treatment {
 	 */
 	public EstablishmentTreatment establishmentMeansOption(List<String> listEstablishmentChecked){
 		EstablishmentTreatment establishTreatment = new EstablishmentTreatment(listEstablishmentChecked);
-		establishTreatment.setUuid(this.getNbSessionRandom());
+		establishTreatment.setUuid(this.getUuid());
 
 		establishTreatment.establishmentMeansTreatment();
 		List<String> noEstablishment = establishTreatment.getNoEstablishmentList();
-		File wrongEstablishmentMeans = this.createFileCsv(noEstablishment, "noEstablishmentMeans_" + this.getNbSessionRandom() + ".csv", "wrong");
+		File wrongEstablishmentMeans = this.createFileCsv(noEstablishment, "noEstablishmentMeans_" + this.getUuid() + ".csv", "wrong");
 		establishTreatment.setWrongEstablishmentMeansFile(wrongEstablishmentMeans);
 
 		return establishTreatment;
@@ -455,21 +455,21 @@ public class Treatment {
 		if(!new File(BloomConfig.getDirectoryPath() + "temp/").exists()){
 			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/");
 		}
-		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom()).exists()){
-			new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom());
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid()).exists()){
+			new File(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid());
 		}
-		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/").exists()){
-			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/");
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/data/").exists()){
+			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/data/");
 		}
-		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/wrong/").exists()){
-			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/wrong/");
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/wrong/").exists()){
+			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/wrong/");
 		}
-		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/final_results/").exists()){
-			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/final_results/");
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/final_results/").exists()){
+			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/final_results/");
 		}
 
 		//String fileRename = fileName + "_" + nbFileRandom + ".csv";
-		File newFile = new File(BloomConfig.getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/" + category +"/" + fileName);
+		File newFile = new File(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/" + category +"/" + fileName);
 		FileWriter writer = null;
 		try {
 			writer = new FileWriter(newFile);
@@ -572,17 +572,17 @@ public class Treatment {
 	 *
 	 * @return int
 	 */
-	public String getNbSessionRandom() {
-		return nbSessionRandom;
+	public String getUuid() {
+		return uuid;
 	}
 
 	/**
 	 *
-	 * @param nbFileRandom
+	 * @param uuid
 	 * @return void
 	 */
-	public void setNbSessionRandom(String nbFileRandom) {
-		this.nbSessionRandom = nbFileRandom;
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
 	public int getNbSynonymInvolved() {
