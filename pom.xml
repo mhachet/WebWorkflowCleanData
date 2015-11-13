@@ -16,7 +16,7 @@
         <version.assertj-core>2.1.0</version.assertj-core>
         <versio.jacoco.codeco>0.7.5.201505241946</versio.jacoco.codeco>
         <version.jersey-server>1.6</version.jersey-server>
-        <version.jackson-jaxrs-json-provider>2.2.3</version.jackson-jaxrs-json-provider>
+        <version.jackson>2.6.3</version.jackson>
     </properties>
 
     <repositories>
@@ -70,11 +70,6 @@
             <version>1.1</version>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.5.4</version>
-        </dependency>
-        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.36</version>
@@ -90,17 +85,17 @@
             <artifactId>jstl</artifactId>
             <version>1.2</version>
         </dependency>
-
-
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-server</artifactId>
             <version>${version.jersey-server}</version>
         </dependency>
+
+
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
-            <version>${version.jackson-jaxrs-json-provider}</version>
+            <version>2.6.3</version>
         </dependency>
 
         <dependency>
