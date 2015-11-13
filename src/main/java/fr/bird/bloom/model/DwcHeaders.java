@@ -275,11 +275,12 @@ public enum DwcHeaders {
     WATER_BODY("waterBody"),
     YEAR("year");
 
+
+    private final String headerValue;
+
     public String getHeaderValue() {
         return headerValue;
     }
-
-    private final String headerValue;
 
     DwcHeaders(String value) {
         this.headerValue = value;
