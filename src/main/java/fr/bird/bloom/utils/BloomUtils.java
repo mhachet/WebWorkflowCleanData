@@ -1,6 +1,7 @@
 package fr.bird.bloom.utils;
 
 import java.io.File;
+import java.util.UUID;
 
 public class BloomUtils {
 
@@ -9,5 +10,9 @@ public class BloomUtils {
         if (!created) {
             throw new IllegalStateException("Could'nt create directory at path: " + path);
         }
+    }
+
+    public static String generateUUID(){
+        return UUID.randomUUID().toString();
     }
 }

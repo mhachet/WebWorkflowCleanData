@@ -2,6 +2,7 @@ package fr.bird.bloom.servlets;
 
 
 import fr.bird.bloom.dto.ServiceInput;
+import fr.bird.bloom.utils.BloomUtils;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -24,6 +25,7 @@ public class WebServiceController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public String process(ServiceInput input) {
+        final String uuid = BloomUtils.generateUUID();
 
 
         return "it works over POST";
