@@ -7,6 +7,7 @@ package fr.bird.bloom.services;
 
 import fr.bird.bloom.beans.Finalisation;
 import fr.bird.bloom.beans.InputParameters;
+import fr.bird.bloom.dto.ServiceInput;
 import fr.bird.bloom.model.CSVFile;
 import fr.bird.bloom.model.ConnectionDatabase;
 import fr.bird.bloom.model.DarwinCore;
@@ -72,6 +73,18 @@ public class LaunchWorkflow {
 	 */
 	public LaunchWorkflow(InputParameters inputParameters){
 		this.inputParameters = inputParameters;
+	}
+
+	public LaunchWorkflow(ServiceInput input, String uuid) {
+		inputParameters = new InputParameters();
+		inputParameters.setSynonym(input.isSynonym());
+		inputParameters.setTdwg4Code(input.isTdwg4Code());
+		inputParameters.setRaster(input.isRaster());
+		inputParameters.setEstablishment(input.isEstablishment());
+		inputParameters.setUuid(uuid);
+		inputParameters.setNbInput(input.getNbInput());
+		inputParameters.setEmailUser(input.getUserEmail());
+		inputParameters.setSendEmail(input.isSendEmail());
 	}
 
 	/**

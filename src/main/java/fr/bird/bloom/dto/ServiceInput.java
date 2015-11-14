@@ -10,20 +10,26 @@ import java.util.Map;
  */
 public class ServiceInput {
 
-    private boolean synonym;
-    private boolean tdwg4Code;
-    private boolean raster;
-    private boolean establishment;
-    private int nbInput;
-    private boolean sendEmail;
+    private boolean synonym = false;
+    private boolean tdwg4Code = false;
+    private boolean raster = false;
+    private boolean establishment = false;
+    private int nbInput = 11;
+    private boolean sendEmail = true;
     private String userEmail;
 
     private String inputFileUrl;
 
     private Map<String, DwcHeaders> csvHeaderToDarwinCoreHeaderMapping;
 
-    public ServiceInput(boolean synonym, boolean tdwg4Code, boolean raster, boolean establishment,
-                        int nbInput, boolean sendEmail, String userEmail, String inputFileUrl,
+    public ServiceInput(boolean synonym,
+                        boolean tdwg4Code,
+                        boolean raster,
+                        boolean establishment,
+                        int nbInput,
+                        boolean sendEmail,
+                        String userEmail,
+                        String inputFileUrl,
                         Map<String, DwcHeaders> csvHeaderToDarwinCoreHeaderMapping) {
         this.synonym = synonym;
         this.tdwg4Code = tdwg4Code;
