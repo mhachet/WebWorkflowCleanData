@@ -1,5 +1,6 @@
 package fr.bird.bloom.dto;
 
+import fr.bird.bloom.model.CSVFile;
 import fr.bird.bloom.model.DwcHeaders;
 
 import java.util.Map;
@@ -17,6 +18,9 @@ public class ServiceInput {
     private int nbInput = 11;
     private boolean sendEmail = true;
     private String userEmail;
+    private CSVFile.Separator separator;
+
+    private boolean taxonomicValidation;
 
     private String inputFileUrl;
 
@@ -29,6 +33,8 @@ public class ServiceInput {
                         int nbInput,
                         boolean sendEmail,
                         String userEmail,
+                        CSVFile.Separator separator,
+                        boolean taxonomicValidation,
                         String inputFileUrl,
                         Map<String, DwcHeaders> csvHeaderToDarwinCoreHeaderMapping) {
         this.synonym = synonym;
@@ -38,12 +44,14 @@ public class ServiceInput {
         this.nbInput = nbInput;
         this.sendEmail = sendEmail;
         this.userEmail = userEmail;
+        this.separator = separator;
+        this.taxonomicValidation = taxonomicValidation;
         this.inputFileUrl = inputFileUrl;
         this.csvHeaderToDarwinCoreHeaderMapping = csvHeaderToDarwinCoreHeaderMapping;
     }
 
     public ServiceInput() {
-        this(false, false, false, false, 0, false, null, null, null);
+        this(false, false, false, false, 0, false, null, null, false, null, null);
     }
 
     public boolean isSynonym() {
@@ -80,6 +88,14 @@ public class ServiceInput {
 
     public Map<String, DwcHeaders> getCsvHeaderToDarwinCoreHeaderMapping() {
         return csvHeaderToDarwinCoreHeaderMapping;
+    }
+
+    public CSVFile.Separator getSeparator() {
+        return separator;
+    }
+
+    public boolean isTaxonomicValidation() {
+        return taxonomicValidation;
     }
 
 
