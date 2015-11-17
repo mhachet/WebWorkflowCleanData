@@ -191,7 +191,7 @@ public class MainController extends HttpServlet {
                 if (!new File(getDirectoryPath() + "temp/" + uuid + "/final_results/").exists()) {
                     BloomUtils.createDirectory(getDirectoryPath() + "temp/" + uuid + "/final_results/");
                 }
-            } else if (fieldName.equals(input)) {
+            } else if (fieldName.equals(input)) { // retrieving input file
                 DiskFileItem itemFile = (DiskFileItem) item;
                 String fileExtensionName = itemFile.getName();
                 fileExtensionName = FilenameUtils.getExtension(fileExtensionName);
@@ -309,7 +309,7 @@ public class MainController extends HttpServlet {
                 }
 
                 nbMappingInput++;
-            } else if (fieldName.contains(reconcileActive)) {
+            } else if (fieldName.contains(reconcileActive)) {// retrieving whether taxonomic validation should be done
                 String[] tableauField = fieldName.split("_");
                 int idReconcile = Integer.parseInt(tableauField[tableauField.length - 1]);
                 //System.out.println("fieldName : " + fieldName + "  " + reconcileActive + " value : " + item.getString());
@@ -361,7 +361,7 @@ public class MainController extends HttpServlet {
                     linesConnnectedNewName.put(idLine, value);
                 }
 
-            } else if (fieldName.contains("csvDropdown_")) {
+            } else if (fieldName.contains("csvDropdown_")) { //retrieving CSV separator
                 //System.out.println("fieldName : " + fieldName);
                 int idInput = Integer.parseInt(fieldName.split("_")[1]);
                 String separator = item.getString();
