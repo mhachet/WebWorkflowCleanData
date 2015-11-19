@@ -7,7 +7,6 @@ package fr.bird.bloom.services;
 
 import fr.bird.bloom.beans.Finalisation;
 import fr.bird.bloom.beans.InputParameters;
-import fr.bird.bloom.dto.ServiceInput;
 import fr.bird.bloom.model.CSVFile;
 import fr.bird.bloom.model.ConnectionDatabase;
 import fr.bird.bloom.model.DarwinCore;
@@ -20,7 +19,6 @@ import fr.bird.bloom.model.RasterTreatment;
 import fr.bird.bloom.model.ReconciliationService;
 import fr.bird.bloom.model.SendMail;
 import fr.bird.bloom.model.Treatment;
-import fr.bird.bloom.rest.FileManagementService;
 import fr.bird.bloom.stepresults.Step1_MappingDwc;
 import fr.bird.bloom.stepresults.Step2_ReconciliationService;
 import fr.bird.bloom.stepresults.Step3_CheckCoordinates;
@@ -31,7 +29,6 @@ import fr.bird.bloom.stepresults.Step7_CheckISo2Coordinates;
 import fr.bird.bloom.stepresults.Step8_CheckCoordinatesRaster;
 import fr.bird.bloom.stepresults.Step9_EstablishmentMeans;
 import fr.bird.bloom.utils.BloomConfig;
-import org.apache.commons.io.FilenameUtils;
 
 import javax.mail.MessagingException;
 import java.io.File;
@@ -41,7 +38,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -76,48 +72,6 @@ public class LaunchWorkflow {
 		this.inputParameters = inputParameters;
 	}
 
-	public LaunchWorkflow(ServiceInput input, String uuid) {
-		inputParameters = new InputParameters();
-		inputParameters.setSynonym(input.isSynonym());
-		inputParameters.setTdwg4Code(input.isTdwg4Code());
-		inputParameters.setRaster(input.isRaster());
-		inputParameters.setEstablishment(input.isEstablishment());
-		inputParameters.setUuid(uuid);
-		inputParameters.setNbInput(input.getNbInput());
-		inputParameters.setEmailUser(input.getUserEmail());
-		inputParameters.setSendEmail(input.isSendEmail());
-
-		File file = FileManagementService.storeInputFile(input.getInputFileUrl(),uuid);
-
-		List<MappingReconcilePreparation> listMappingReconcileDWC = new ArrayList<>();
-
-		CSVFile csvFile = new CSVFile(file);
-		MappingDwC newMappingDWC = new MappingDwC(csvFile, false);
-        newMappingDWC.getNoMappedFile().setSeparator(input.getSeparator());
-
-
-		newMappingDWC.initialiseMapping(uuid);
-		HashMap<String, String> connectionTags = new HashMap<>();
-		List<String> tagsNoMapped = newMappingDWC.getTagsListNoMapped();
-		for (int i = 0; i < tagsNoMapped.size(); i++) {
-			connectionTags.put(tagsNoMapped.get(i) + "_" + i, "");
-		}
-		//System.out.println("connectionTagsControler : " + connectionTags);
-		newMappingDWC.setConnectionTags(connectionTags);
-		newMappingDWC.getNoMappedFile().setCsvName(file.getName());
-		//inputParameters.getInputFilesList().add(csvFile.getCsvFile());
-		//newMappingDWC.setFilename(itemFile.getName());
-		ReconciliationService reconciliationService = new ReconciliationService();
-
-		MappingReconcilePreparation mappingReconcileDWC = new MappingReconcilePreparation(newMappingDWC, reconciliationService, 1);
-		mappingReconcileDWC.setOriginalName(file.getName());
-        mappingReconcileDWC.setOriginalExtension(FilenameUtils.getExtension(file.getName()));
-		listMappingReconcileDWC.add(mappingReconcileDWC);
-
-
-        inputParameters.setListMappingReconcileFiles(listMappingReconcileDWC);
-
-	}
 
 	/**
 	 * Call steps of the workflow
