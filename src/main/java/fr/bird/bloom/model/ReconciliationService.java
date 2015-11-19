@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * src.model
@@ -20,7 +21,7 @@ public class ReconciliationService{
     private File reconcileFile;
     private boolean reconcile;
     private String reconcileTagBased;
-    private HashMap<Integer, String> linesConnectedNewName;
+    private Map<Integer, String> linesConnectedNewName;
     private String filename;
     private String successReconcile;
     private String filepath;
@@ -54,12 +55,11 @@ public class ReconciliationService{
         this.reconcileTagBased = reconcileTagBased;
     }
 
-    public HashMap<Integer, String> getLinesConnectedNewName() {
+    public Map<Integer, String> getLinesConnectedNewName() {
         return linesConnectedNewName;
     }
 
-    public void setLinesConnectedNewName(
-    	HashMap<Integer, String> linesConnectedNewName) {
+    public void setLinesConnectedNewName(Map<Integer, String> linesConnectedNewName) {
         this.linesConnectedNewName = linesConnectedNewName;
     }
 

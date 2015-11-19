@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
@@ -127,7 +128,7 @@ public class SendMail {
 		StringBuilder content = new StringBuilder("To download results from mapping to DarwinCore<br>");
 		ArrayList<String> filenameInputs = new ArrayList<>();
 		if(this.getStep1().isInvolved()){
-			HashMap<Integer,MappingDwC> infos_mapping = this.getStep1().getInfos_mapping();
+			Map<Integer,MappingDwC> infos_mapping = this.getStep1().getInfos_mapping();
 			for (Entry<Integer, MappingDwC> idFile : infos_mapping.entrySet()){
 				MappingDwC mappingDWC = idFile.getValue();
 				if(mappingDWC.getMappingInvolved()) {
@@ -139,7 +140,7 @@ public class SendMail {
 		content.append( "<br></br>");
 		//System.out.println(content);
 		if(this.getStep2().isInvolved()){
-			HashMap<Integer,ReconciliationService> infos_reconcile = this.getStep2().getInfos_reconcile();
+			Map<Integer,ReconciliationService> infos_reconcile = this.getStep2().getInfos_reconcile();
 			for (Entry<Integer, ReconciliationService> idFile : infos_reconcile.entrySet()){
 				//ReconciliationService reconcile = infos_reconcile.get(idFile);
 				content.append("Renamed file ").append(idFile.getValue().getFilename()).append(" => <a href=\"http:localhost:8080/bloom/").append(idFile.getValue().getFilepath()).append("\"> Download link</a><br>");

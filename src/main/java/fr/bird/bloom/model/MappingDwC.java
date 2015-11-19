@@ -40,7 +40,7 @@ public class MappingDwC {
     private String filename;
     private String filepath;
     private int idFile;
-    private ArrayList<String> lines;
+    private List<String> lines;
 
     /**
      * src.model

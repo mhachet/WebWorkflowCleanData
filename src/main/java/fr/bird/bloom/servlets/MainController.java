@@ -212,7 +212,7 @@ public class MainController extends HttpServlet {
                 listMappingFiles.add(newMappingDWC);
 
                 newMappingDWC.initialiseMapping(uuid);
-                HashMap<String, String> connectionTags = new HashMap<>();
+                Map<String, String> connectionTags = new HashMap<>();
                 List<String> tagsNoMapped = newMappingDWC.getTagsListNoMapped();
                 for (int i = 0; i < tagsNoMapped.size(); i++) {
                     connectionTags.put(tagsNoMapped.get(i) + "_" + i, "");
@@ -319,7 +319,7 @@ public class MainController extends HttpServlet {
                         ReconciliationService reconciliationService = listMappingReconcileDWC.get(i).getReconcileDWC();
                         if (item.getString().equals("true")) {
                             reconciliationService.setReconcile(true);
-                            HashMap<Integer, String> linesConnectedNewName = new HashMap<Integer, String>();
+                            HashMap<Integer, String> linesConnectedNewName = new HashMap<>();
                             reconciliationService.setLinesConnectedNewName(linesConnectedNewName);
                             reconciliationService.setFilename(listMappingReconcileDWC.get(i).getOriginalName());
                             listReconcileFiles.add(reconciliationService);
@@ -356,7 +356,7 @@ public class MainController extends HttpServlet {
                 //System.out.println(idLine);
                 ReconciliationService reconciliationService = listReconcileFiles.get(idFile);
                 if (reconciliationService.isReconcile()) {
-                    HashMap<Integer, String> linesConnnectedNewName = reconciliationService.getLinesConnectedNewName();
+                    Map<Integer, String> linesConnnectedNewName = reconciliationService.getLinesConnectedNewName();
                     //System.out.println("in group : " + linesConnnectedNewName);
                     linesConnnectedNewName.put(idLine, value);
                 }
