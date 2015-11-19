@@ -3,6 +3,7 @@ package fr.bird.bloom.rest;
 
 import fr.bird.bloom.beans.InputParameters;
 import fr.bird.bloom.dto.ServiceInput;
+import fr.bird.bloom.dto.WorkflowResults;
 import fr.bird.bloom.model.CSVFile;
 import fr.bird.bloom.model.MappingDwC;
 import fr.bird.bloom.model.MappingReconcilePreparation;
@@ -36,7 +37,8 @@ public class WorkflowService {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public String process(ServiceInput input) throws IOException {
+    @Produces(MediaType.APPLICATION_JSON)
+    public WorkflowResults process(ServiceInput input) throws IOException {
         final String uuid = BloomUtils.generateUUID();
 
         InputParameters inputParameters = initParameters(input, uuid);
@@ -44,8 +46,18 @@ public class WorkflowService {
         LaunchWorkflow workflow = new LaunchWorkflow(inputParameters);
 
         workflow.executeWorkflow();
-
-        return "it works over POST";
+        return WorkflowResults.builder()
+                .setStep1Result(workflow.getStep1())
+                .setStep2Result(workflow.getStep2())
+                .setStep3Result(workflow.getStep3())
+                .setStep4Result(workflow.getStep4())
+                .setStep5Result(workflow.getStep5())
+                .setStep6Result(workflow.getStep6())
+                .setStep7Result(workflow.getStep7())
+                .setStep8Result(workflow.getStep8())
+                .setStep9Result(workflow.getStep9())
+                .setFinalisation(workflow.getFinalisation())
+                .build();
     }
 
     private InputParameters initParameters(ServiceInput input, String uuid) {
