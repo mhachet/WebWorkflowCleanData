@@ -418,7 +418,7 @@ public class MappingDwC {
      * @param connectionTags
      * @return void
      */
-    public void setConnectionTags(HashMap<String, String> connectionTags) {
+    public void setConnectionTags(Map<String, String> connectionTags) {
         this.connectionTags = connectionTags;
     }
 
