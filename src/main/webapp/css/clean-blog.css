@@ -69,7 +69,7 @@ hr.small {
 
 .navbar-custom .nav li a {
 	text-transform: uppercase;
-	font-size: 30px;
+	font-size: 20px;
 	font-weight: 800;
 	letter-spacing: 1px
 }
@@ -141,26 +141,27 @@ hr.small {
 }
 
 .intro-header {
-	background-color: gray;
+	background-color:grey;
 	background: no-repeat center center;
 	background-attachment: scroll;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
-	background-size: cover;
+	background-size: 100% 100%;
 	-o-background-size: cover;
 	margin-bottom: 50px
 }
 
 .intro-header .site-heading,.intro-header .post-heading,.intro-header .page-heading
 {
-	padding: 100px 0 50px;
+	padding: 50px 0 50px;
 	color: #fff
 }
 
 @media only screen and (min-width:768px) {
 	.intro-header .site-heading,.intro-header .post-heading,.intro-header .page-heading
 	{
-		padding: 150px 0
+		margin-top:100px;
+		margin-bottom: 300px;
 	}
 }
 
@@ -219,10 +220,10 @@ hr.small {
 
 @media only screen and (min-width:768px) {
 	.intro-header .post-heading h1 {
-		font-size: 150px
+		font-size: 100px
 	}
 	.intro-header .post-heading .subheading {
-		font-size: 50px
+		font-size: 35px
 	}
 }
 
