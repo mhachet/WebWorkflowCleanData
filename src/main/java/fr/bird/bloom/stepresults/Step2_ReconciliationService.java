@@ -7,6 +7,7 @@ package fr.bird.bloom.stepresults;
 import fr.bird.bloom.model.ReconciliationService;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * fr.bird.bloom.beans
@@ -17,7 +18,7 @@ import java.util.HashMap;
 public class Step2_ReconciliationService {
 
     private boolean involved = false;
-    private HashMap<Integer, ReconciliationService> infos_reconcile = new HashMap<Integer, ReconciliationService>();
+    private Map<Integer, ReconciliationService> infos_reconcile = new HashMap<Integer, ReconciliationService>();
     
     public Step2_ReconciliationService(){
 	
@@ -31,7 +32,7 @@ public class Step2_ReconciliationService {
         this.involved = involved;
     }
 
-	public HashMap<Integer, ReconciliationService> getInfos_reconcile() {
+	public Map<Integer, ReconciliationService> getInfos_reconcile() {
 		return infos_reconcile;
 	}
 

@@ -91,7 +91,7 @@ public class EstablishmentTreatment {
 					e.printStackTrace();
 				}
 				DatabaseTreatment newConnectionOthers = new DatabaseTreatment(statement);
-				List<String> messagesOthers = new ArrayList<String>();
+				List<String> messagesOthers = new ArrayList<>();
 
 				String sqlOthers = "SELECT * FROM Workflow.Clean_" + this.getUuid() + " WHERE Clean_" + this.getUuid() + ".establishmentMeans_!=\"native\" && " +
 						"Clean_" + this.getUuid() + ".establishmentMeans_!=\"introduced\" && " +
@@ -127,7 +127,7 @@ public class EstablishmentTreatment {
 					e.printStackTrace();
 				}
 				DatabaseTreatment newConnectionSelect = new DatabaseTreatment(statementSelect);
-				List<String> messagesSelect = new ArrayList<String>();
+				List<String> messagesSelect = new ArrayList<>();
 				messagesSelect.add("\n--- Select no establishment Means ---\n");
 				String sqlSelectNoEstablishment = "SELECT * FROM Workflow.Clean_" + this.getUuid() + " WHERE Clean_" + this.getUuid() + ".establishmentMeans_=\"" + this.getInverseEstablishmentList().get(i) + "\";";
 				messagesSelect.addAll(newConnectionSelect.executeSQLcommand("executeQuery", sqlSelectNoEstablishment));
@@ -154,7 +154,7 @@ public class EstablishmentTreatment {
 					e.printStackTrace();
 				}
 				DatabaseTreatment newConnection = new DatabaseTreatment(statement);
-				List<String> messagesDelete = new ArrayList<String>();
+				List<String> messagesDelete = new ArrayList<>();
 				messagesDelete.add("\n--- establishment Means ---\n");
 				String sqlDeleteEstablishment = "DELETE FROM Workflow.Clean_" + this.getUuid() + " WHERE Clean_" + this.getUuid() + ".establishmentMeans_=\"" + this.getInverseEstablishmentList().get(i) + "\";";
 				messagesDelete.addAll(newConnection.executeSQLcommand("executeUpdate", sqlDeleteEstablishment));

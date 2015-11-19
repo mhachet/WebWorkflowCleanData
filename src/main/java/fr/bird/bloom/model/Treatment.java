@@ -22,6 +22,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 
@@ -136,7 +137,7 @@ public class Treatment {
 
 		String tagReconcile = reconcileService.getReconcileTagBased();
 		int tagReconcileColumn = 0;
-		HashMap<Integer, String> linesConnectedNewName = reconcileService.getLinesConnectedNewName();
+		Map<Integer, String> linesConnectedNewName = reconcileService.getLinesConnectedNewName();
 		List<String> listLinesReconciled = new ArrayList<>();
 		try{
 			System.out.println(referenceFileReconcile.getCsvFile().getAbsolutePath());

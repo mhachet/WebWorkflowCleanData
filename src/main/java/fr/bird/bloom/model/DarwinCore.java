@@ -32,7 +32,7 @@ public class DarwinCore extends CSVFile{
 
 	private int idFile_;
 	private String uuid;
-	private HashMap<String, List<String>> idAssoData;
+	private Map<String, List<String>> idAssoData;
 	private ArrayList<String> darwinLines;
 	private File darwinCoreFileTemp;
 
@@ -70,7 +70,7 @@ public class DarwinCore extends CSVFile{
 	public void associateIdData(){
 		idAssoData = new HashMap<>();
 		DatabaseTreatment newConnection = null;
-		List<String> messages = new ArrayList<String>();
+		List<String> messages = new ArrayList<>();
 		//ConnectionDatabase newConnection = new ConnectionDatabase();
 		messages.add("\n--- Select id line from clean ---\n");
 		Statement statement = null;
@@ -219,7 +219,7 @@ public class DarwinCore extends CSVFile{
 	 */
 	public List<String> getDecimalLatitudeClean(){
 		DatabaseTreatment newConnection = null;
-		List<String> messages = new ArrayList<String>();
+		List<String> messages = new ArrayList<>();
 		//ConnectionDatabase newConnection = new ConnectionDatabase();
 		messages.add("\n--- Select decimal latitude from coordinates ---");
 		Statement statement = null;
@@ -246,7 +246,7 @@ public class DarwinCore extends CSVFile{
 	public List<String> getDecimalLongitudeClean(){
 		
 		DatabaseTreatment newConnection = null;
-		List<String> messages = new ArrayList<String>();
+		List<String> messages = new ArrayList<>();
 		//ConnectionDatabase newConnection = new ConnectionDatabase();
 		messages.add("\n--- Select decimal longitude from coordinates ---");
 		Statement statement = null;
@@ -271,7 +271,7 @@ public class DarwinCore extends CSVFile{
 	 */
 	public List<String> getIDClean(){
 		DatabaseTreatment newConnection = null;
-		List<String> messages = new ArrayList<String>();
+		List<String> messages = new ArrayList<>();
 		messages.add("\n--- Select id line from clean ---\n");
 		Statement statement = null;
 		try {
@@ -296,7 +296,7 @@ public class DarwinCore extends CSVFile{
 	 */
 	public List<String> getGbifIDClean(){
 		DatabaseTreatment newConnection = null;
-		List<String> messages = new ArrayList<String>();
+		List<String> messages = new ArrayList<>();
 		messages.add("\n--- Select id line from clean ---\n");
 		Statement statement = null;
 		try {
@@ -321,7 +321,7 @@ public class DarwinCore extends CSVFile{
 	 */
 	public List<String> getID(){
 		DatabaseTreatment newConnection = null;
-		List<String> messages = new ArrayList<String>();
+		List<String> messages = new ArrayList<>();
 		messages.add("\n--- Select id line from DarwinCoreInput ---\n");
 		Statement statement = null;
 		try {
@@ -347,7 +347,7 @@ public class DarwinCore extends CSVFile{
 	public List<String> getIso2Clean(){
 		
 		DatabaseTreatment newConnection = null;
-		List<String> messages = new ArrayList<String>();
+		List<String> messages = new ArrayList<>();
 		messages.add("\n--- Select iso2 code ---");
 		Statement statement = null;
 		try {

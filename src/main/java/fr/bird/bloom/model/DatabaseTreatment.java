@@ -29,7 +29,7 @@ public class DatabaseTreatment {
 
 		//this.getRessourcesMysql();
 
-		List<String > messages = new ArrayList<String>();
+		List<String > messages = new ArrayList<>();
 
 		try {
 			messages.add( "\nChargement du driver..." );
@@ -135,7 +135,7 @@ public class DatabaseTreatment {
 	 * @return void
 	 */
 	public void setResultatSelect(ResultSetMetaData resultMeta) throws SQLException{
-		resultatSelect = new ArrayList<String>();
+		resultatSelect = new ArrayList<>();
 		String line = "";
 		for(int i = 1; i <= resultMeta.getColumnCount(); i++){
 			line += resultMeta.getColumnName(i) + ",";
