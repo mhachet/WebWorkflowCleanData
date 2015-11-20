@@ -87,9 +87,11 @@ public class MappingDwC {
         String firstNewLine = "";
         int nbCol = connectionTags.size();
         int countTags = 0;
-        //System.out.println("value " + connectionTags);
-        //System.out.println("valuesTags : " + connectionValuesTags);
+        System.out.println("value " + connectionTags);
+        System.out.println("valuesTags : " + connectionValuesTags);
 
+        int idLatitudeDwcTag = 0;
+        int idLongitudeDwcTag = 0;
         for (Entry<String, String> entryDwC : connectionTags.entrySet()) {
             String[] splitKey = entryDwC.getKey().split("_");
             int idColumn = Integer.parseInt(splitKey[splitKey.length - 1]);
@@ -98,6 +100,12 @@ public class MappingDwC {
                 String valueNoMapped = entryDwC.getValue();
                 if (!" ".equals(valueNoMapped)) {
                     firstNewLine += valueNoMapped + ",";
+                }
+                if(valueNoMapped.equals("decimalLatitude")){
+                    idLatitudeDwcTag = idColumn;
+                }
+                if(valueNoMapped.equals("decimalLongitude")){
+                    idLongitudeDwcTag = idColumn;
                 }
                 countTags++;
             }
@@ -115,9 +123,18 @@ public class MappingDwC {
             for (Entry<String, List<String>> entryValuesTags : connectionValuesTags.entrySet()) {
                 List<String> listValues = entryValuesTags.getValue();
                 String[] splitKey = entryValuesTags.getKey().split("_");
+               // System.out.println("key : " + entryValuesTags.getKey());
+
                 Integer entryKey = Integer.parseInt(splitKey[splitKey.length - 1]);
                 if (!this.getListInvalidColumns().contains(entryKey)) {
-                    if(listValues.get(countLines).contains(noMappedFile.getSeparator().getSymbol())){
+                    if(entryKey.equals(idLatitudeDwcTag) || entryKey.equals(idLongitudeDwcTag)){
+                        String coordinate = listValues.get(countLines);
+                        coordinate = coordinate.replace(",", ".");
+                        lineValues += coordinate;
+                        //System.out.println(entryKey + "  " + coordinate);
+                    }
+
+                    else if(listValues.get(countLines).contains(noMappedFile.getSeparator().getSymbol())){
                         lineValues += "\"" + listValues.get(countLines) + "\"";
                     }
                     else {
@@ -142,6 +159,7 @@ public class MappingDwC {
         writerMappedFile.close();
         return mappedFile;
     }
+
 
     /**
      * Found all DwC tags
@@ -289,13 +307,14 @@ public class MappingDwC {
                             String idKey = idKeyTable[idKeyTable.length - 1];
                             if (Integer.parseInt(idKey) == i) {
                                 listValuesMap = entry.getValue();
+                                id = entry.getKey();
                                 if (!splitedLine.get(i).isEmpty()) {
                                     listValuesMap.add(splitedLine.get(i));
                                 } else {
                                     listValuesMap.add(" ");
                                 }
 
-                                id = entry.getKey();
+
                             }
                         }
                         //System.out.println(id + " => " + listValuesMap);
