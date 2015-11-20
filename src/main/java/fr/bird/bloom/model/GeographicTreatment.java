@@ -343,7 +343,7 @@ public class GeographicTreatment {
 		messages.add("\n--- Create Table Clean from temporary table ---");
 		String sqlCreateClean = "CREATE TABLE Workflow.Clean_" + this.getUuid() + " AS SELECT * FROM Workflow.temp_" + this.getUuid() + " WHERE " +
 				"(decimalLatitude_!=0 AND decimalLatitude_<90 AND decimalLatitude_>-90 AND decimalLongitude_!=0 " +
-				"AND decimalLongitude_>-180 AND decimalLongitude_<180) AND (hasGeospatialIssues_!='true');";
+				"AND decimalLongitude_>-180 AND decimalLongitude_<180) AND ((hasGeospatialIssues_!=\"true\") OR (hasGeospatialIssues_ IS NULL));";
 		messages.addAll(newConnectionClean.executeSQLcommand(choiceStatement, sqlCreateClean));
 
 		for(int i = 0 ; i < messages.size() ; i++){
