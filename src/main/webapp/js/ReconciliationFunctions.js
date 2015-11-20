@@ -173,7 +173,7 @@ function doPreparationReconciliation(uuid, nb_input, separator){
 
 		var xhrPOST = new XMLHttpRequest();
 
-		xhrPOST.open("POST","reconcileControler", true);
+		xhrPOST.open("POST","reconcileController", true);
 		//xhrPOST.setRequestHeader("Content-Length", filesize);
 		//xhrPOST.addEventListener("progress", updateProgress, false);
 		xhrPOST.addEventListener("error", transferFailed, false);
@@ -234,7 +234,7 @@ function getContentFile(uuid, nb_input, infosColumns, separator){
 
 		var xhrPOST = new XMLHttpRequest();
 
-		xhrPOST.open("POST","reconcileControler", true);
+		xhrPOST.open("POST","reconcileController", true);
 		//xhrPOST.setRequestHeader("Content-Length", filesize);
 		//xhrPOST.addEventListener("progress", updateProgress, false);
 		xhrPOST.addEventListener("error", transferFailed, false);

@@ -2,11 +2,13 @@
  * fr.bird.bloom.beans
  * Step1_MappingDwc
  */
-package fr.bird.bloom.beans;
+package fr.bird.bloom.stepresults;
 
 import fr.bird.bloom.model.MappingDwC;
 
 import java.util.HashMap;
+import java.util.Map;
+
 /**
  * fr.bird.bloom.beans
  * 
@@ -15,7 +17,7 @@ import java.util.HashMap;
  */
 public class Step1_MappingDwc {
 
-	private HashMap<Integer,MappingDwC> infos_mapping = new HashMap<Integer,MappingDwC>();
+	private Map<Integer,MappingDwC> infos_mapping = new HashMap<>();
 	
     private boolean involved = false;
     //private HashMap<MappingDwC, String> mappedFilesAssociatedPath = new HashMap<MappingDwC, String>();
@@ -26,7 +28,7 @@ public class Step1_MappingDwc {
 	
     }
 
-	public HashMap<Integer, MappingDwC> getInfos_mapping() {
+	public Map<Integer, MappingDwC> getInfos_mapping() {
 		return infos_mapping;
 	}
 

@@ -1,6 +1,7 @@
 package fr.bird.bloom.servlets;
 
 import fr.bird.bloom.utils.BloomConfig;
+import fr.bird.bloom.utils.BloomUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItem;
@@ -13,13 +14,20 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@WebServlet(name = "ReconcileControler")
-public class ReconcileControler extends HttpServlet {
+@WebServlet(name = "ReconcileController")
+public class ReconcileController extends HttpServlet {
 
 	private String getDirectoryPath() {
 		if (BloomConfig.getDirectoryPath() == null) {
@@ -76,24 +84,24 @@ public class ReconcileControler extends HttpServlet {
 			count ++;
 		}
 		if(!new File(getDirectoryPath() + "temp/").exists()){
-			new File(getDirectoryPath() + "temp/").mkdirs();
+			BloomUtils.createDirectory(getDirectoryPath() + "temp/");
 		}
 		if(!new File(getDirectoryPath() + "temp/" + uuid).exists()){
 			new File(getDirectoryPath() + "temp/" + uuid);
 		}
 		if(!new File(getDirectoryPath() + "temp/" + uuid + "/data/").exists()){
-			new File(getDirectoryPath() + "temp/" + uuid + "/data/").mkdirs();
+			BloomUtils.createDirectory(getDirectoryPath() + "temp/" + uuid + "/data/");
 		}
 		if(!new File(getDirectoryPath() + "temp/" + uuid + "/wrong/").exists()){
-			new File(getDirectoryPath() + "temp/" + uuid + "/wrong/").mkdirs();
+			BloomUtils.createDirectory(getDirectoryPath() + "temp/" + uuid + "/wrong/");
 		}
 		if(!new File(getDirectoryPath() + "temp/" + uuid + "/final_results/").exists()){
-			new File(getDirectoryPath() + "temp/" + uuid + "/final_results/").mkdirs();
+			BloomUtils.createDirectory(getDirectoryPath() + "temp/" + uuid + "/final_results/");
 		}
 
 		String extension = this.getExtension(nbInput, uuid);
 		System.out.println("extension : " + extension);
-		if(action.equals("preparation")){
+		if("preparation".equals(action)){
 
 			File file = new File(getDirectoryPath() + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + "." + extension);
 			firstLine = this.getFirstLine(file);
@@ -102,10 +110,10 @@ public class ReconcileControler extends HttpServlet {
 			response.setCharacterEncoding("UTF-8");
 			response.getWriter().write(firstLine);
 		}
-		else if(action.equals("reconciliation")){
+		else if("reconciliation".equals(action)){
 			FileReader reader = new FileReader(getDirectoryPath() + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + "." + extension);
 			BufferedReader br = null;
-			ArrayList<String> lines = new ArrayList<>();
+			List<String> lines = new ArrayList<>();
 			int countLines = 0;
 			try {
 				String sCurrentLine;
@@ -126,7 +134,7 @@ public class ReconcileControler extends HttpServlet {
 				e.printStackTrace();
 			}
 			
-			ArrayList<Integer> idColumnsCheck = this.getColumnsIdReconcile(firstLine, separator, checkingColumns);
+			List<Integer> idColumnsCheck = this.getColumnsIdReconcile(firstLine, separator, checkingColumns);
 			String selectedLines = this.getSelectedLines(idColumnsCheck, lines, separator);
 			/*
 			JSONArray array = null;
@@ -212,10 +220,10 @@ public class ReconcileControler extends HttpServlet {
 	 * @param columnsCheck
 	 * @return ArrayList<Integer>
 	 */
-	public ArrayList<Integer> getColumnsIdReconcile(String firstline, String separator, String columnsCheck){
-		ArrayList<Integer> columnsReconcile = new ArrayList<>();
-		ArrayList<String> columns = new ArrayList(Arrays.asList(firstline.split(separator)));
-		ArrayList<String> arrayColumnsCheck = new ArrayList(Arrays.asList(columnsCheck.split(",")));
+	public List<Integer> getColumnsIdReconcile(String firstline, String separator, String columnsCheck){
+		List<Integer> columnsReconcile = new ArrayList<>();
+		List<String> columns = new ArrayList(Arrays.asList(firstline.split(separator)));
+		List<String> arrayColumnsCheck = new ArrayList(Arrays.asList(columnsCheck.split(",")));
 		
 		for(int i = 0; i < columns.size(); i++){
 			String column = columns.get(i);
@@ -236,7 +244,7 @@ public class ReconcileControler extends HttpServlet {
 	 * @param separator
 	 * @return String
 	 */
-	public String getSelectedLines(ArrayList<Integer> idColumns, ArrayList<String> contentFile, String separator){
+	public String getSelectedLines(List<Integer> idColumns, List<String> contentFile, String separator){
 		String newContentFile = "";
 		
 		for(int i = 0; i < contentFile.size(); i++){

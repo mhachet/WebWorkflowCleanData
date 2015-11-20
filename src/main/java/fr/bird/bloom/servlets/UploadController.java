@@ -1,6 +1,7 @@
 package fr.bird.bloom.servlets;
 
 import fr.bird.bloom.utils.BloomConfig;
+import fr.bird.bloom.utils.BloomUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItem;
@@ -13,14 +14,24 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-@WebServlet(name = "UploadControler")
-public class UploadControler  extends HttpServlet{
+@WebServlet(name = "UploadController")
+public class UploadController extends HttpServlet{
 
 
 	private String getDirectoryPath() {
@@ -53,13 +64,13 @@ public class UploadControler  extends HttpServlet{
 			if(count == 0){
 				uuid = itemFile.getString();
 				if(!new File(getDirectoryPath() + "temp/").exists()){
-					new File(getDirectoryPath() + "temp/").mkdirs();
+					BloomUtils.createDirectory(getDirectoryPath() + "temp/");
 				}
 				if(!new File(getDirectoryPath() + "temp/" + uuid + "/").exists()){
-					new File(getDirectoryPath() + "temp/" + uuid + "/").mkdirs();
+					BloomUtils.createDirectory(getDirectoryPath() + "temp/" + uuid + "/");
 				}
 				if(!new File(getDirectoryPath() + "temp/" + uuid + "/data/").exists()){
-					new File(getDirectoryPath() + "temp/" + uuid + "/data/").mkdirs();
+					BloomUtils.createDirectory(getDirectoryPath() + "temp/" + uuid + "/data/");
 				}
 				System.out.println(uuid);
 			}
@@ -73,20 +84,20 @@ public class UploadControler  extends HttpServlet{
 			}
 			else if(count == 3){
 				System.out.println("format : " + fileExtensionName);
-				ArrayList<String> compressedFormat = new ArrayList<>();
+				List<String> compressedFormat = new ArrayList<>();
 				compressedFormat.add("zip");
 				compressedFormat.add("rar");
 				compressedFormat.add("tar.gz");
 				
 				File file = new File(getDirectoryPath() + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + "." + fileExtensionName);
-				if(action.equals("upload")){
+				if("upload".equals(action)){
 					try {
 						itemFile.write(file);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					if(fileExtensionName.equals("zip")){
+					if("zip".equals(fileExtensionName)){
 						String dezipFile = this.unzip(file, getDirectoryPath() + "temp/" + uuid + "/data/");
 						System.out.println("dezipfile : " + dezipFile);
 					}
@@ -99,7 +110,7 @@ public class UploadControler  extends HttpServlet{
 						response.getWriter().write(firstline);
 					}
 				}
-				else if(action.equals("cancel")){
+				else if("cancel".equals(action)){
 
 					file.delete();
 					response.getWriter().write("cancelDone");

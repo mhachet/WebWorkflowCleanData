@@ -25,7 +25,7 @@ public class CSVFile {
     protected Separator separator = Separator.COMMA;
     protected String csvName;
     protected File csvFile;
-    protected ArrayList<String> lines;
+    protected List<String> lines;
 
     public enum Separator {
         COMMA(","),
@@ -121,7 +121,7 @@ public class CSVFile {
     /**
      * @return ArrayList<String>
      */
-    public ArrayList<String> getLines() {
+    public List<String> getLines() {
         return lines;
     }
 

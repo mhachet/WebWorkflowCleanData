@@ -28,7 +28,7 @@ public class TestRasterOption {
     }
 
     /**
-     * Test method for {@link fr.bird.bloom.model.RasterTreatment#initialiseRasterFiles(java.util.ArrayList, java.util.ArrayList)}.
+     * Test method for {@link fr.bird.bloom.model.RasterTreatment#initialiseRasterFiles(java.util.List, java.util.List)}.
      */
     @Test
     public void testInitialiseRasterFiles() {
@@ -76,7 +76,7 @@ public class TestRasterOption {
     }
 
     /**
-     * Test method for {@link fr.bird.bloom.model.RasterTreatment#deleteWrongCellsFromClean(java.util.ArrayList)}.
+     * Test method for {@link fr.bird.bloom.model.RasterTreatment#deleteWrongCellsFromClean(java.util.List)}.
      */
     @Test
     public void testDeleteWrongCellsFromClean() {

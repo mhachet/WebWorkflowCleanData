@@ -27,7 +27,7 @@ public class TestEstablishmentMeansOptions {
     }
 
     /**
-     * Test method for {@link fr.bird.bloom.model.Treatment#establishmentMeansOption(java.util.ArrayList)}.
+     * Test method for {@link fr.bird.bloom.model.Treatment#establishmentMeansOption(java.util.List)}.
      */
     @Test
     public void testEstablishmentMeansOption() {
