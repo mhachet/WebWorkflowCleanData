@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@page import="fr.bird.bloom.servlets.MainControler"%>
+<%@page import="fr.bird.bloom.servlets.MainController"%>
 <%@page import="fr.bird.bloom.beans.*"%>
 
 
@@ -65,7 +65,7 @@
 					<h3 class="post-subtitle">All results can be downloaded</h3>
 				</div>
                 <div id="hiddenResults">
-                	<input type="hidden" id="nbTotalInput" value="${initialise.nbInput}" />
+                	<input type="hidden" id="nbTotalInput" value="${inputParameters.nbInput}" />
                     <c:set var="count0" value="0" scope="page"/>
                     <c:forEach var="info" items="${step1.infos_mapping}">
                         <c:if test="${info.value.mappingInvolved == false}">
@@ -386,6 +386,14 @@
                                 <div id="p_ok_step7_inp" class="card-view">
                                     <span class="title">Success</span>
                                     <span id="spanSuccessStep7" class="value"><c:out value='${step7.step7_ok}'/></span>
+                                </div>
+                                <div class="card-view">
+                                    <span class="title">Occurrences number deleted</span>
+                                    <span class="value"><c:out value='${step7.nbFound}'/></span>
+                                </div>
+                                <div class="card-view">
+                                    <span class="title">Download link</span>
+                                    <span class="value"><a href=<c:out value='${step7.pathWrongIso2}'/>>Wrong ISO2 code file</a></span>
                                 </div>
                             </td>
                         </tr>

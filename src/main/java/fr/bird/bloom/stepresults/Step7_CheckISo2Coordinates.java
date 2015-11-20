@@ -2,7 +2,7 @@
  * fr.bird.bloom.beans
  * Step7_CheckISo2Coordinates
  */
-package fr.bird.bloom.beans;
+package fr.bird.bloom.stepresults;
 
 /**
  * fr.bird.bloom.beans

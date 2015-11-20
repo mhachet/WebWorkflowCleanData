@@ -6,22 +6,23 @@
 package fr.bird.bloom.servlets;
 
 import fr.bird.bloom.beans.Finalisation;
-import fr.bird.bloom.beans.Initialise;
-import fr.bird.bloom.beans.Step1_MappingDwc;
-import fr.bird.bloom.beans.Step2_ReconciliationService;
-import fr.bird.bloom.beans.Step3_CheckCoordinates;
-import fr.bird.bloom.beans.Step4_CheckGeoIssue;
-import fr.bird.bloom.beans.Step5_IncludeSynonym;
-import fr.bird.bloom.beans.Step6_CheckTDWG;
-import fr.bird.bloom.beans.Step7_CheckISo2Coordinates;
-import fr.bird.bloom.beans.Step8_CheckCoordinatesRaster;
-import fr.bird.bloom.beans.Step9_EstablishmentMeans;
+import fr.bird.bloom.beans.InputParameters;
+import fr.bird.bloom.stepresults.Step1_MappingDwc;
+import fr.bird.bloom.stepresults.Step2_ReconciliationService;
+import fr.bird.bloom.stepresults.Step3_CheckCoordinates;
+import fr.bird.bloom.stepresults.Step4_CheckGeoIssue;
+import fr.bird.bloom.stepresults.Step5_IncludeSynonym;
+import fr.bird.bloom.stepresults.Step6_CheckTDWG;
+import fr.bird.bloom.stepresults.Step7_CheckISo2Coordinates;
+import fr.bird.bloom.stepresults.Step8_CheckCoordinatesRaster;
+import fr.bird.bloom.stepresults.Step9_EstablishmentMeans;
 import fr.bird.bloom.model.CSVFile;
-import fr.bird.bloom.model.LaunchWorkflow;
+import fr.bird.bloom.services.LaunchWorkflow;
 import fr.bird.bloom.model.MappingDwC;
 import fr.bird.bloom.model.MappingReconcilePreparation;
 import fr.bird.bloom.model.ReconciliationService;
 import fr.bird.bloom.utils.BloomConfig;
+import fr.bird.bloom.utils.BloomUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItem;
@@ -40,6 +41,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.UUID;
@@ -50,31 +52,8 @@ import java.util.UUID;
  * LaunchWorkflow
  */
 
-@WebServlet(name = "MainControler")
-public class MainControler extends HttpServlet {
-
-    private Initialise initialisation;
-    private String nbSessionRandom;
-    private Finalisation finalisation;
-
-
-    // TODO FIX THESE INSTANCE VARIABLES, THEY ARE NOT THREAD SAFE !
-    private Step1_MappingDwc step1;
-    private Step2_ReconciliationService step2;
-    private Step3_CheckCoordinates step3;
-    private Step4_CheckGeoIssue step4;
-    private Step5_IncludeSynonym step5;
-    private Step6_CheckTDWG step6;
-    private Step7_CheckISo2Coordinates step7;
-    private Step8_CheckCoordinatesRaster step8;
-    private Step9_EstablishmentMeans step9;
-
-    private String getDirectoryPath() {
-        if (BloomConfig.getDirectoryPath() == null) {
-            BloomConfig.initializeDirectoryPath(getServletContext().getRealPath("/"));
-        }
-        return BloomConfig.getDirectoryPath();
-    }
+@WebServlet(name = "MainController")
+public class MainController extends HttpServlet {
 
     /**
      * @param request
@@ -84,56 +63,52 @@ public class MainControler extends HttpServlet {
      * @throws ServletException
      */
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        processRequest(request, response);
-    }
-
-    /**
-     * @param request
-     * @param response
-     * @return void
-     * @throws ServletException
-     * @throws IOException
-     */
-    public void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/plain");
-        initialisation = new Initialise();
 
-        //this.setNbSessionRandom(this.generateRandomKey());
-        //this.initialisation.setNbSessionRandom(this.getNbSessionRandom());
+        //this.setUuid(this.generateUUID());
+        //this.inputParameters.setUuid(uuid);
 
-        List<FileItem> listFileItems = this.initialiseRequest(request);
+        List<FileItem> listFileItems = getMultipartRequestParameters(request);
 
-        this.initialiseParameters(listFileItems, response, request);
-        request.setAttribute("initialise", initialisation);
+        InputParameters inputParameters = initialiseParameters(listFileItems, response);
 
-        LaunchWorkflow newLaunch = new LaunchWorkflow(this.initialisation);
 
-        newLaunch.initialiseLaunchWorkflow();
+        request.setAttribute("initialise", inputParameters);
 
-        finalisation = newLaunch.getFinalisation();
+        LaunchWorkflow workflow = new LaunchWorkflow(inputParameters);
+
+        workflow.executeWorkflow();
+
+        Finalisation finalisation = workflow.getFinalisation();
         request.setAttribute("finalisation", finalisation);
 
-        step1 = newLaunch.getStep1();
+        Step1_MappingDwc step1 = workflow.getStep1();
         request.setAttribute("step1", step1);
-        step2 = newLaunch.getStep2();
+        Step2_ReconciliationService step2 = workflow.getStep2();
         request.setAttribute("step2", step2);
-        step3 = newLaunch.getStep3();
+        Step3_CheckCoordinates step3 = workflow.getStep3();
         request.setAttribute("step3", step3);
-        step4 = newLaunch.getStep4();
+        Step4_CheckGeoIssue step4 = workflow.getStep4();
         request.setAttribute("step4", step4);
-        step5 = newLaunch.getStep5();
+        Step5_IncludeSynonym step5 = workflow.getStep5();
         request.setAttribute("step5", step5);
-        step6 = newLaunch.getStep6();
+        Step6_CheckTDWG step6 = workflow.getStep6();
         request.setAttribute("step6", step6);
-        step7 = newLaunch.getStep7();
+        Step7_CheckISo2Coordinates step7 = workflow.getStep7();
         request.setAttribute("step7", step7);
-        step8 = newLaunch.getStep8();
+        Step8_CheckCoordinatesRaster step8 = workflow.getStep8();
         request.setAttribute("step8", step8);
-        step9 = newLaunch.getStep9();
+        Step9_EstablishmentMeans step9 = workflow.getStep9();
         request.setAttribute("step9", step9);
 
         this.getServletContext().getRequestDispatcher("/finalWorkflow.jsp").forward(request, response);
+    }
 
+    private String getDirectoryPath() {
+        if (BloomConfig.getDirectoryPath() == null) {
+            BloomConfig.initializeDirectoryPath(getServletContext().getRealPath("/"));
+        }
+        return BloomConfig.getDirectoryPath();
     }
 
     /**
@@ -142,7 +117,7 @@ public class MainControler extends HttpServlet {
      * @param request
      * @return List<FileItem>
      */
-    public List<FileItem> initialiseRequest(HttpServletRequest request) {
+    private List<FileItem> getMultipartRequestParameters(HttpServletRequest request) {
 
 
         DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
@@ -161,20 +136,20 @@ public class MainControler extends HttpServlet {
     /**
      * Initialise parameters/options
      *
-     * @param items
+     * @param fileItems
      * @param response
      * @return void
      * @throws IOException
      */
-    public void initialiseParameters(List<FileItem> items, HttpServletResponse response, HttpServletRequest request) throws IOException {
-
+    private InputParameters initialiseParameters(List<FileItem> fileItems, HttpServletResponse response) throws IOException {
+        InputParameters inputParameters = new InputParameters();
         response.setContentType("text/html");
         response.addHeader("Access-Control-Allow-Origin", "*");
 
-        Iterator<FileItem> iterator = (Iterator<FileItem>) items.iterator();
-        ArrayList<MappingDwC> listMappingFiles = new ArrayList<>();
-        ArrayList<ReconciliationService> listReconcileFiles = new ArrayList<>();
-        ArrayList<MappingReconcilePreparation> listMappingReconcileDWC = new ArrayList<>();
+        Iterator<FileItem> iterator = fileItems.iterator();
+        List<MappingDwC> listMappingFiles = new ArrayList<>();
+        List<ReconciliationService> listReconcileFiles = new ArrayList<>();
+        List<MappingReconcilePreparation> listMappingReconcileDWC = new ArrayList<>();
 
         int nbFilesInput = 0;
         int nbFilesRaster = 0;
@@ -182,7 +157,7 @@ public class MainControler extends HttpServlet {
         int nbFilesSynonyms = 0;
         int nbMappingInput = 0;
 
-
+        String uuid = "";
         while (iterator.hasNext()) {
             // DiskFileItem item = (DiskFileItem) iterator.next();
             FileItem item = iterator.next();
@@ -199,28 +174,28 @@ public class MainControler extends HttpServlet {
             String fieldName = item.getFieldName();
             //System.out.println("fieldName : " + fieldName + " item : " + item.getString());
             if (fieldName.contains("formulaire")) {
-                this.setNbSessionRandom(item.getString());
-                this.initialisation.setNbSessionRandom(this.getNbSessionRandom());
+                uuid = item.getString();
+                inputParameters.setUuid(uuid);
                 if (!new File(getDirectoryPath() + "temp/").exists()) {
-                    new File(getDirectoryPath() + "temp/").mkdirs();
+                    BloomUtils.createDirectory(getDirectoryPath() + "temp/");
                 }
-                if (!new File(getDirectoryPath() + "temp/" + this.getNbSessionRandom()).exists()) {
-                    new File(getDirectoryPath() + "temp/" + this.getNbSessionRandom());
+                if (!new File(getDirectoryPath() + "temp/" + uuid).exists()) {
+                    new File(getDirectoryPath() + "temp/" + uuid);
                 }
-                if (!new File(getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/").exists()) {
-                    new File(getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/").mkdirs();
+                if (!new File(getDirectoryPath() + "temp/" + uuid + "/data/").exists()) {
+                    BloomUtils.createDirectory(getDirectoryPath() + "temp/" + uuid + "/data/");
                 }
-                if (!new File(getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/wrong/").exists()) {
-                    new File(getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/wrong/").mkdirs();
+                if (!new File(getDirectoryPath() + "temp/" + uuid + "/wrong/").exists()) {
+                    BloomUtils.createDirectory(getDirectoryPath() + "temp/" + uuid + "/wrong/");
                 }
-                if (!new File(getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/final_results/").exists()) {
-                    new File(getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/final_results/").mkdirs();
+                if (!new File(getDirectoryPath() + "temp/" + uuid + "/final_results/").exists()) {
+                    BloomUtils.createDirectory(getDirectoryPath() + "temp/" + uuid + "/final_results/");
                 }
-            } else if (fieldName.equals(input)) {
+            } else if (fieldName.equals(input)) { // retrieving input file
                 DiskFileItem itemFile = (DiskFileItem) item;
                 String fileExtensionName = itemFile.getName();
                 fileExtensionName = FilenameUtils.getExtension(fileExtensionName);
-                File file = new File(getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/input_" + nbFilesInput + "_" + this.getNbSessionRandom() + ".csv");
+                File file = new File(getDirectoryPath() + "temp/" + uuid + "/data/input_" + nbFilesInput + "_" + uuid + ".csv");
                 if (!file.exists()) {
                     try {
                         System.out.println("writing");
@@ -236,16 +211,16 @@ public class MainControler extends HttpServlet {
 
                 listMappingFiles.add(newMappingDWC);
 
-                newMappingDWC.initialiseMapping(this.getNbSessionRandom());
-                HashMap<String, String> connectionTags = new HashMap<>();
-                ArrayList<String> tagsNoMapped = newMappingDWC.getTagsListNoMapped();
+                newMappingDWC.initialiseMapping(uuid);
+                Map<String, String> connectionTags = new HashMap<>();
+                List<String> tagsNoMapped = newMappingDWC.getTagsListNoMapped();
                 for (int i = 0; i < tagsNoMapped.size(); i++) {
                     connectionTags.put(tagsNoMapped.get(i) + "_" + i, "");
                 }
                 //System.out.println("connectionTagsControler : " + connectionTags);
                 newMappingDWC.setConnectionTags(connectionTags);
                 newMappingDWC.getNoMappedFile().setCsvName(file.getName());
-                //initialisation.getInputFilesList().add(csvFile.getCsvFile());
+                //inputParameters.getInputFilesList().add(csvFile.getCsvFile());
                 //newMappingDWC.setFilename(itemFile.getName());
                 ReconciliationService reconciliationService = new ReconciliationService();
                 listReconcileFiles.add(reconciliationService);
@@ -258,20 +233,20 @@ public class MainControler extends HttpServlet {
                 nbFilesInput++;
             } else if (fieldName.equals(raster)) {
                 System.out.println("if raster : " + item);
-                initialisation.setRaster(true);
+                inputParameters.setRaster(true);
 
                 String fileExtensionName = item.getName();
                 fileExtensionName = FilenameUtils.getExtension(fileExtensionName);
                 String fileName = item.getName();
                 if (!Objects.equals(fileName, "")) {
-                    File file = new File(getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/" + fileName);
+                    File file = new File(getDirectoryPath() + "temp/" + uuid + "/data/" + fileName);
                     try {
                         item.write(file);
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
-                    this.initialisation.getInputRastersList().add(file);
+                    inputParameters.getInputRastersList().add(file);
                     nbFilesRaster++;
                 }
 
@@ -281,32 +256,32 @@ public class MainControler extends HttpServlet {
                 String fileExtensionName = item.getName();
                 fileExtensionName = FilenameUtils.getExtension(fileExtensionName);
                 String fileName = item.getName();
-                if (fileName != "") {
-                    File file = new File(getDirectoryPath() + "temp/" + this.getNbSessionRandom() + "/data/" + fileName);
+                if (!Objects.equals(fileName, "")) {
+                    File file = new File(getDirectoryPath() + "temp/" + uuid + "/data/" + fileName);
                     try {
                         item.write(file);
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
-                    this.initialisation.getHeaderRasterList().add(file);
+                    inputParameters.getHeaderRasterList().add(file);
                     nbFilesHeader++;
                 }
             } else if ("raster".equals(fieldName)) {
-                initialisation.setRaster(true);
+                inputParameters.setRaster(true);
             } else if (synonyms.equals(fieldName)) {
-                initialisation.setSynonym(true);
+                inputParameters.setSynonym(true);
             } else if ("tdwg4".equals(fieldName)) {
-                initialisation.setTdwg4Code(true);
+                inputParameters.setTdwg4Code(true);
             } else if ("establishment".equals(fieldName)) {
-                initialisation.setEstablishment(true);
+                inputParameters.setEstablishment(true);
             } else if (fieldName.contains("dropdownDwC_")) {
                 //System.out.println("fieldName : " + fieldName);
                 String valueDropdown = item.getString();
                 String[] tableauField = fieldName.split("_");
                 String idDropdown = tableauField[tableauField.length - 1];
                 for (int i = 0; i < listMappingReconcileDWC.size(); i++) {
-                    HashMap<String, String> connectionTags = listMappingReconcileDWC.get(i).getMappingDWC().getConnectionTags();
+                    Map<String, String> connectionTags = listMappingReconcileDWC.get(i).getMappingDWC().getConnectionTags();
                     for (Entry<String, String> entry : connectionTags.entrySet()) {
                         String[] tableKey = entry.getKey().split("_");
                         String idKey = tableKey[tableKey.length - 1];
@@ -334,7 +309,7 @@ public class MainControler extends HttpServlet {
                 }
 
                 nbMappingInput++;
-            } else if (fieldName.contains(reconcileActive)) {
+            } else if (fieldName.contains(reconcileActive)) {// retrieving whether taxonomic validation should be done
                 String[] tableauField = fieldName.split("_");
                 int idReconcile = Integer.parseInt(tableauField[tableauField.length - 1]);
                 //System.out.println("fieldName : " + fieldName + "  " + reconcileActive + " value : " + item.getString());
@@ -344,7 +319,7 @@ public class MainControler extends HttpServlet {
                         ReconciliationService reconciliationService = listMappingReconcileDWC.get(i).getReconcileDWC();
                         if (item.getString().equals("true")) {
                             reconciliationService.setReconcile(true);
-                            HashMap<Integer, String> linesConnectedNewName = new HashMap<Integer, String>();
+                            HashMap<Integer, String> linesConnectedNewName = new HashMap<>();
                             reconciliationService.setLinesConnectedNewName(linesConnectedNewName);
                             reconciliationService.setFilename(listMappingReconcileDWC.get(i).getOriginalName());
                             listReconcileFiles.add(reconciliationService);
@@ -381,12 +356,12 @@ public class MainControler extends HttpServlet {
                 //System.out.println(idLine);
                 ReconciliationService reconciliationService = listReconcileFiles.get(idFile);
                 if (reconciliationService.isReconcile()) {
-                    HashMap<Integer, String> linesConnnectedNewName = reconciliationService.getLinesConnectedNewName();
+                    Map<Integer, String> linesConnnectedNewName = reconciliationService.getLinesConnectedNewName();
                     //System.out.println("in group : " + linesConnnectedNewName);
                     linesConnnectedNewName.put(idLine, value);
                 }
 
-            } else if (fieldName.contains("csvDropdown_")) {
+            } else if (fieldName.contains("csvDropdown_")) { //retrieving CSV separator
                 //System.out.println("fieldName : " + fieldName);
                 int idInput = Integer.parseInt(fieldName.split("_")[1]);
                 String separator = item.getString();
@@ -406,94 +381,55 @@ public class MainControler extends HttpServlet {
                     }
                 }
 
-            } else {
-                //System.out.println("fieldName : " + fieldName);
+            }else if(fieldName.contains("email")){
+                inputParameters.setEmailUser(item.getString());
+                inputParameters.setSendEmail(true);
             }
-
-
-            if (initialisation.isEstablishment()) {
+            else if (inputParameters.isEstablishment()) {
                 String param = item.getFieldName();
                 //System.out.println(param);
                 switch (param) {
                     case "native":
-                        this.initialisation.getEstablishmentList().add("native");
+                        inputParameters.getEstablishmentList().add("native");
                         break;
                     case "introduced":
-                        this.initialisation.getEstablishmentList().add("introduced");
+                        inputParameters.getEstablishmentList().add("introduced");
                         break;
                     case "naturalised":
-                        this.initialisation.getEstablishmentList().add("naturalised");
+                        inputParameters.getEstablishmentList().add("naturalised");
                         break;
                     case "invasive":
-                        this.initialisation.getEstablishmentList().add("invasive");
+                        inputParameters.getEstablishmentList().add("invasive");
                         break;
                     case "managed":
-                        this.initialisation.getEstablishmentList().add("managed");
+                        inputParameters.getEstablishmentList().add("managed");
                         break;
                     case "uncertain":
-                        this.initialisation.getEstablishmentList().add("uncertain");
+                        inputParameters.getEstablishmentList().add("uncertain");
                         break;
                     case "others":
-                        this.initialisation.getEstablishmentList().add("others");
+                        inputParameters.getEstablishmentList().add("others");
                         break;
                 }
             }
         }
 
-        this.initialisation.setNbInput(nbFilesInput);
+        inputParameters.setNbInput(nbFilesInput);
 
-        this.initialisation.setListMappingReconcileFiles(listMappingReconcileDWC);
+        inputParameters.setListMappingReconcileFiles(listMappingReconcileDWC);
 
-
+        return inputParameters;
     }
 
-    /**
-     *
-     */
     public void destroy() {
         // do nothing.
     }
 
     /**
-     * @return Initialise
-     */
-    public Initialise getInitialisation() {
-        return initialisation;
-    }
-
-    /**
-     * @param initialisation
-     * @return void
-     */
-    public void setInitialisation(Initialise initialisation) {
-        this.initialisation = initialisation;
-    }
-
-    /**
      * @return int
      */
-    public String getNbSessionRandom() {
-        return nbSessionRandom;
-    }
-
-    /**
-     * @param nbSessionRandom
-     * @return void
-     */
-    public void setNbSessionRandom(String nbSessionRandom) {
-        this.nbSessionRandom = nbSessionRandom;
-    }
-
-    /**
-     * @return int
-     */
-    public String generateRandomKey() {
-        String nbUUID = UUID.randomUUID().toString().replace("-", "_");
-        //String nbSessionRandom =  UUID.randomUUID();
-        //Random random = new Random();
-        //nbFileRandom = random.nextInt();
-        //System.out.println(nbFileRandom);
-        return nbUUID;
+    public String generateUUID() {
+        return UUID.randomUUID().toString().replace("-", "_");
     }
 
 }

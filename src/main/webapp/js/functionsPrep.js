@@ -255,7 +255,7 @@ function addDeleteRasterFile(){
 				addRasterButton.setAttribute('class',"btn btn-default waves-effect waves-light font-small-button dropdown-toggle");
 				//addRasterButton.style = "color:rgb(204,0,153); border-color:rgb(255,255,255); border-style:solid;";
 				addRasterButton.size="51";
-				addRasterButton.value = "Add a new raster file";
+				addRasterButton.value = "Add bioclimatic and habitat data";
 				addRasterButton.setAttribute("onclick", "addField(\'compteur_raster\',\'tdwg4\',\'raster\')");
 
 				var delRasterButton = document.createElement("input");
@@ -263,7 +263,7 @@ function addDeleteRasterFile(){
 				delRasterButton.name = "delRaster";
 				delRasterButton.type = "button";
 				delRasterButton.size = "51";
-				delRasterButton.value = "Delete a raster file";
+				delRasterButton.value = "Delete bioclimatic and habitat data";
 				delRasterButton.setAttribute('class', 'btn btn-default waves-effect waves-light font-small-button');
 				delRasterButton.setAttribute("onclick","deleteField(\'compteur_raster\',\'raster\')");
 
@@ -350,6 +350,16 @@ function established() {
 		document.getElementById("invasive").checked = false;
 		document.getElementById("managed").checked = false;
 		document.getElementById("uncertain").checked = false;
+		document.getElementById("others").checked = false;
+	}
+	else{
+		document.getElementById("native").checked = true;
+		document.getElementById("introduced").checked = true;
+		document.getElementById("naturalised").checked = true;
+		document.getElementById("invasive").checked = true;
+		document.getElementById("managed").checked = true;
+		document.getElementById("uncertain").checked = true;
+		document.getElementById("others").checked = true;
 	}
 }
 
@@ -486,7 +496,7 @@ function cancelInputFile(nb_input, action){
 
 		var xhrPOST = new XMLHttpRequest();
 
-		xhrPOST.open("POST","uploadControler", true);
+		xhrPOST.open("POST","uploadController", true);
 		xhrPOST.setRequestHeader("Content-Length", filesize);
 		//xhrPOST.addEventListener("progress", updateProgress, false);
 		xhrPOST.addEventListener("error", transferFailed, false);
@@ -623,7 +633,7 @@ function uploadInputFile(nb_input){
 		divSpinnerIcon.appendChild(divCircleLeft);
 		divSpinnerIcon.appendChild(divGapPatch);
 		divSpinnerIcon.appendChild(divClipperRight);
-		divLoadingIcon.appendChild(divSpinnerIcon)
+		divLoadingIcon.appendChild(divSpinnerIcon);
 		
 		var divAddLoad = document.getElementById("divAddLoad_" + nb_input);
 		divAddLoad.appendChild(divLoadingIcon);
@@ -636,7 +646,7 @@ function uploadInputFile(nb_input){
 		console.log(formdata);
 		var xhrPOST = new XMLHttpRequest();
 
-		xhrPOST.open("POST","uploadControler", true);
+		xhrPOST.open("POST","uploadController", true);
 		xhrPOST.setRequestHeader("Content-Length", filesize);
 		//xhrPOST.addEventListener("progress", updateProgress, false);
 		xhrPOST.addEventListener("error", transferFailed, false);

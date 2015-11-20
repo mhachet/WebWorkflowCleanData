@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.fail;
 
@@ -45,7 +46,7 @@ public class TestConnectionDatabase {
 		String choiceStatement = "", sql = "";
 		choiceStatement = "execute";
 		sql = "SHOW COLUMNS FROM Workflow.IsoCode;";
-		ArrayList<String> messages = newConnection.executeSQLcommand(choiceStatement, sql);
+		List<String> messages = newConnection.executeSQLcommand(choiceStatement, sql);
 		if(messages.contains("Connection error")){
 			fail("Connection to database failed");
 		}

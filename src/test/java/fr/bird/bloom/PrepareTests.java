@@ -11,15 +11,16 @@ package fr.bird.bloom;
  * ExampleWebTestCase
  */
 
+import fr.bird.bloom.beans.InputParameters;
 import org.junit.Ignore;
 import org.junit.Test;
-import fr.bird.bloom.beans.Initialise;
 import fr.bird.bloom.model.CSVFile;
 import fr.bird.bloom.model.MappingDwC;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
 
@@ -30,8 +31,8 @@ public class PrepareTests {
     private String DIRECTORY_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/test/";
     private String RESSOURCES_PATH = "/home/mhachet/workspace/WebWorkflowCleanData/src/resources/";
 
-    private Initialise initialisation;
-    public String nbSessionRandom;
+    private InputParameters inputParameters;
+    public String uuid;
     private ArrayList<File> inputFilesList;
     private ArrayList<File> inputsRasterList;
     private ArrayList<File> inputHeaderList;
@@ -41,23 +42,23 @@ public class PrepareTests {
     public void prepare() {
 
 
-	initialisation = new Initialise();
+	inputParameters = new InputParameters();
 	inputFilesList = new ArrayList<>();
 	inputHeaderList = new ArrayList<>();
 	inputsRasterList = new ArrayList<>();
 
-	setNbSessionRandom(generateRandomKey());
+	setUuid(generateRandomKey());
 	prepareInputFiles();
 
-	initialisation.setRaster(true);
+	inputParameters.setRaster(true);
 	prepareInputsRaster();
 	prepareInputsHeader();
 
-	initialisation.setEstablishment(true);
+	inputParameters.setEstablishment(true);
 	prepareEstablishment();
 
-	initialisation.setSynonym(true);
-	initialisation.setTdwg4Code(true);
+	inputParameters.setSynonym(true);
+	inputParameters.setTdwg4Code(true);
 
 	System.out.println("beforeclass 1 ");
 	//setBaseUrl("http://localhost:8080/WebWorkflowCleanData/HomePage.jsp");	
@@ -77,13 +78,13 @@ public class PrepareTests {
 	inputFilesList.add(new File(DIRECTORY_PATH + "inputs_data/test3_DWC.csv"));
 
 	for(int i = 0 ; i < inputFilesList.size() ; i++){
-	    File file = new File(DIRECTORY_PATH + "temp/noMappedDWC_" + getNbSessionRandom() + "_" + (i + 1 ) + ".csv");
+	    File file = new File(DIRECTORY_PATH + "temp/noMappedDWC_" + getUuid() + "_" + (i + 1 ) + ".csv");
 	    FileWriter writer = null;
 	    try {
 		writer = new FileWriter(file.getAbsoluteFile());
 
 		BufferedWriter output = new BufferedWriter(writer);
-		ArrayList<String> linesFile = getLinesFile(inputFilesList.get(i));
+		List<String> linesFile = getLinesFile(inputFilesList.get(i));
 
 		for(int j = 0 ; j < linesFile.size() ; j++){
 		    output.write(linesFile.get(j) + "\n");
@@ -101,20 +102,20 @@ public class PrepareTests {
 	    String nameFile = inputFilesList.get(i).getName();
 	    //newMappingDWC.setOriginalExtension(nameFile.substring(nameFile.indexOf('.')+1,nameFile.length()));
 	    listMappedDWC.add(newMappingDWC);
-	    newMappingDWC.initialiseMapping(getNbSessionRandom());
+	    newMappingDWC.initialiseMapping(getUuid());
 	    HashMap<String, String> connectionTags = new HashMap<>();
-	    ArrayList<String> tagsNoMapped = newMappingDWC.getTagsListNoMapped();
+	    List<String> tagsNoMapped = newMappingDWC.getTagsListNoMapped();
 	    for(int k = 0 ; k < tagsNoMapped.size() ; k++){
 		connectionTags.put(tagsNoMapped.get(k) + "_" + k, "");
 	    }
 	    newMappingDWC.setConnectionTags(connectionTags);
 	    newMappingDWC.getNoMappedFile().setCsvName(file.getName());
-	    //initialisation.getInputFilesList().add(csvFile.getCsvFile());
+	    //inputParameters.getInputFilesList().add(csvFile.getCsvFile());
 
 	    boolean doMapping = newMappingDWC.doMapping();
 	    newMappingDWC.setMappingInvolved(doMapping);
 	    if(doMapping){
-		ArrayList<String> presentTags = newMappingDWC.getPresentTags();
+		List<String> presentTags = newMappingDWC.getPresentTags();
 		for(Entry<String, String> entry : connectionTags.entrySet()) {
 		    String [] tableKey = entry.getKey().split("_");
 		    String idKey = tableKey[0];
@@ -132,18 +133,18 @@ public class PrepareTests {
 
 	}
 	
-	//initialisation.setListMappingFiles(listMappedDWC);
+	//inputParameters.setListMappingFiles(listMappedDWC);
     }
 
     public void prepareInputsRaster(){
 
-	initialisation.setRaster(true);
+	inputParameters.setRaster(true);
 
 	inputsRasterList.add(new File(DIRECTORY_PATH + "inputs_data/alt_22.bil"));
 	inputsRasterList.add(new File(DIRECTORY_PATH + "inputs_data/prec1_46.bil"));
 	inputsRasterList.add(new File(DIRECTORY_PATH + "inputs_data/tmean1.bil"));
 
-	initialisation.setInputRastersList(inputsRasterList);
+	inputParameters.setInputRastersList(inputsRasterList);
     }
 
     public void prepareInputsHeader(){
@@ -151,22 +152,22 @@ public class PrepareTests {
 	inputHeaderList.add(new File(DIRECTORY_PATH + "inputs_data/prec1_46.hdr"));
 	inputHeaderList.add(new File(DIRECTORY_PATH + "inputs_data/tmean1.hdr"));
 
-	initialisation.setHeaderRasterList(inputHeaderList);
+	inputParameters.setHeaderRasterList(inputHeaderList);
 
     }
 
     public void prepareEstablishment(){
-	ArrayList<String> listEstablishment = new ArrayList<>();
+	List<String> listEstablishment = new ArrayList<>();
 	listEstablishment.add("introduced");
 	listEstablishment.add("invasive");
 	listEstablishment.add("native");
 	listEstablishment.add("managed");
 
-	initialisation.setEstablishmentList(listEstablishment);
+	inputParameters.setEstablishmentList(listEstablishment);
     }
 
-    public ArrayList<String> getLinesFile(File file){
-	ArrayList<String> linesFile = new ArrayList<>();
+    public List<String> getLinesFile(File file){
+	List<String> linesFile = new ArrayList<>();
 	try{
 	    InputStream ips = new FileInputStream(file.getAbsoluteFile()); 
 	    InputStreamReader ipsr = new InputStreamReader(ips);
@@ -189,8 +190,8 @@ public class PrepareTests {
      * @return int
      */
     private String generateRandomKey() {
-	String nbSessionRandom = UUID.randomUUID().toString().replace("-","_");
-	return nbSessionRandom;
+	String uuid = UUID.randomUUID().toString().replace("-","_");
+	return uuid;
     }
 
     public String getDIRECTORY_PATH() {
@@ -201,20 +202,20 @@ public class PrepareTests {
 	DIRECTORY_PATH = dIRECTORY_PATH;
     }
 
-    public Initialise getInitialisation() {
-	return initialisation;
+    public InputParameters getInputParameters() {
+	return inputParameters;
     }
 
-    public void setInitialisation(Initialise initialise) {
-	initialisation = initialise;
+    public void setInputParameters(InputParameters inputParameters) {
+	this.inputParameters = inputParameters;
     }
 
-    public String getNbSessionRandom() {
-	return nbSessionRandom;
+    public String getUuid() {
+	return uuid;
     }
 
-    public void setNbSessionRandom(String nbSession) {
-	nbSessionRandom = nbSession;
+    public void setUuid(String nbSession) {
+	uuid = nbSession;
     }
 
 
@@ -228,7 +229,7 @@ public class PrepareTests {
     }
 
 
-    public ArrayList<File> getInputFilesList() {
+    public List<File> getInputFilesList() {
         return inputFilesList;
     }
 
@@ -238,7 +239,7 @@ public class PrepareTests {
     }
 
 
-    public ArrayList<File> getInputsRasterList() {
+    public List<File> getInputsRasterList() {
         return inputsRasterList;
     }
 
@@ -248,7 +249,7 @@ public class PrepareTests {
     }
 
 
-    public ArrayList<File> getInputHeaderList() {
+    public List<File> getInputHeaderList() {
         return inputHeaderList;
     }
 
@@ -258,7 +259,7 @@ public class PrepareTests {
     }
 
 
-    public ArrayList<MappingDwC> getListMappedDWC() {
+    public List<MappingDwC> getListMappedDWC() {
         return listMappedDWC;
     }
 

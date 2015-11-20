@@ -10,9 +10,9 @@ import java.io.PrintWriter;
 
 class StreamGobbler extends Thread{
 	
-    InputStream is;
-    String type;
-    OutputStream os;
+    private InputStream is;
+    private String type;
+    private OutputStream os;
     
     StreamGobbler(InputStream is, String type){
         this(is, type, null);
