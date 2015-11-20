@@ -16,6 +16,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 /**
@@ -27,18 +29,18 @@ public class MappingDwC {
 
     private CSVFile noMappedFile;
     private File mappedFile;
-    private ArrayList<String> presentTags;
-    private ArrayList<String> tagsListNoMapped;
-    private ArrayList<String> tagsListDwC;
-    private HashMap<String, String> connectionTags;
-    private HashMap<String, ArrayList<String>> connectionValuesTags;
+    private List<String> presentTags;
+    private List<String> tagsListNoMapped;
+    private List<String> tagsListDwC;
+    private Map<String, String> connectionTags;
+    private Map<String, List<String>> connectionValuesTags;
     private boolean mappingInvolved;
-    private ArrayList<Integer> listInvalidColumns;
+    private List<Integer> listInvalidColumns;
     private String successMapping;
     private String filename;
     private String filepath;
     private int idFile;
-    private ArrayList<String> lines;
+    private List<String> lines;
 
     /**
      * src.model
@@ -57,8 +59,8 @@ public class MappingDwC {
      *
      * @return void
      */
-    public void initialiseMapping(String nbSessionRandom) {
-        this.setTagsListDwC(this.initialiseDwCTags(nbSessionRandom));
+    public void initialiseMapping(String uuid) {
+        this.setTagsListDwC(this.initialiseDwCTags(uuid));
         this.setTagsListNoMapped(this.initialiseNoMappedTags());
         this.setPresentTags(this.initialisePresentTags());
     }
@@ -76,9 +78,9 @@ public class MappingDwC {
         File mappedFile = new File(mappedFilename);
 
         FileWriter writerMappedFile = new FileWriter(mappedFile);
-        HashMap<String, String> connectionTags = this.getConnectionTags();
-        HashMap<String, ArrayList<String>> connectionValuesTags = this.getConnectionValuesTags();
-        ArrayList<Integer> listInvalidColumns = this.getListInvalidColumns();
+        Map<String, String> connectionTags = this.getConnectionTags();
+        Map<String, List<String>> connectionValuesTags = this.getConnectionValuesTags();
+        List<Integer> listInvalidColumns = this.getListInvalidColumns();
 
         String firstNewLine = "";
         int nbCol = connectionTags.size();
@@ -92,7 +94,7 @@ public class MappingDwC {
 
             if (!listInvalidColumns.contains(idColumn)) {
                 String valueNoMapped = entryDwC.getValue();
-                if (!valueNoMapped.equals(" ")) {
+                if (!" ".equals(valueNoMapped)) {
                     firstNewLine += valueNoMapped + ",";
                 }
                 countCol++;
@@ -110,8 +112,8 @@ public class MappingDwC {
         while (countLines < nbLines - 1) {
             String lineValues = "";
             countCol = 1;
-            for (Entry<String, ArrayList<String>> entryValuesTags : connectionValuesTags.entrySet()) {
-                ArrayList<String> listValues = entryValuesTags.getValue();
+            for (Entry<String, List<String>> entryValuesTags : connectionValuesTags.entrySet()) {
+                List<String> listValues = entryValuesTags.getValue();
                 String[] splitKey = entryValuesTags.getKey().split("_");
                 Integer entryKey = Integer.parseInt(splitKey[splitKey.length - 1]);
                 if (!this.getListInvalidColumns().contains(entryKey)) {
@@ -133,13 +135,13 @@ public class MappingDwC {
      *
      * @return ArrayList<String>
      */
-    public ArrayList<String> initialiseDwCTags(String nbSessionRandom) {
+    public List<String> initialiseDwCTags(String uuid) {
 
-        ArrayList<String> tagsListDwCInit = new ArrayList<String>();
-        ArrayList<String> tempList = new ArrayList<String>();
+        List<String> tagsListDwCInit = new ArrayList<>();
+        List<String> tempList = new ArrayList<>();
         String choiceStatement = "executeQuery";
         String getColumnsName = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='DarwinCoreInput';";
-        ArrayList<String> messages = new ArrayList<>();
+        List<String> messages = new ArrayList<>();
         DatabaseTreatment columnsNameDwC = null;
 
         try {
@@ -179,18 +181,18 @@ public class MappingDwC {
      * @return ArrayList<String>
      * @throws IOException
      */
-    public ArrayList<String> initialiseNoMappedTags() {
+    public List<String> initialiseNoMappedTags() {
         /*CSVFile csvNoMapped = new CSVFile(this.getNoMappedFile().getCsvFile());
-		ArrayList<String> linesCSV = csvNoMapped.getLines();
+		List<String> linesCSV = csvNoMapped.getLines();
 		String [] firstLine = linesCSV.get(0).split(csvNoMapped.getSeparator());
 		*/
-        //ArrayList<String> linesCSV = this.getNoMappedFile().getLines();
+        //List<String> linesCSV = this.getNoMappedFile().getLines();
         final String separatorRegex = this.getNoMappedFile().getSeparator().getSymbol();
 
         final String firstLineString = this.getNoMappedFile().getFirstLine();
 
         String [] firstLine = firstLineString.split(separatorRegex);
-        ArrayList<String> tagsListNoMappedInit = new ArrayList(Arrays.asList(firstLine));
+        List<String> tagsListNoMappedInit = new ArrayList(Arrays.asList(firstLine));
         return tagsListNoMappedInit;
     }
 
@@ -199,10 +201,10 @@ public class MappingDwC {
      *
      * @return ArrayList<String>
      */
-    public ArrayList<String> initialisePresentTags() {
-        ArrayList<String> presentTagsInit = new ArrayList<String>();
-        ArrayList<String> noMappedTags = this.getTagsListNoMapped();
-        ArrayList<String> DwCtags = this.getTagsListDwC();
+    public List<String> initialisePresentTags() {
+        List<String> presentTagsInit = new ArrayList<>();
+        List<String> noMappedTags = this.getTagsListNoMapped();
+        List<String> DwCtags = this.getTagsListDwC();
 
         for (int i = 0; i < noMappedTags.size(); i++) {
             String noMappedTag = noMappedTags.get(i);
@@ -214,11 +216,11 @@ public class MappingDwC {
     }
 
     public void findInvalidColumns() {
-        ArrayList<Integer> invalidColumns = new ArrayList<>();
+        List<Integer> invalidColumns = new ArrayList<>();
 
         for (Entry<String, String> entryDwC : this.getConnectionTags().entrySet()) {
             String valueNoMapped = entryDwC.getValue();
-            if (valueNoMapped.equals(" ")) {
+            if (" ".equals(valueNoMapped)) {
                 String[] splitKey = entryDwC.getKey().split("_");
                 int idColumn = Integer.parseInt(splitKey[splitKey.length - 1]);
                 invalidColumns.add(idColumn);
@@ -233,8 +235,8 @@ public class MappingDwC {
      *
      * @return HashMap<String,ArrayList<String>>
      */
-    public HashMap<String, ArrayList<String>> doConnectionValuesTags() {
-        HashMap<String, ArrayList<String>> connectionValuesTags = new HashMap<String, ArrayList<String>>();
+    public Map<String, List<String>> doConnectionValuesTags() {
+        Map<String, List<String>> connectionValuesTags = new HashMap<>();
         CSVFile noMappedFile = this.getNoMappedFile();
         try {
             InputStream inputStreamNoMapped = new FileInputStream(noMappedFile.getCsvFile());
@@ -244,15 +246,15 @@ public class MappingDwC {
             int countLine = 0;
             while ((line = readerNoMapped.readLine()) != null) {
                 String[] lineSplit = line.split(noMappedFile.getSeparator().getSymbol(), -1);
-                ArrayList<String> listValuesMap = new ArrayList<>();
+                List<String> listValuesMap = new ArrayList<>();
                 for (int i = 0; i < lineSplit.length; i++) {
                     String id = "";
                     if (countLine == 0) {
                         id = lineSplit[i] + "_" + i;
-                        ArrayList<String> values = new ArrayList<>();
+                        List<String> values = new ArrayList<>();
                         connectionValuesTags.put(id, values);
                     } else {
-                        for (Entry<String, ArrayList<String>> entry : connectionValuesTags.entrySet()) {
+                        for (Entry<String, List<String>> entry : connectionValuesTags.entrySet()) {
                             String[] idKeyTable = entry.getKey().split("_");
                             String idKey = idKeyTable[idKeyTable.length - 1];
                             if (Integer.parseInt(idKey) == i) {
@@ -283,8 +285,8 @@ public class MappingDwC {
 
     public boolean doMapping() {
 
-        ArrayList<String> listNoMapped = this.getTagsListNoMapped();
-        ArrayList<String> listDwCTags = this.getTagsListDwC();
+        List<String> listNoMapped = this.getTagsListNoMapped();
+        List<String> listDwCTags = this.getTagsListDwC();
 
         for (int i = 0; i < listNoMapped.size(); i++) {
             String tag = listNoMapped.get(i);
@@ -362,7 +364,7 @@ public class MappingDwC {
     /**
      * @return ArrayList<String>
      */
-    public ArrayList<String> getPresentTags() {
+    public List<String> getPresentTags() {
         return presentTags;
     }
 
@@ -370,14 +372,14 @@ public class MappingDwC {
      * @param presentTags
      * @return void
      */
-    public void setPresentTags(ArrayList<String> presentTags) {
+    public void setPresentTags(List<String> presentTags) {
         this.presentTags = presentTags;
     }
 
     /**
      * @return ArrayList<String>
      */
-    public ArrayList<String> getTagsListNoMapped() {
+    public List<String> getTagsListNoMapped() {
         return tagsListNoMapped;
     }
 
@@ -385,14 +387,14 @@ public class MappingDwC {
      * @param tagsListNoMapped
      * @return void
      */
-    public void setTagsListNoMapped(ArrayList<String> tagsListNoMapped) {
+    public void setTagsListNoMapped(List<String> tagsListNoMapped) {
         this.tagsListNoMapped = tagsListNoMapped;
     }
 
     /**
      * @return ArrayList<String>
      */
-    public ArrayList<String> getTagsListDwC() {
+    public List<String> getTagsListDwC() {
         return tagsListDwC;
     }
 
@@ -400,7 +402,7 @@ public class MappingDwC {
      * @param tagsListDwC
      * @return void
      */
-    public void setTagsListDwC(ArrayList<String> tagsListDwC) {
+    public void setTagsListDwC(List<String> tagsListDwC) {
         this.tagsListDwC = tagsListDwC;
     }
 
@@ -408,7 +410,7 @@ public class MappingDwC {
     /**
      * @return HashMap<String,String>
      */
-    public HashMap<String, String> getConnectionTags() {
+    public Map<String, String> getConnectionTags() {
         return connectionTags;
     }
 
@@ -416,14 +418,14 @@ public class MappingDwC {
      * @param connectionTags
      * @return void
      */
-    public void setConnectionTags(HashMap<String, String> connectionTags) {
+    public void setConnectionTags(Map<String, String> connectionTags) {
         this.connectionTags = connectionTags;
     }
 
     /**
      * @return HashMap<String,ArrayList<String>>
      */
-    public HashMap<String, ArrayList<String>> getConnectionValuesTags() {
+    public Map<String, List<String>> getConnectionValuesTags() {
         return connectionValuesTags;
     }
 
@@ -431,15 +433,15 @@ public class MappingDwC {
      * @param connectionValuesTags
      * @return void
      */
-    public void setConnectionValuesTags(HashMap<String, ArrayList<String>> connectionValuesTags) {
+    public void setConnectionValuesTags(Map<String, List<String>> connectionValuesTags) {
         this.connectionValuesTags = connectionValuesTags;
     }
 
-    public ArrayList<Integer> getListInvalidColumns() {
+    public List<Integer> getListInvalidColumns() {
         return listInvalidColumns;
     }
 
-    public void setListInvalidColumns(ArrayList<Integer> listInvalidColumns) {
+    public void setListInvalidColumns(List<Integer> listInvalidColumns) {
         this.listInvalidColumns = listInvalidColumns;
     }
 
@@ -483,7 +485,7 @@ public class MappingDwC {
         this.mappingInvolved = mappingInvolved;
     }
 
-    public ArrayList<String> getLines() {
+    public List<String> getLines() {
         return lines;
     }
 
