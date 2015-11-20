@@ -4,24 +4,23 @@
  */
 package fr.bird.bloom.model;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Point;
+import fr.bird.bloom.utils.BloomConfig;
+import org.geotools.geojson.geom.GeometryJSON;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import fr.bird.bloom.utils.BloomConfig;
-import org.geotools.geojson.geom.GeometryJSON;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
 
 /**
  * src.model
@@ -31,12 +30,8 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class TdwgTreatment {
 
-	private String nbSessionRandom;
+	private String uuid;
 	private boolean sucessTdwgTreatment;
-
-	public TdwgTreatment(){
-
-	}
 
 	/**
 	 * 
@@ -48,15 +43,15 @@ public class TdwgTreatment {
 		//change example : locationID="TDWG:MXS-JA"
 		this.setSucessTdwgTreatment(true);
 		fileDarwinCore.associateIdData();
-		HashMap<String, ArrayList<String>> idAssoData = fileDarwinCore.getIdAssoData(); 
+		Map<String, List<String>> idAssoData = fileDarwinCore.getIdAssoData();
 
 		int iLatitude = fileDarwinCore.getIndiceFromTag("decimalLatitude_");
 		int iLongitude = fileDarwinCore.getIndiceFromTag("decimalLongitude_");
 		int iIso2 = fileDarwinCore.getIndiceFromTag("countryCode_");
 
 		for (String id_ : idAssoData.keySet()) {
-			if(!id_ .equals("id_")){
-				ArrayList<String> listInfos = idAssoData.get(id_);
+			if(!"id_".equals(id_ )){
+				List<String> listInfos = idAssoData.get(id_);
 
 				float latitude = 0;
 				float longitude = 0;
@@ -90,9 +85,9 @@ public class TdwgTreatment {
 					e.printStackTrace();
 				}
 				DatabaseTreatment newConnectionSelectID = new DatabaseTreatment(statement);
-				String sqlSelectID = "SELECT locationID_ FROM Workflow.Clean_" + this.getNbSessionRandom() + " WHERE Clean_" + this.getNbSessionRandom() + ".id_=" + id_ + ";";
+				String sqlSelectID = "SELECT locationID_ FROM Workflow.Clean_" + this.getUuid() + " WHERE Clean_" + this.getUuid() + ".id_=" + id_ + ";";
 				newConnectionSelectID.executeSQLcommand("executeQuery", sqlSelectID);
-				ArrayList<String> selectIDResults = newConnectionSelectID.getResultatSelect();
+				List<String> selectIDResults = newConnectionSelectID.getResultatSelect();
 
 				String newLocationID = "";
 				if(selectIDResults.size() > 1 && !selectIDResults.get(1).replaceAll("\"", "").isEmpty()){
@@ -102,7 +97,7 @@ public class TdwgTreatment {
 					newLocationID = "TDWG=" + tdwg4Code;
 				}
 
-				String sqlUpdateTDWG = "UPDATE Workflow.Clean_" + this.getNbSessionRandom() + " SET Clean_" + this.getNbSessionRandom() + ".locationID_=\"" + newLocationID + "\" WHERE Clean_" + this.getNbSessionRandom() + ".id_=" + id_ + ";";
+				String sqlUpdateTDWG = "UPDATE Workflow.Clean_" + this.getUuid() + " SET Clean_" + this.getUuid() + ".locationID_=\"" + newLocationID + "\" WHERE Clean_" + this.getUuid() + ".id_=" + id_ + ";";
 
 				Statement statementUpdateClean = null;
 				try {
@@ -112,7 +107,7 @@ public class TdwgTreatment {
 					e.printStackTrace();
 				}
 				DatabaseTreatment newConnectionUpdateClean = new DatabaseTreatment(statementUpdateClean);
-				ArrayList<String> messages = newConnectionUpdateClean.executeSQLcommand("executeUpdate", sqlUpdateTDWG);
+				List<String> messages = newConnectionUpdateClean.executeSQLcommand("executeUpdate", sqlUpdateTDWG);
 
 				for(int i = 0; i < messages.size(); i++){
 					if(messages.get(i).contains("Connection error : ")){
@@ -163,12 +158,12 @@ public class TdwgTreatment {
 
 	}
 
-	public String getNbSessionRandom() {
-		return nbSessionRandom;
+	public String getUuid() {
+		return uuid;
 	}
 
-	public void setNbSessionRandom(String nbSessionRandom) {
-		this.nbSessionRandom = nbSessionRandom;
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
 	public boolean isSucessTdwgTreatment() {
