@@ -66,10 +66,6 @@
         <option name="PROGRAM_PARAMETERS" value="" />
       </SHUTDOWN>
     </ConfigurationWrapper>
-    <method>
-      <option name="BuildArtifacts" enabled="true">
-        <artifact name="bloom:war exploded" />
-      </option>
-    </method>
+    <method />
   </configuration>
 </component>

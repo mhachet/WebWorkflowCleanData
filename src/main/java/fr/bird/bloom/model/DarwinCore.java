@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 
@@ -143,10 +145,10 @@ public class DarwinCore extends CSVFile{
 				String line = null;
 				while ((line = br.readLine() ) != null ){
 					if(count != 0){
-						String lineSplit [] = line.replaceAll("\"", "").replaceAll("\'", "").split(separator, -1);
+						List<String> lineSplit = this.getSplitedLine(separator, line);//line.replaceAll("\"", "").replaceAll("\'", "").split(separator, -1);
 						String newLine = "";
-						for(int j = 0 ; j < lineSplit.length ; j++){
-							newLine += "\"" + lineSplit[j] + "\",";
+						for(int j = 0 ; j < lineSplit.size() ; j++){
+							newLine += "\"" + lineSplit.get(j) + "\",";
 						}
 						newLine += Integer.toString(idFile_) + ",0,\"" + this.getUuid() + "\"\n";
 						
@@ -180,6 +182,21 @@ public class DarwinCore extends CSVFile{
 		}
 		
 		return tempFile;
+	}
+
+	public List<String> getSplitedLine(String separator, String line){
+		List<String> splitedLine = new ArrayList<>();
+		String regex = "(^|(?<=,))([^\",])*((?=,)|$)|((?<=^\")|(?<=,\"))([^\"]|\"\")*((?=\",)|(?=\"$))";
+		Pattern p = Pattern.compile(regex);
+		Matcher m = p.matcher(line);
+		// System.out.println("******");
+		while (m.find()){
+			splitedLine.add(m.group());
+			//System.out.println(m.group());
+		}
+
+		// System.out.println("******");
+		return splitedLine;
 	}
 
 	
