@@ -164,7 +164,7 @@ public class LaunchWorkflow {
 
 		//}
 
-		this.dataTreatment.deleteTables();
+		//this.dataTreatment.deleteTables();
 
 	}
 

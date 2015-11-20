@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * src.model
@@ -84,7 +86,7 @@ public class MappingDwC {
 
         String firstNewLine = "";
         int nbCol = connectionTags.size();
-        int countCol = 1;
+        int countTags = 0;
         //System.out.println("value " + connectionTags);
         //System.out.println("valuesTags : " + connectionValuesTags);
 
@@ -97,18 +99,16 @@ public class MappingDwC {
                 if (!" ".equals(valueNoMapped)) {
                     firstNewLine += valueNoMapped + ",";
                 }
-                countCol++;
+                countTags++;
             }
 
         }
-        //System.out.println("before : " + firstNewLine);
         firstNewLine = firstNewLine.substring(0, firstNewLine.length() - 1) + "\n";
 
         writerMappedFile.write(firstNewLine);
-        //System.out.println("line : " + firstNewLine);
         int countLines = 0;
         int nbLines = this.getNbLines(noMappedFile.getCsvFile());
-        countCol = 1;
+        int countCol = 1;
         while (countLines < nbLines - 1) {
             String lineValues = "";
             countCol = 1;
@@ -117,12 +117,25 @@ public class MappingDwC {
                 String[] splitKey = entryValuesTags.getKey().split("_");
                 Integer entryKey = Integer.parseInt(splitKey[splitKey.length - 1]);
                 if (!this.getListInvalidColumns().contains(entryKey)) {
-                    lineValues += listValues.get(countLines) + ",";
+                    if(listValues.get(countLines).contains(noMappedFile.getSeparator().getSymbol())){
+                        lineValues += "\"" + listValues.get(countLines) + "\"";
+                    }
+                    else {
+                        lineValues += listValues.get(countLines);
+                    }
+
+                    if(countCol == countTags){
+                        lineValues += "\n";
+                    }
+                    else{
+                        lineValues += ",";
+                    }
+
                 }
 
                 countCol++;
             }
-            lineValues = lineValues.substring(0, lineValues.length() - 2) + "\n";
+
             writerMappedFile.write(lineValues);
             countLines++;
         }
@@ -230,6 +243,21 @@ public class MappingDwC {
         this.setListInvalidColumns(invalidColumns);
     }
 
+    public List<String> getSplitedLine(String separator, String line){
+        List<String> splitedLine = new ArrayList<>();
+        String regex = "(^|(?<=,))([^\",])*((?=,)|$)|((?<=^\")|(?<=,\"))([^\"]|\"\")*((?=\",)|(?=\"$))";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(line);
+       // System.out.println("******");
+        while (m.find()){
+            splitedLine.add(m.group());
+            //System.out.println(m.group());
+        }
+
+       // System.out.println("******");
+        return splitedLine;
+    }
+
     /**
      * Connect tags (from input file) to value (from input file)
      *
@@ -245,12 +273,14 @@ public class MappingDwC {
             String line = "";
             int countLine = 0;
             while ((line = readerNoMapped.readLine()) != null) {
+                List<String> splitedLine = this.getSplitedLine(noMappedFile.getSeparator().getSymbol(), line);
                 String[] lineSplit = line.split(noMappedFile.getSeparator().getSymbol(), -1);
+
                 List<String> listValuesMap = new ArrayList<>();
-                for (int i = 0; i < lineSplit.length; i++) {
+                for (int i = 0; i < splitedLine.size(); i++) {
                     String id = "";
                     if (countLine == 0) {
-                        id = lineSplit[i] + "_" + i;
+                        id = splitedLine.get(i) + "_" + i;
                         List<String> values = new ArrayList<>();
                         connectionValuesTags.put(id, values);
                     } else {
@@ -259,8 +289,8 @@ public class MappingDwC {
                             String idKey = idKeyTable[idKeyTable.length - 1];
                             if (Integer.parseInt(idKey) == i) {
                                 listValuesMap = entry.getValue();
-                                if (!lineSplit[i].isEmpty()) {
-                                    listValuesMap.add(lineSplit[i]);
+                                if (!splitedLine.get(i).isEmpty()) {
+                                    listValuesMap.add(splitedLine.get(i));
                                 } else {
                                     listValuesMap.add(" ");
                                 }
@@ -268,6 +298,7 @@ public class MappingDwC {
                                 id = entry.getKey();
                             }
                         }
+                        //System.out.println(id + " => " + listValuesMap);
                         connectionValuesTags.put(id, listValuesMap);
                     }
 
