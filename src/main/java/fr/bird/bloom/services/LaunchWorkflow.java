@@ -143,8 +143,9 @@ public class LaunchWorkflow {
 		}
 
 		this.writeFinalOutput();
-		System.out.println("reconcile involved : " + this.getStep2().isInvolved());
-		//if(inputParameters.isSendEmail()){
+
+		if(inputParameters.isSendEmail()){
+			System.out.println("email option : " + inputParameters.isSendEmail());
 			SendMail mail = new SendMail();
 			try {
 				mail.setStep1(step1);
@@ -162,9 +163,9 @@ public class LaunchWorkflow {
 				e.printStackTrace();
 			}
 
-		//}
+		}
 
-		//this.dataTreatment.deleteTables();
+		this.dataTreatment.deleteTables();
 
 	}
 

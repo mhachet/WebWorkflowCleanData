@@ -382,8 +382,12 @@ public class MainController extends HttpServlet {
                 }
 
             }else if(fieldName.contains("email")){
-                inputParameters.setEmailUser(item.getString());
-                inputParameters.setSendEmail(true);
+                if(item.getString().contains("@")){
+                    inputParameters.setEmailUser(item.getString());
+                    inputParameters.setSendEmail(true);
+                    System.out.println("is mail : " + inputParameters.isSendEmail());
+                }
+
             }
             else if (inputParameters.isEstablishment()) {
                 String param = item.getFieldName();
@@ -417,6 +421,7 @@ public class MainController extends HttpServlet {
         inputParameters.setNbInput(nbFilesInput);
 
         inputParameters.setListMappingReconcileFiles(listMappingReconcileDWC);
+
 
         return inputParameters;
     }

@@ -26,9 +26,9 @@ public class MappingReconcilePreparation {
     * MappingReconcilePreparation
     */
     public MappingReconcilePreparation(MappingDwC mappingDWC, ReconciliationService reconcileDWC, int idFile){
-	this.mappingDWC = mappingDWC;
-	this.reconcileDWC = reconcileDWC;
-	this.idFile = idFile;
+        this.mappingDWC = mappingDWC;
+        this.reconcileDWC = reconcileDWC;
+        this.idFile = idFile;
     }
     
     /**

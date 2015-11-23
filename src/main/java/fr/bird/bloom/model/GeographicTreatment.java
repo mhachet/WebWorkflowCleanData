@@ -100,6 +100,7 @@ public class GeographicTreatment {
 		int iIso2 = this.getDarwinCore().getIndiceFromTag("countryCode_");
 		int iGbifID = this.getDarwinCore().getIndiceFromTag("gbifID_");
 		int nbWrongIso2 = 0;
+		List<String> listIDtoDelete = new ArrayList<>();
 
 		for (String id_ : idAssoData.keySet()) {
 			if(!"id_".equals(id_ )){
@@ -130,50 +131,93 @@ public class GeographicTreatment {
 				System.out.println("The point is contained in the polygone : " + isContained);
 				System.out.println("--------------------------------------------------------------\n");
 				 */
+
 				if(!isContained){
 					nbWrongIso2 ++;
-					Statement statement = null;
-					try {
-						statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					DatabaseTreatment newConnectionSelectID = new DatabaseTreatment(statement);
-					List<String> messagesSelectID = new ArrayList<>();
-					String sqlSelectID = "SELECT abstract_,acceptedNameUsage_,acceptedNameUsageID_,accessRights_,accrualMethod_,accrualPeriodicity_,accrualPolicy_,alternative_,associatedMedia_,associatedOccurrences_,associatedOrganisms_,associatedReferences_,associatedSequences_,associatedTaxa_,audience_,available_,basisOfRecord_,bed_,behavior_,bibliographicCitation_,catalogNumber_,class_,classKey_,collectionCode_,collectionID_,conformsTo_,continent_,contributor_,coordinateAccuracy_,coordinatePrecision_,coordinateUncertaintyInMeters_,country_,countryCode_,county_,coverage_,created_,creator_,dataGeneralizations_,datasetID_,datasetKey_,datasetName_,date_,dateAccepted_,dateCopyrighted_,dateIdentified_,dateSubmitted_,day_,decimalLatitude_,decimalLongitude_,depth_,depthAccuracy_,description_,disposition_,distanceAboveSurface_,distanceAboveSurfaceAccuracy_,dynamicProperties_,earliestAgeOrLowestStage_,earliestEonOrLowestEonothem_,earliestEpochOrLowestSeries_,earliestEraOrLowestErathem_,earliestPeriodOrLowestSystem_,educationLevel_,elevation_,elevationAccuracy_,endDayOfYear_,establishmentMeans_,event_,eventDate_,eventID_,eventRemarks_,eventTime_,extent_,family_,familyKey_,fieldNotes_,fieldNumber_,footprintSpatialFit_,footprintSRS_,footprintWKT_,format_,formation_,gbifID_,genericName_,genus_,genusKey_,geodeticDatum_,geologicalContext_,geologicalContextID_,georeferencedBy_,georeferencedDate_,georeferenceProtocol_,georeferenceRemarks_,georeferenceSources_,georeferenceVerificationStatus_,group_,habitat_,hasCoordinate_,hasFormat_,hasGeospatialIssues_,hasPart_,hasVersion_,higherClassification_,higherGeography_,higherGeographyID_,highestBiostratigraphicZone_,identification_,identificationID_,identificationQualifier_,identificationReferences_,identificationRemarks_,identificationVerificationStatus_,identifiedBy_,identifier_,idFile_,individualCount_,individualID_,informationWithheld_,infraspecificEpithet_,institutionCode_,institutionID_,instructionalMethod_,isFormatOf_,island_,islandGroup_,isPartOf_,isReferencedBy_,isReplacedBy_,isRequiredBy_,issue_,issued_,isVersionOf_,kingdom_,kingdomKey_,language_,lastCrawled_,lastInterpreted_,lastParsed_,latestAgeOrHighestStage_,latestEonOrHighestEonothem_,latestEpochOrHighestSeries_,latestEraOrHighestErathem_,latestPeriodOrHighestSystem_,license_,lifeStage_,lithostratigraphicTerms_,livingSpecimen_,locality_,locationAccordingTo_,locationID_,locationRemarks_,lowestBiostratigraphicZone_,machineObservation_,materialSample_,materialSampleID_,maximumDepthinMeters_,maximumDistanceAboveSurfaceInMeters_,maximumElevationInMeters_,measurementAccuracy_,measurementDeterminedBy_,measurementDeterminedDate_,measurementID_,measurementMethod_,measurementOrFact_,measurementRemarks_,measurementType_,measurementUnit_,mediator_,mediaType_,medium_,member_,minimumDepthinMeters_,minimumDistanceAboveSurfaceInMeters_,minimumElevationInMeters_,modified_,month_,municipality_,nameAccordingTo_,nameAccordingToID_,namePublishedIn_,namePublishedInID_,namePublishedInYear_,nomenclaturalCode_,nomenclaturalStatus_,occurrence_,occurrenceDetails_,occurrenceID_,occurrenceRemarks_,occurrenceStatus_,order_,orderKey_,organism_,organismID_,organismName_,organismRemarks_,organismScope_,originalNameUsage_,originalNameUsageID_,otherCatalogNumbers_,ownerInstitutionCode_,parentNameUsage_,parentNameUsageID_,phylum_,phylumKey_,pointRadiusSpatialFit_,preparations_,preservedSpecimen_,previousIdentifications_,protocol_,provenance_,publisher_,publishingCountry_,recordedBy_,recordNumber_,references_,relatedResourceID_,relationshipAccordingTo_,relationshipEstablishedDate_,relationshipRemarks_,relation_,replaces_,reproductiveCondition_,requires_,resourceID_,resourceRelationship_,resourceRelationshipID_,rights_,rightsHolder_,samplingEffort_,samplingProtocol_,scientificName_,scientificNameAuthorship_,scientificNameID_,sex_,source_,spatial_,species_,speciesKey_,specificEpithet_,startDayOfYear_,stateProvince_,subgenus_,subgenusKey_,subject_,tableOfContents_,taxon_,taxonConceptID_,taxonID_,taxonKey_,taxonomicStatus_,taxonRank_,taxonRemarks_,temporal_,title_,type_,typeStatus_,typifiedName_,valid_,verbatimCoordinates_,verbatimCoordinateSystem_,verbatimDate_,verbatimDepth_,verbatimElevation_,verbatimEventDate_,verbatimLatitude_,verbatimLocality_,verbatimLongitude_,verbatimSRS_,verbatimTaxonRank_,vernacularName_,waterBody_,year_ FROM Workflow.Clean_" + this.getUuid() + " WHERE Clean_" + this.getUuid() + ".id_=" + id_ + ";";
-					messagesSelectID.addAll(newConnectionSelectID.executeSQLcommand("executeQuery", sqlSelectID));
-					List<String> selectIDResults = newConnectionSelectID.getResultatSelect();
-
-					for(int j = 0 ; j < messagesSelectID.size() ; j++){
-						System.out.println(messagesSelectID.get(j));
-					}
-
-					for(int k = 0 ; k < selectIDResults.size() ; k++){
-						if(!listToDelete.contains(selectIDResults.get(k))){
-							listToDelete.add(selectIDResults.get(k));
-						}
-					}
-
-
-					Statement statementDelete = null;
-					try {
-						statementDelete = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					DatabaseTreatment newConnectionDeleteID = new DatabaseTreatment(statementDelete);
-					List<String> messagesDeleteID = new ArrayList<>();
-					String sqlDeleteID = "DELETE FROM Workflow.Clean_" + this.getUuid() + " WHERE id_=" + id_ + ";";
-					messagesDeleteID.addAll(newConnectionDeleteID.executeSQLcommand("executeUpdate", sqlDeleteID));
-
-					for(int i = 0 ; i < messagesDeleteID.size() ; i++){
-						System.out.println(messagesDeleteID.get(i));
-					}
+					listIDtoDelete.add(id_);
 				}
-
 			}
+		}
+		String sqlIDCleanToSelect = "SELECT abstract_,acceptedNameUsage_,acceptedNameUsageID_,accessRights_,accrualMethod_,accrualPeriodicity_,accrualPolicy_," +
+				"alternative_,associatedMedia_,associatedOccurrences_,associatedOrganisms_,associatedReferences_,associatedSequences_,associatedTaxa_,audience_," +
+				"available_,basisOfRecord_,bed_,behavior_,bibliographicCitation_,catalogNumber_,class_,classKey_,collectionCode_,collectionID_,conformsTo_,continent_," +
+				"contributor_,coordinateAccuracy_,coordinatePrecision_,coordinateUncertaintyInMeters_,country_,countryCode_,county_,coverage_,created_,creator_," +
+				"dataGeneralizations_,datasetID_,datasetKey_,datasetName_,date_,dateAccepted_,dateCopyrighted_,dateIdentified_,dateSubmitted_,day_,decimalLatitude_," +
+				"decimalLongitude_,depth_,depthAccuracy_,description_,disposition_,distanceAboveSurface_,distanceAboveSurfaceAccuracy_,dynamicProperties_," +
+				"earliestAgeOrLowestStage_,earliestEonOrLowestEonothem_,earliestEpochOrLowestSeries_,earliestEraOrLowestErathem_,earliestPeriodOrLowestSystem_," +
+				"educationLevel_,elevation_,elevationAccuracy_,endDayOfYear_,establishmentMeans_,event_,eventDate_,eventID_,eventRemarks_,eventTime_,extent_,family_," +
+				"familyKey_,fieldNotes_,fieldNumber_,footprintSpatialFit_,footprintSRS_,footprintWKT_,format_,formation_,gbifID_,genericName_,genus_,genusKey_," +
+				"geodeticDatum_,geologicalContext_,geologicalContextID_,georeferencedBy_,georeferencedDate_,georeferenceProtocol_,georeferenceRemarks_," +
+				"georeferenceSources_,georeferenceVerificationStatus_,group_,habitat_,hasCoordinate_,hasFormat_,hasGeospatialIssues_,hasPart_,hasVersion_," +
+				"higherClassification_,higherGeography_,higherGeographyID_,highestBiostratigraphicZone_,identification_,identificationID_,identificationQualifier_," +
+				"identificationReferences_,identificationRemarks_,identificationVerificationStatus_,identifiedBy_,identifier_,idFile_,individualCount_,individualID_," +
+				"informationWithheld_,infraspecificEpithet_,institutionCode_,institutionID_,instructionalMethod_,isFormatOf_,island_,islandGroup_,isPartOf_," +
+				"isReferencedBy_,isReplacedBy_,isRequiredBy_,issue_,issued_,isVersionOf_,kingdom_,kingdomKey_,language_,lastCrawled_,lastInterpreted_,lastParsed_," +
+				"latestAgeOrHighestStage_,latestEonOrHighestEonothem_,latestEpochOrHighestSeries_,latestEraOrHighestErathem_,latestPeriodOrHighestSystem_,license_," +
+				"lifeStage_,lithostratigraphicTerms_,livingSpecimen_,locality_,locationAccordingTo_,locationID_,locationRemarks_,lowestBiostratigraphicZone_," +
+				"machineObservation_,materialSample_,materialSampleID_,maximumDepthinMeters_,maximumDistanceAboveSurfaceInMeters_,maximumElevationInMeters_," +
+				"measurementAccuracy_,measurementDeterminedBy_,measurementDeterminedDate_,measurementID_,measurementMethod_,measurementOrFact_,measurementRemarks_," +
+				"measurementType_,measurementUnit_,mediator_,mediaType_,medium_,member_,minimumDepthinMeters_,minimumDistanceAboveSurfaceInMeters_," +
+				"minimumElevationInMeters_,modified_,month_,municipality_,nameAccordingTo_,nameAccordingToID_,namePublishedIn_,namePublishedInID_,namePublishedInYear_," +
+				"nomenclaturalCode_,nomenclaturalStatus_,occurrence_,occurrenceDetails_,occurrenceID_,occurrenceRemarks_,occurrenceStatus_,order_,orderKey_,organism_," +
+				"organismID_,organismName_,organismRemarks_,organismScope_,originalNameUsage_,originalNameUsageID_,otherCatalogNumbers_,ownerInstitutionCode_," +
+				"parentNameUsage_,parentNameUsageID_,phylum_,phylumKey_,pointRadiusSpatialFit_,preparations_,preservedSpecimen_,previousIdentifications_,protocol_," +
+				"provenance_,publisher_,publishingCountry_,recordedBy_,recordNumber_,references_,relatedResourceID_,relationshipAccordingTo_," +
+				"relationshipEstablishedDate_,relationshipRemarks_,relation_,replaces_,reproductiveCondition_,requires_,resourceID_,resourceRelationship_," +
+				"resourceRelationshipID_,rights_,rightsHolder_,samplingEffort_,samplingProtocol_,scientificName_,scientificNameAuthorship_,scientificNameID_,sex_," +
+				"source_,spatial_,species_,speciesKey_,specificEpithet_,startDayOfYear_,stateProvince_,subgenus_,subgenusKey_,subject_,tableOfContents_,taxon_," +
+				"taxonConceptID_,taxonID_,taxonKey_,taxonomicStatus_,taxonRank_,taxonRemarks_,temporal_,title_,type_,typeStatus_,typifiedName_,valid_," +
+				"verbatimCoordinates_,verbatimCoordinateSystem_,verbatimDate_,verbatimDepth_,verbatimElevation_,verbatimEventDate_,verbatimLatitude_," +
+				"verbatimLocality_,verbatimLongitude_,verbatimSRS_,verbatimTaxonRank_,vernacularName_,waterBody_,year_ FROM Workflow.Clean_" + this.getUuid() +
+				" WHERE Clean_" + this.getUuid() + ".id_=";
+
+		String sqlIDCleanToDelete = "DELETE FROM Workflow.Clean_" + this.getUuid() + " WHERE id_=";
+		for(int l = 0 ; l < listIDtoDelete.size() ; l++){
+			if(l != listIDtoDelete.size() - 1){
+				sqlIDCleanToDelete += listIDtoDelete.get(l) + " OR ";
+				sqlIDCleanToSelect += listIDtoDelete.get(l) + " OR Clean_" + this.getUuid() + ".id_=";
+			}
+			else{
+				sqlIDCleanToDelete += listIDtoDelete.get(l) + ";";
+				sqlIDCleanToSelect += listIDtoDelete.get(l) + ";";
+			}
+		}
+		Statement statement = null;
+		try {
+			statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		DatabaseTreatment newConnectionSelectID = new DatabaseTreatment(statement);
+		List<String> messagesSelectID = new ArrayList<>();
+		//String sqlSelectID =  + id_ + ";";
+		messagesSelectID.addAll(newConnectionSelectID.executeSQLcommand("executeQuery", sqlIDCleanToSelect));
+		List<String> selectIDResults = newConnectionSelectID.getResultatSelect();
+
+		for(int j = 0 ; j < messagesSelectID.size() ; j++){
+			System.out.println(messagesSelectID.get(j));
+		}
+
+		for(int k = 0 ; k < selectIDResults.size() ; k++){
+			if(!listToDelete.contains(selectIDResults.get(k))){
+				listToDelete.add(selectIDResults.get(k));
+			}
+		}
+		Statement statementDelete = null;
+		try {
+			statementDelete = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		DatabaseTreatment newConnectionDeleteID = new DatabaseTreatment(statementDelete);
+		List<String> messagesDeleteID = new ArrayList<>();
+		//String sqlDeleteID = "DELETE FROM Workflow.Clean_" + this.getUuid() + " WHERE id_=" + id_ + ";";
+		messagesDeleteID.addAll(newConnectionDeleteID.executeSQLcommand("executeUpdate", sqlIDCleanToDelete));
+
+		for(int i = 0 ; i < messagesDeleteID.size() ; i++){
+			System.out.println(messagesDeleteID.get(i));
 		}
 
 		this.setNbWrongIso2(nbWrongIso2);

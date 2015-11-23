@@ -842,3 +842,4 @@ function checkRasterFiles(){
 	
 	return all_ok;
 }
+
