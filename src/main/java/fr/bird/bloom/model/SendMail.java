@@ -126,8 +126,8 @@ public class SendMail {
 
 	public MimeMessage setTextMimeMessage(MimeMessage message) throws MessagingException {
 		StringBuilder content = new StringBuilder("To download results from mapping to DarwinCore<br>");
-		ArrayList<String> filenameInputs = new ArrayList<>();
-		if(this.getStep1().isInvolved()){
+		List<String> filenameInputs = new ArrayList<>();
+		//if(this.getStep1().isInvolved()){
 			Map<Integer,MappingDwC> infos_mapping = this.getStep1().getInfos_mapping();
 			for (Entry<Integer, MappingDwC> idFile : infos_mapping.entrySet()){
 				MappingDwC mappingDWC = idFile.getValue();
@@ -136,7 +136,8 @@ public class SendMail {
 				}
 				filenameInputs.add(mappingDWC.getFilename());
 			}
-		}
+		//}
+
 		content.append( "<br></br>");
 		//System.out.println(content);
 		if(this.getStep2().isInvolved()){

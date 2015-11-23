@@ -86,7 +86,7 @@ public class DarwinCore extends CSVFile{
 			e.printStackTrace();
 		}	
 		//System.out.println(sqlID);
-		//--- Create DarwinCoreInput table ---inputFile_
+		//--- Create DarwinCoreInput table ---
 		//messages.addAll(newConnection.executeSQLcommand("executeQuery", sqlID));
 		List<String> resultats = newConnection.getResultatSelect();
 
@@ -140,18 +140,40 @@ public class DarwinCore extends CSVFile{
 			int count = 0;
 			BufferedReader br = null;
 			InputStream in = new FileInputStream(darwinCoreFile);
+			int decimalLatitudeID = 0 ;
+			int decimalLongitudeID = 0 ;
 			try{
 				br = new BufferedReader(new InputStreamReader(in));
 				String line = null;
 				while ((line = br.readLine() ) != null ){
-					if(count != 0){
-						List<String> lineSplit = this.getSplitedLine(separator, line);//line.replaceAll("\"", "").replaceAll("\'", "").split(separator, -1);
+					List<String> lineSplit = this.getSplitedLine(separator, line);//line.replaceAll("\"", "").replaceAll("\'", "").split(separator, -1);
+					if(count == 0){
+						for(int k = 0 ; k < lineSplit.size() ; k ++){
+							String tagName = lineSplit.get(k);
+							if(tagName.equals("decimalLatitude")){
+								decimalLatitudeID = k;
+							}
+							else if(tagName.equals("decimalLongitude")){
+								decimalLongitudeID = k;
+							}
+						}
+					}
+					else{
 						String newLine = "";
 						for(int j = 0 ; j < lineSplit.size() ; j++){
-							newLine += "\"" + lineSplit.get(j) + "\",";
+							if(j == decimalLatitudeID || j == decimalLongitudeID){
+								String checkedLatLong = "";
+								String noCheckedLatLong = lineSplit.get(j);
+								checkedLatLong = noCheckedLatLong.replace(",", ".");
+								newLine += "\"" + checkedLatLong + "\",";
+							}
+							else {
+								newLine += "\"" + lineSplit.get(j) + "\",";
+							}
+
+
 						}
 						newLine += Integer.toString(idFile_) + ",0,\"" + this.getUuid() + "\"\n";
-						
 						writer.write(newLine);
 					}
 					
@@ -195,7 +217,7 @@ public class DarwinCore extends CSVFile{
 			//System.out.println(m.group());
 		}
 
-		// System.out.println("******");
+		//System.out.println("******");
 		return splitedLine;
 	}
 
