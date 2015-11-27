@@ -28,7 +28,7 @@ public class InputParameters {
     private boolean raster;
     private boolean establishment;
     private String uuid;
-    private int nbInput;
+    private int nbInput = 0;
     private String emailUser;
     private boolean sendEmail;
 
@@ -207,7 +207,7 @@ public class InputParameters {
         return nbInput;
     }
 
-    public void setNbInput(int nbInput) {
+    public void setNbInputs(int nbInput) {
         this.nbInput = nbInput;
     }
 

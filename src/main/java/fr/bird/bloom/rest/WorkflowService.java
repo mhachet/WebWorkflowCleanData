@@ -69,7 +69,7 @@ public class WorkflowService {
         inputParameters.setRaster(input.isRaster());
         inputParameters.setEstablishment(input.isEstablishment());
         inputParameters.setUuid(uuid);
-        inputParameters.setNbInput(input.getNbInput());
+        inputParameters.setNbInputs(input.getNbInput());
         inputParameters.setEmailUser(input.getUserEmail());
         inputParameters.setSendEmail(input.isSendEmail());
 

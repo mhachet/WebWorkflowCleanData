@@ -109,6 +109,17 @@
             <version>2.2</version>
         </dependency>
 
+        <!-- UNCOMPRESS TOOLS DEPENDENCIES -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.junrar</groupId>
+            <artifactId>junrar</artifactId>
+            <version>0.7</version>
+        </dependency>
 
         <!-- TEST DEPENDENCIES -->
         <dependency>
@@ -123,6 +134,7 @@
             <version>${version.assertj-core}</version>
             <scope>test</scope>
         </dependency>
+
 
     </dependencies>
 

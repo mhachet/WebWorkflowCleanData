@@ -54,6 +54,8 @@ public class RasterTreatment {
 	 * @return File matrix with raster results
 	 */
 	public File treatmentRaster(){
+
+
 		// retrieve all data (included or not) from Clean table
 		List<String> listAllData = dataTreatment.getFileDarwinCore().getIDClean();
 		//System.out.println("all Data : " + listAllData);
@@ -61,28 +63,46 @@ public class RasterTreatment {
 		// initialise raster file and hash map
 		this.initialiseRasterFiles(rasterFiles, listAllData);
 
-		// retrieve all data included in a cell
-		List<Integer> listValidData = this.getValidData();
-		//System.out.println("valid Data : " + listValidData);
+		if(listAllData.size() > 1){
+			// retrieve all data included in a cell
+			List<Integer> listValidData = this.getValidData();
+			//System.out.println("valid Data : " + listValidData);
 
-		// create a matrix file : for each point and for each raster file,
-		// indicate if point is included in a cell
-		File matrixFileValidCells = this.writeMatrixReport();
+			// create a matrix file : for each point and for each raster file,
+			// indicate if point is included in a cell
+			matrixFileValidCells = this.writeMatrixReport();
 
-		// retrieve all data not included in a cell
-		List<Integer> listNotValidData = this.getIDdelete(listValidData, listAllData);
-		//System.out.println("not valid : " + listNotValidData);
+			// retrieve all data not included in a cell
+			List<Integer> listNotValidData = this.getIDdelete(listValidData, listAllData);
+			//System.out.println("not valid : " + listNotValidData);
 
-		// delete from Clean table, all data not included
-		this.deleteWrongCellsFromClean(listNotValidData);
+			// delete from Clean table, all data not included
+			this.deleteWrongCellsFromClean(listNotValidData);
 
+			this.setNbWrongOccurrences(listNotValidData.size());
+			// remove temporary files bind to the raster analysis
+			//dataTreatment.deleteDirectory(new File(DIRECTORY_PATH + "temp/" + dataTreatment.getUuid() + "/rasterAnalyse/"));
+		}
+		else{
+			for(int i = 0 ; i < rasterFiles.size() ; i++){
+				String rasterFileName = rasterFiles.get(i).getName();
+				this.getCheckProcess().put(rasterFileName, true);
+			}
+			matrixFileValidCells = new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getUuid() + "/rasterAnalyse/cells_proba_raster_" + dataTreatment.getUuid() + ".csv");
+			FileWriter writerMatrix = null;
+			try {
+				writerMatrix = new FileWriter(matrixFileValidCells);
+				writerMatrix.write("");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			List<String> emptyList = new ArrayList<>();
+			File wrongRasterFile = dataTreatment.createFileCsv(emptyList, "/wrong_raster_" + this.dataTreatment.getUuid() + ".csv", "wrong");
+			this.setWrongRasterFile(wrongRasterFile);
 
+		}
 
-		this.setNbWrongOccurrences(listNotValidData.size());
-
-		// remove temporary files bind to the raster analysis
-		//dataTreatment.deleteDirectory(new File(DIRECTORY_PATH + "temp/" + dataTreatment.getUuid() + "/rasterAnalyse/"));
-		//cells_proba_raster_
 
 		return matrixFileValidCells;
 	}
@@ -91,12 +111,24 @@ public class RasterTreatment {
 	 * 
 	 * Check the number of raster file, necessary 1
 	 * 
-	 * @param ArrayList<File> raster file
+	 * @param List<File> raster file
 	 * @param rasterFiles
 	 *@param listAllID @return void
 	 */
 	public void initialiseRasterFiles(List<File> rasterFiles, List<String> listAllID){
 
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/").exists()){
+			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/");
+		}
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getUuid()).exists()){
+			new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getUuid());
+		}
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getUuid() + "/data/").exists()){
+			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getUuid() + "/data/");
+		}
+		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getUuid() + "/rasterAnalyse/").exists()){
+			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getUuid() + "/rasterAnalyse/");
+		}
 
 		hashMapValidOrNot = new HashMap<>();
 
@@ -132,10 +164,7 @@ public class RasterTreatment {
 		 *	BIP			Band Interleaved by Pixel (ESRI BIP)		.bip				NA
 		 ************************************************************************************************/
 		String scriptRaster = BloomConfig.getResourcePath() + "raster.R";
-		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getUuid() + "/rasterAnalyse/").exists())
-		{
-			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getUuid() + "/rasterAnalyse/");
-		}
+
 		File dataInputFileRaster = new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getUuid() + "/rasterAnalyse/dataInputFileRaster.csv");
 		//System.out.println("dataInputFileRaster : " + dataInputFileRaster.getAbsolutePath());
 		List<Integer> listValidData = new ArrayList<>();
@@ -178,10 +207,7 @@ public class RasterTreatment {
 		List<String> decimalLongitude = dataTreatment.getFileDarwinCore().getDecimalLongitudeClean();
 		List<String> idLine = dataTreatment.getFileDarwinCore().getIDClean();
 
-		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getUuid() + "/rasterAnalyse/").exists())
-		{
-			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getUuid() + "/rasterAnalyse/");
-		}
+
 		File validRaster = new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getUuid() + "/rasterAnalyse/validRaster.txt");
 		File errorRaster = new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getUuid() + "/rasterAnalyse/errorRaster.txt");
 		try {
@@ -222,7 +248,7 @@ public class RasterTreatment {
 			t.printStackTrace();
 		}
 		boolean errorProcess = this.errorDuringProcess(errorRaster);
-		//System.out.println("error process : " + errorProcess);
+		System.out.println("error process : " + errorProcess);
 		
 		this.getCheckProcess().put(dataRasterFile.getName(), errorProcess);
 		
@@ -338,18 +364,7 @@ public class RasterTreatment {
 	 * @return File
 	 */
 	public File writeMatrixReport(){
-		if(!new File(BloomConfig.getDirectoryPath() + "temp/").exists()){
-			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/");
-		}
-		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getUuid()).exists()){
-			new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getUuid());
-		}
-		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getUuid() + "/data/").exists()){
-			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getUuid() + "/data/");
-		}
-		if(!new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getUuid() + "/rasterAnalyse/").exists()){
-			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getUuid() + "/rasterAnalyse/");
-		}
+
 		File matrix = new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getUuid() + "/rasterAnalyse/cells_proba_raster_" + dataTreatment.getUuid() + ".csv");
 		FileWriter writer = null;
 		try {

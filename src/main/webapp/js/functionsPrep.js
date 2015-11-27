@@ -657,20 +657,24 @@ function uploadInputFile(nb_input){
 		xhrPOST.onload = function(e) {
 
 			if (this.status == 200) {
-				
+				if(this.responseText == "formatError"){
+					alert("Format not supported.\nPlease give us csv format");
+				}
+				else {
+					var inputLoad = document.getElementById("inp_" + nb_input);
+					inputLoad.setAttribute('value', true);//boolean for valid upload
+
+					actionSeparatorCSV(nb_input, "upload");
+					actionMappingButton(nb_input, "upload");
+					actionReconcileButton(nb_input, "upload");
+
+					var buttonConvert = document.getElementById("convert_" + nb_input);
+					buttonConvert.setAttribute("onclick", "loadMappingDwc('" + this.responseText + "'," + nb_input + ")");
+
+					var reconcileButton = document.getElementById("reconcileButton_" + nb_input);
+					reconcileButton.setAttribute("onclick", "loadReconcileService('" + uuid + "','" + nb_input + "')");
+				}
 				divAddLoad.removeChild(divLoadingIcon);
-				var inputLoad = document.getElementById("inp_" + nb_input);
-				inputLoad.setAttribute('value', true);//boolean for valid upload
-				
-				actionSeparatorCSV(nb_input, "upload");
-				actionMappingButton(nb_input, "upload");
-				actionReconcileButton(nb_input, "upload");
-				
-				var buttonConvert = document.getElementById("convert_" + nb_input);
-				buttonConvert.setAttribute("onclick" , "loadMappingDwc('" + this.responseText + "'," + nb_input + ")");
-				
-				var reconcileButton = document.getElementById("reconcileButton_" + nb_input);
-				reconcileButton.setAttribute("onclick" , "loadReconcileService('" + uuid + "','" + nb_input + "')");
 			}
 		}
 	}

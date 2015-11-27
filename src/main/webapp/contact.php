@@ -100,8 +100,8 @@
 				?>
             </div>
         </div>
-	<hr></hr>
-	<!-- Footer -->
+<!--	<hr></hr>
+	 Footer -->
     <footer>
         <div class="container">
             <div class="row">

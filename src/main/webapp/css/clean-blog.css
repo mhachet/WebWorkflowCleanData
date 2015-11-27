@@ -54,6 +54,11 @@ hr.small {
 	border-color: #fff
 }
 
+.hr-result{
+	border-bottom-width: 5px;
+	border-bottom-style: inset;
+	border-top:none;
+}
 .navbar-custom {
 	position: absolute;
 	top: 0;
@@ -296,7 +301,11 @@ hr.small {
 }
 
 footer {
-	padding: 50px 0 65px
+	padding: 50px 0 65px;
+	background-color: #eceff1;
+	border-top-style: none;
+	margin-top: 50px;
+	padding-top: 100px;
 }
 
 footer .list-inline {
@@ -528,6 +537,7 @@ tr.shown td.details-control {
 	cursor: pointer;
 }
 
+
 /*
 #dataTables_wrapper{
 	display:compact;
@@ -572,13 +582,24 @@ input[type=radio]{
 }
 
 .table {
-	margin-bottom: 0px !important;
-	border-bottom: 1px solid #DDD;
+	/*margin-bottom: 0px !important;
+	border-bottom: 0.5px solid #DDD;
 	border-collapse: collapse !important;
-	border-radius: 1px;
+	border-radius: 1px;*/
+	margin: 10px;
+	border-top-width: thin;
 }
 
+.td-result{
+	border-top : none;
+	margin :10px;
+}
 
+.tr-result{
+	margin : 10px;
+	/*border-top: solid #DDD;*/
+	border-bottom: 1px solid #DDD;
+}
 .dataTables_scrollBody:hover,.dataTables_scrollBody:focus{
 	background-color: #ffffee;
 }
@@ -655,6 +676,7 @@ input[type=radio]{
 	width:90%;
 	margin-left:auto;
 	margin-right: auto;
+	padding-bottom : 100px;
 }
 
 .row{
@@ -872,6 +894,10 @@ input[type=mail]{
 	position: relative;
 	width: 1209.13px;
 
+}
+
+.buttonLaunchWorkflow{
+	margin-top:50px;
 }
 /*
 .col-md-6{

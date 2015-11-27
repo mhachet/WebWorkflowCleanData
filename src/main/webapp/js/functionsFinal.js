@@ -11,12 +11,16 @@ function initialiseFinalPage() {
 		}
 		
 	}
+	var nbOutputClean = document.getElementById("nbOutputClean").value;
+	if(nbOutputClean == 0){
+		document.getElementById("downloadFinalFiles").style.display = "none";
+	}
 }
 
 function checkErrorOk(step_ok, p_ok, nbStep){
-	console.log(nbStep + " : " + step_ok);
+	//console.log(nbStep + " : " + step_ok);
 	if(step_ok == "true"){
-		console.log("true : " + "p_ok" + nbStep);
+		//console.log("true : " + "p_ok" + nbStep);
 		p_ok.setAttribute("style", "color:#089A4C");
 		p_ok.innerHTML = "Everything went well";
 	}
@@ -33,14 +37,17 @@ function initialiseStep(nbStep, involved){
 	
     divStep.setAttribute('style', "margin-left: 40px; visibility: visible");
     
-    if(nbStep == 0 || nbStep == 1 || nbStep ==2){
+    if(nbStep == 0 || nbStep == 1 || nbStep == 2){
+
     	if(involved){
+
     		for(var i = 0; i < nbInput; i++){
         		var step_ok_id = document.getElementById("step" + nbStep + "_ok_inp" + i);
+				console.log(involved + " - " + nbStep+ " - " + step_ok+ " - " + p_ok_step_inp);
         		if(step_ok_id){
         			var step_ok = step_ok_id.innerHTML;
         			var p_ok_step_inp = document.getElementById("p_ok_step" + nbStep + "_inp" + i);
-            		
+
             		formatResult(involved, nbStep, step_ok, p_ok_step_inp);
         		}
         		
@@ -64,13 +71,22 @@ function initialiseStep(nbStep, involved){
 function formatResult(involved, nbStep, step_ok, p_ok_step_inp){
 	var headerStep_involved = $("#headerStep" + nbStep + "_involved");
     var headerStep_notInvolved = $("#headerStep" + nbStep + "_NotInvolved");
-    
-	console.log(involved);
+
 	if(involved){
 		var divStepInvolved = document.getElementById("headerStep" + nbStep + "_involved");
         headerStep_involved.show();
         headerStep_notInvolved.hide();
         this.checkErrorOk(step_ok, p_ok_step_inp, nbStep);
+		if(nbStep == 3 || nbStep == 4 || nbStep == 7 || nbStep == 9) {
+			console.log(nbStep + " formatDownloadLink");
+			this.formatDownloadLink(nbStep);
+		}
+		else if(nbStep == 8){
+			var step8_ok = document.getElementById("step8_ok").value;
+			if(!step8_ok){
+				document.getElementById("cardDownloadLink_step8").style.display = "none";
+			}
+		}
 		//divStepInvolved.setAttribute('style', "margin-left: 40px; visibility: visible");
 	}
 	else{
@@ -81,11 +97,20 @@ function formatResult(involved, nbStep, step_ok, p_ok_step_inp){
 	    var notInvolved = document.getElementById("headerStep" + nbStep + "_NotInvolved");
 	    var divStep = document.getElementById("divStep" + nbStep);
         divStep.style.display = "none";
-        console.log(notInvolved);
+        //console.log(notInvolved);
 	    //notInvolved.setAttribute('style', "margin-left: 40px; visibility: visible");
 	    
 	}
 	
+}
+
+function formatDownloadLink(nbStep){
+	var nbOccurrencesStep = document.getElementById("nbOccurrencesStep" + nbStep).innerHTML;
+	var cardDownloadLink_step = document.getElementById("cardDownloadLink_step" + nbStep);
+	if(nbOccurrencesStep == 0){
+		cardDownloadLink_step.style.display = 'none';
+	}
+
 }
 
 /*

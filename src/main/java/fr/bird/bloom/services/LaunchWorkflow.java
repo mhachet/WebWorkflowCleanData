@@ -36,10 +36,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 /**
@@ -95,77 +92,110 @@ public class LaunchWorkflow {
 		step8 = new Step8_CheckCoordinatesRaster();
 		step9 = new Step9_EstablishmentMeans();
 
-		this.isValidInputFiles();
+		Map<Integer, Boolean> validInputFiles = this.isValidInputFiles();
+		if(validInputFiles.containsValue(true)) {
 
+			this.launchWorkflow();
+			step3.setInvolved(true);
+			step4.setInvolved(true);
+			step7.setInvolved(true);
 
+			if (this.inputParameters.isSynonym()) {
 
-		this.launchWorkflow();
-		step3.setInvolved(true);
-		step4.setInvolved(true);
-		step7.setInvolved(true);
-
-		if(this.inputParameters.isSynonym()){
-
-			boolean synonymFileIsValid = this.isValidSynonymFile();
-			this.launchSynonymOption(synonymFileIsValid);
-			step5.setInvolved(true);
-		}
-
-		if(this.inputParameters.isTdwg4Code()){
-			boolean sucessTdwgTreatment = dataTreatment.tdwgCodeOption();
-			step6.setStep6_ok(sucessTdwgTreatment);
-			step6.setInvolved(true);
-		}
-
-		if(this.inputParameters.isRaster()){
-			step8.setInvolved(true);
-			boolean rasterFilesIsValid = this.isValidRasterFiles();
-			if(rasterFilesIsValid){
-				this.launchRasterOption();
-			}
-			else{
-				final String resourcePath = BloomConfig.getResourcePath();
-				File defaultRaster = new File(resourcePath + "test/inputs_data/tmean1.bil");
-				this.inputParameters.getInputRastersList().add(defaultRaster);
-				File defaultHeader = new File(resourcePath + "test/inputs_data/tmean1.hdr");
-				this.inputParameters.getHeaderRasterList().add(defaultHeader);
-				this.launchRasterOption();
-				//step8.setStep8_ok(false);
+				boolean synonymFileIsValid = this.isValidSynonymFile();
+				this.launchSynonymOption(synonymFileIsValid);
+				step5.setInvolved(true);
 			}
 
-		}
-
-		//System.out.println("establishment : " + this.inputParameters.getEstablishmentList());accessRight
-		//keep introduced data
-		if(this.inputParameters.isEstablishment()){
-			this.launchEstablishmentMeansOption();
-			step9.setInvolved(true);
-		}
-
-		this.writeFinalOutput();
-
-		if(inputParameters.isSendEmail()){
-			System.out.println("email option : " + inputParameters.isSendEmail());
-			SendMail mail = new SendMail();
-			try {
-				mail.setStep1(step1);
-				mail.setStep2(step2);
-				mail.setStep3(step3);
-				mail.setStep4(step4);
-				mail.setStep5(step5);
-				mail.setStep6(step6);
-				mail.setStep7(step7);
-				mail.setStep8(step8);
-				mail.setStep9(step9);
-				mail.setFinalisation(finalisation);
-				mail.sendMessage(inputParameters.getEmailUser());
-			} catch (MessagingException e) {
-				e.printStackTrace();
+			if (this.inputParameters.isTdwg4Code()) {
+				boolean sucessTdwgTreatment = dataTreatment.tdwgCodeOption();
+				step6.setStep6_ok(sucessTdwgTreatment);
+				step6.setInvolved(true);
 			}
 
-		}
+			if (this.inputParameters.isRaster()) {
+				step8.setInvolved(true);
+				boolean rasterFilesIsValid = this.isValidRasterFiles();
+				if (rasterFilesIsValid) {
+					this.launchRasterOption();
+				} else {
+					final String supportFiles = BloomConfig.getResourcePath();
+					File defaultRaster = new File(supportFiles + "tmean1.bil");
+					this.inputParameters.getInputRastersList().add(defaultRaster);
+					File defaultHeader = new File(supportFiles + "tmean1.hdr");
+					this.inputParameters.getHeaderRasterList().add(defaultHeader);
+					this.launchRasterOption();
+					//step8.setStep8_ok(false);
+				}
 
-		this.dataTreatment.deleteTables();
+			}
+
+			//System.out.println("establishment : " + this.inputParameters.getEstablishmentList());accessRight
+			//keep introduced data
+			if (this.inputParameters.isEstablishment()) {
+				this.launchEstablishmentMeansOption();
+				step9.setInvolved(true);
+			}
+
+			this.writeFinalOutput();
+
+			if (inputParameters.isSendEmail()) {
+				System.out.println("email option : " + inputParameters.isSendEmail());
+				SendMail mail = new SendMail();
+				try {
+					mail.setStep1(step1);
+					mail.setStep2(step2);
+					mail.setStep3(step3);
+					mail.setStep4(step4);
+					mail.setStep5(step5);
+					mail.setStep6(step6);
+					mail.setStep7(step7);
+					mail.setStep8(step8);
+					mail.setStep9(step9);
+					mail.setFinalisation(finalisation);
+					mail.sendMessage(inputParameters.getEmailUser());
+				} catch (MessagingException e) {
+					e.printStackTrace();
+				}
+
+			}
+
+			this.dataTreatment.deleteTables();
+		}
+		else{
+
+			//if(!step1.isInvolved()){
+			List<MappingReconcilePreparation> listMappingReconcileFiles =  inputParameters.getListMappingReconcileFiles();
+			Map<Integer, MappingDwC> infos_mapping = step1.getInfos_mapping();
+			inputParameters.setNbInputs(listMappingReconcileFiles.size());
+			for(int i = 0 ; i < listMappingReconcileFiles.size() ; i ++){
+				int idFile = listMappingReconcileFiles.get(i).getIdFile();
+				MappingDwC mappingDwC = listMappingReconcileFiles.get(i).getMappingDWC();
+				mappingDwC.setFilename(listMappingReconcileFiles.get(i).getOriginalName());
+				infos_mapping.put(idFile, mappingDwC);
+			}
+
+			step1.setNbInputs(listMappingReconcileFiles.size());
+			step3.setStep3_ok(false);
+			step4.setStep4_ok(false);
+			step7.setStep7_ok(false);
+
+			if(step5.isInvolved()){
+				step5.setStep5_ok(false);
+			}
+
+			if(step6.isInvolved()){
+				step6.setStep6_ok(false);
+			}
+
+			if(step8.isInvolved()){
+				step8.setStep8_ok(false);
+			}
+
+			if(step9.isInvolved()){
+				step9.setStep9_ok(false);
+			}
+		}
 
 	}
 
@@ -181,6 +211,7 @@ public class LaunchWorkflow {
 		List<MappingReconcilePreparation> listMappingReconcileDWC = this.inputParameters.getListMappingReconcileFiles();
 		Map<Integer, ReconciliationService> reconcilePath = step2.getInfos_reconcile();
 		Map<Integer, MappingDwC> hashMapStep1 = step1.getInfos_mapping();
+		step1.setNbInputs(listMappingReconcileDWC.size());
 
 		/**
 		 * pre-treatment for mapping and reconcile
@@ -295,7 +326,8 @@ public class LaunchWorkflow {
 	 *
 	 * @return boolean
 	 */
-	private void isValidInputFiles(){
+	private Map <Integer, Boolean> isValidInputFiles(){
+		Map <Integer, Boolean> validInputFiles = new HashMap<>();
 
 		List<MappingReconcilePreparation> listMappingReconcileFiles = this.inputParameters.getListMappingReconcileFiles();
 
@@ -309,33 +341,43 @@ public class LaunchWorkflow {
 			CSVFile csvFileNoMapped = mappingFile.getNoMappedFile();
 
 			if(csvFileNoMapped.getSeparator() == CSVFile.Separator.INCONSISTENT || csvFileNoMapped.getSeparator() == CSVFile.Separator.UNKNOWN){
-				System.out.println("separator false : " + csvFileNoMapped.getSeparator());
+				//System.out.println("separator false : " + csvFileNoMapped.getSeparator());
 				mappingFile.setSuccessMapping(Boolean.toString(false));
 				reconciliationService.setSuccessReconcile(Boolean.toString(false));
+				validInputFiles.put(mappingReconcilePrep.getIdFile(), false);
+				System.out.println(mappingReconcilePrep.getIdFile() + " => false");
 			}
 			else{
-				System.out.println("separator true : " + csvFileNoMapped.getSeparator());
+				//System.out.println("separator true : " + csvFileNoMapped.getSeparator());
 				if(!mappingReconcilePrep.getMappingDWC().getMappingInvolved()){
 					mappingFile.setSuccessMapping(Boolean.toString(true));
 					String [] listTagsInput = csvFileNoMapped.getFirstLine().split(csvFileNoMapped.getSeparator().getSymbol());
 					List<String> tagsDwcOfficial = mappingFile.getTagsListDwC();
+					boolean validFile = true;
 
 					for(int j = 0; j < listTagsInput.length; j++){
-
 						String tagInput = listTagsInput[j];
 
 						if(!tagsDwcOfficial.contains(tagInput)){
 							mappingFile.setSuccessMapping(Boolean.toString(false));
+							validFile = false;
 						}
 					}
+					validInputFiles.put(mappingReconcilePrep.getIdFile(), validFile);
+					System.out.println(mappingReconcilePrep.getIdFile() + " => " + validFile);
 				}
 				else{
-					System.out.println("separator true true : " + csvFileNoMapped.getSeparator());
+					//System.out.println("separator true true : " + csvFileNoMapped.getSeparator());
 					mappingFile.setSuccessMapping(Boolean.toString(true));
+					validInputFiles.put(mappingReconcilePrep.getIdFile(), true);
+					System.out.println(mappingReconcilePrep.getIdFile() + " => true");
 				}
 			}
 
 		}
+
+
+		return validInputFiles;
 
 	}
 

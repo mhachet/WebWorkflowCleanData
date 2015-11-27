@@ -1,5 +1,9 @@
 package fr.bird.bloom.servlets;
 
+import com.github.junrar.Archive;
+import com.github.junrar.exception.RarException;
+import com.github.junrar.impl.FileVolumeManager;
+import com.github.junrar.rarfile.FileHeader;
 import fr.bird.bloom.utils.BloomConfig;
 import fr.bird.bloom.utils.BloomUtils;
 import org.apache.commons.fileupload.FileItem;
@@ -8,12 +12,12 @@ import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.*;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -29,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.zip.GZIPInputStream;
 
 @WebServlet(name = "UploadController")
 public class UploadController extends HttpServlet{
@@ -58,9 +63,8 @@ public class UploadController extends HttpServlet{
 		}            
 		for (FileItem item : items) {
 			DiskFileItem itemFile = (DiskFileItem) item;
-			String fileExtensionName = itemFile.getName();
-			fileExtensionName = FilenameUtils.getExtension(fileExtensionName);
-
+			String filename = itemFile.getName();
+			String fileExtensionName = FilenameUtils.getExtension(filename);
 			if(count == 0){
 				uuid = itemFile.getString();
 				if(!new File(getDirectoryPath() + "temp/").exists()){
@@ -87,27 +91,67 @@ public class UploadController extends HttpServlet{
 				List<String> compressedFormat = new ArrayList<>();
 				compressedFormat.add("zip");
 				compressedFormat.add("rar");
-				compressedFormat.add("tar.gz");
-				
-				File file = new File(getDirectoryPath() + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + "." + fileExtensionName);
+				boolean errorFormat = false;
+
+				File file = null;
+				if(fileExtensionName != ""){
+					file = new File(getDirectoryPath() + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + "." + fileExtensionName);
+				}
+				else{
+					file = new File(getDirectoryPath() + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + ".csv");
+				}
+
+
 				if("upload".equals(action)){
-					try {
-						itemFile.write(file);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					if("xls".equals(fileExtensionName) || "xlsx".equals(fileExtensionName) || "doc".equals(fileExtensionName) || "docx".equals(fileExtensionName)){
+						errorFormat = true;
 					}
-					if("zip".equals(fileExtensionName)){
-						String dezipFile = this.unzip(file, getDirectoryPath() + "temp/" + uuid + "/data/");
-						System.out.println("dezipfile : " + dezipFile);
-					}
-					else{
-						firstline = this.getFirstLine(file);
-						//String fileContained = this.getFileContained(file);
-						System.out.println(firstline);
+					else {
+						try {
+							itemFile.write(file);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						if("zip".equals(fileExtensionName)){
+							ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(file.getCanonicalFile())));
+							String dezipExtensionName = FilenameUtils.getExtension(zis.getNextEntry().getName());
+							System.out.println("dezipExtensionName : " + dezipExtensionName);
+							if("xls".equals(dezipExtensionName) || "xlsx".equals(dezipExtensionName) || "doc".equals(dezipExtensionName) || "docx".equals(dezipExtensionName)){
+								file.delete();
+								errorFormat = true;
+							}
+							else {
+								File dezipFile = this.unzip(file, getDirectoryPath() + "temp/" + uuid + "/data/");
+								System.out.println("dezipfile : " + dezipFile.getAbsolutePath());
+								file = dezipFile;
+							}
+						}
+						else if("rar".equals(fileExtensionName)){
+							File unrarFile = this.unrar(file, getDirectoryPath() + "temp/" + uuid + "/data/");
+							if(unrarFile == null){
+								errorFormat = true;
+								System.out.println("Error format in unrarFile");
+							}
+							else{
+								System.out.println("unrarFile : " + unrarFile.getAbsolutePath());
+								file = unrarFile;
+							}
+
+						}
+
 						response.setContentType("application/text");
 						response.setCharacterEncoding("UTF-8");
-						response.getWriter().write(firstline);
+
+						if(!errorFormat){
+							firstline = this.getFirstLine(file);
+							System.out.println("filename : " + file.getAbsolutePath());
+							System.out.println(firstline);
+							response.getWriter().write(firstline);
+						} else {
+							System.out.println("error format : " + fileExtensionName);
+							response.getWriter().write("formatError");
+						}
 					}
 				}
 				else if("cancel".equals(action)){
@@ -197,26 +241,26 @@ public class UploadController extends HttpServlet{
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public String unzip(File zipfile, String folder) throws FileNotFoundException, IOException{
-		
+	public File unzip(File zipfile, String folder) throws FileNotFoundException, IOException{
+
 		ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipfile.getCanonicalFile())));
 		String zipFilename = zipfile.getName().split("/")[zipfile.getName().split("/").length - 1];
 		String dezipFilename = "";
 		ZipEntry ze = null;
-		
+		File dezipFile = null;
 		try {
 			while((ze = zis.getNextEntry()) != null){
 				//dezipFilename = ze.toString();
 				dezipFilename = zipFilename.split("\\.")[0] + ".csv";
-				File f = new File(folder,dezipFilename );
+				dezipFile = new File(folder,dezipFilename);
 				if (ze.isDirectory()) {
-					f.mkdirs();
+					dezipFile.mkdirs();
 					continue;
 				}
-				
 
-				f.getParentFile().mkdirs();
-				OutputStream fos = new BufferedOutputStream(new FileOutputStream(f));
+
+				dezipFile.getParentFile().mkdirs();
+				OutputStream fos = new BufferedOutputStream(new FileOutputStream(dezipFile));
 
 				try {
 					try {
@@ -230,7 +274,7 @@ public class UploadController extends HttpServlet{
 					}
 				}
 				catch (final IOException ioe) {
-					f.delete();
+					dezipFile.delete();
 					throw ioe;
 				}
 			}
@@ -239,11 +283,62 @@ public class UploadController extends HttpServlet{
 			zis.close();
 			zipfile.delete();
 		}
-		
-		return dezipFilename;
+
+		return dezipFile;
 	}
 
 
+	public File unrar(File rarfile, String folder){
+		Archive rarArchive = null;
+		File unrarFile = null;
+		boolean errorFormat = false;
+		String fileExtensionName = "";
+		try {
+			rarArchive = new Archive(new FileVolumeManager(rarfile));
+		} catch (RarException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (rarArchive != null) {
+			rarArchive.getMainHeader().print();
+			FileHeader fileHeader = rarArchive.nextFileHeader();
+			while (fileHeader != null) {
+				try {
+					unrarFile = new File(folder + FilenameUtils.getBaseName(rarfile.getAbsolutePath()) + ".csv"); //rarfile.getName().split("\\.")[0] + ".csv");
+					fileExtensionName = FilenameUtils.getExtension(fileHeader.getFileNameString());
+
+					if("xls".equals(fileExtensionName) || "xlsx".equals(fileExtensionName) || "doc".equals(fileExtensionName) || "docx".equals(fileExtensionName)){
+						errorFormat = true;
+						System.out.println("Error Format in unrarFileOriginal : " + fileHeader.getFileNameString());
+						rarfile.delete();
+						return null;
+					}
+					else{
+						FileOutputStream fileOutputStream = new FileOutputStream(unrarFile);
+						rarArchive.extractFile(fileHeader, fileOutputStream);
+						fileOutputStream.close();
+					}
+
+
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (RarException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				fileHeader = rarArchive.nextFileHeader();
+			}
+		}
+
+		return unrarFile;
+	}
 }
 
 
