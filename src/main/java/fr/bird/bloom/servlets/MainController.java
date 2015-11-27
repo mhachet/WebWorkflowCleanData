@@ -418,7 +418,7 @@ public class MainController extends HttpServlet {
             }
         }
 
-        inputParameters.setNbInput(nbFilesInput);
+        inputParameters.setNbInputs(nbFilesInput);
 
         inputParameters.setListMappingReconcileFiles(listMappingReconcileDWC);
 

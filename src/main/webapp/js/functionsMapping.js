@@ -138,8 +138,6 @@ function mappingDWC(counter, change_mapping_reconcile){
 	var result = "";
 	var count = 0;
 	buttonConvert.addEventListener('click', function() {
-
-
 		//performAjaxSubmit(counter, isChange);
 	}, false);
 

@@ -13,9 +13,7 @@ import fr.bird.bloom.stepresults.Step9_EstablishmentMeans;
 
 @SuppressWarnings("unused") // unused getters needed for json serialization
 public class WorkflowResults {
-    public Step1_MappingDwc getStep1Result() {
-        return step1Result;
-    }
+    public Step1_MappingDwc getStep1Result() { return step1Result; }
 
     public Step2_ReconciliationService getStep2Result() {
         return step2Result;

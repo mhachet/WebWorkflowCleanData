@@ -120,7 +120,7 @@ public class SynonymsTreatment {
 
 			String sqlUpdateClean = "UPDATE Workflow.Clean_" + this.getUuid() + " SET Clean_" + this.getUuid() + ".taxonID_=" + taxonID_ + ",Clean_" + this.getUuid() + ".acceptedNameUsageID_="
 					+ acceptedNameUsageID_ + ",Clean_" + this.getUuid() + ".acceptedNameUsage_=" + acceptedNameUsage_ + ",Clean_" + this.getUuid() + ".taxonomicStatus_=" + taxonomicStatus_
-					+ " WHERE Clean.id_=" + id_ + ";"; 
+					+ " WHERE Clean_" + this.getUuid() + ".id_=" + id_ + ";";
 			messagesUpdate.add(sqlUpdateClean);
 			messagesUpdate.addAll(newConnectionUpdate.executeSQLcommand("executeUpdate", sqlUpdateClean));
 			List<String> resultatUpdate = newConnectionUpdate.getResultatSelect();
