@@ -309,19 +309,21 @@ public class DarwinCore extends CSVFile{
 	 * @return ArrayList<String>
 	 */
 	public List<String> getIDClean(){
+
 		DatabaseTreatment newConnection = null;
 		List<String> messages = new ArrayList<>();
-		messages.add("\n--- Select id line from clean ---\n");
-		Statement statement = null;
 		try {
-			statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			newConnection = new DatabaseTreatment(statement);
 			String sqlID= "SELECT id_ FROM Workflow.Clean_" + this.getUuid() + " WHERE UUID_=\"" + this.getUuid() + "\";";
+			Statement statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			newConnection = new DatabaseTreatment(statement);
 			messages.addAll(newConnection.executeSQLcommand("executeQuery", sqlID));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		messages.add("\n--- Select id line from clean ---\n");
+
 
 		List<String> resultatID = newConnection.getResultatSelect();
 

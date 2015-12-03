@@ -22,7 +22,7 @@ function checkErrorOk(step_ok, p_ok, nbStep){
 	if(step_ok == "true"){
 		//console.log("true : " + "p_ok" + nbStep);
 		p_ok.setAttribute("style", "color:#089A4C");
-		p_ok.innerHTML = "Everything went well";
+		p_ok.innerHTML = "Successful process";
 	}
 	else{
 		//console.log("false : " + step_ok);
