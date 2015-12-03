@@ -6176,7 +6176,8 @@ select:focus {
 
 button:focus {
   outline: none;
-  background-color: #2ab7a9; }
+  /*background-color: #2ab7a9;*/
+}
 
 label {
   font-size: 0.8rem;
@@ -8143,7 +8144,7 @@ p.box {
   padding: 20px; }
 
 p {
-  color: rgba(0, 0, 0, 0.71);
+  /*color: rgba(0, 0, 0, 0.71);*/
   padding: 0;
   -webkit-font-smoothing: antialiased; }
 

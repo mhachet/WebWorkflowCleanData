@@ -185,27 +185,84 @@ function doPreparationReconciliation(uuid, nb_input, separator){
 
 			if (this.status == 200) {
 				var firstline = this.responseText;
-				var urlTaxo = document.getElementById("urlAPItaxo_" + nb_input);
-				if(urlTaxo == null){
+				var selectUrl = document.getElementById("selectUrl_" + nb_input);
+				//var urlTaxo = selectUrl.options[selectUrl.selectedIndex].text;
+				//var urlTaxo = document.getElementById("urlAPItaxo_" + nb_input);
+				if(selectUrl == null){
 					var divReconciliationCheck = document.getElementById("divReconciliationCheck_" + nb_input);
 
-					var divUrlTaxo = document.createElement("div");
-					divUrlTaxo.setAttribute('class', "col-lg-12 url-div");
+					var divTaxo = document.createElement("div");
+					divTaxo.setAttribute('class', "col-lg-12");
+					divTaxo.id = "divTaxo_" + nb_input;
+
+					var divUrlTaxo = document.createElement('div');
+					divUrlTaxo.setAttribute('class', "input-field col s12 m5");
 					divUrlTaxo.id = "divUrlTaxo_" + nb_input;
 
+					var selectUrl = document.createElement('select');
+					selectUrl.setAttribute('id', "selectUrl_" + nb_input);
+					var optionUrl_0 = document.createElement('option');
+					//optionUrl_0.setAttribute('disabled selected',"");
+					optionUrl_0.innerHTML = "Choose your url";
+
+					var optionUrl_1 = document.createElement('option');
+					optionUrl_1.setAttribute('value',"1");
+					optionUrl_1.innerHTML = "http://data1.kew.org/reconciliation/reconcile/IpniName";
+					optionUrl_1.setAttribute('id', "optionUrl1_" + nb_input);
+
+					var optionUrl_2 = document.createElement('option');
+					optionUrl_2.setAttribute('value',"2");
+					optionUrl_2.innerHTML = "http://refine.taxonomics.org/gbifchecklists/reconcile";
+					optionUrl_2.setAttribute('id', "optionUrl2_" + nb_input);
+
+					//selectUrl.setAttribute('class', "selectpicker");
+					//selectUrl.setAttribute('data-style', "btn-white");
+					//selectUrl.setAttribute('data-width', "100%");
+					//selectUrl.style.display = "block";
+					selectUrl.appendChild(optionUrl_0);
+					selectUrl.appendChild(optionUrl_1);
+					selectUrl.appendChild(optionUrl_2);
+
+					divUrlTaxo.appendChild(selectUrl);
+
+					/*
 					var urlTaxo = document.createElement("input");
 					urlTaxo.id = "urlAPItaxo_" + nb_input;
 					urlTaxo.type = "url";
 					urlTaxo.setAttribute('class', "col-lg-10");
 					//urlTaxo.placeholder = "http://data1.kew.org/reconciliation/reconcile/IpniName";
+
 					var labelUrl = document.createElement('label');
 					labelUrl.id = "labelUrlTaxo_" + nb_input;
-					labelUrl.setAttribute('class', "col-lg-2");
+					labelUrl.setAttribute('class', "col-lg-3");
 					labelUrl.value = "http://data1.kew.org/reconciliation/reconcile/IpniName";
-					divUrlTaxo.appendChild(labelUrl);
-					divUrlTaxo.appendChild(urlTaxo);
-					divReconciliationCheck.appendChild(divUrlTaxo);
-					$("#labelUrlTaxo_" + nb_input).text("Url reference");
+					*/
+					var divNoteReconcile = document.createElement('div');
+					divNoteReconcile.setAttribute('id', 'divNoteReconcile_' + nb_input);
+					divNoteReconcile.setAttribute('class', "col s12 m7 note-reconcile");
+					var noteReconcile = document.createElement('h6');
+					noteReconcile.innerHTML = "For more information, see the documentation about the ";
+					//noteReconcile.setAttribute('class', "col s12 m7");
+					var refDocReconcile = document.createElement('a');
+					refDocReconcile.setAttribute('href', "DocumentationPage.html#help-reconcile-div");
+					refDocReconcile.innerHTML = "taxonomic reconciliation";
+
+					noteReconcile.appendChild(refDocReconcile);
+					divNoteReconcile.appendChild(noteReconcile);
+					//divUrlTaxo.appendChild(labelUrl);
+					//divUrlTaxo.appendChild(urlTaxo);
+					//divTaxo.appendChild(labelUrl);
+					divTaxo.appendChild(divUrlTaxo);
+					divTaxo.appendChild(divNoteReconcile);
+					//divReconciliationCheck.appendChild(noteReconcile);
+					divReconciliationCheck.appendChild(divTaxo);
+
+					//$("#labelUrlTaxo_" + nb_input).text("Url reference");
+
+					//$(".selectpicker").selectpicker();
+					$("#selectUrl_" + nb_input).material_select();
+
+
 				}
 				createReconciliationPreparation(uuid, firstline.split(separator), nb_input); 
 
@@ -293,7 +350,7 @@ function createReconciliationPreparation(uuid, presentTags, nbInput){
 		tablePrepareReconcile.id = "tablePrepareReconcile_" + nbInput;
 		tablePrepareReconcile.name = "tablePrepareReconcile_" + nbInput;
 		tablePrepareReconcile.border = "0";
-		tablePrepareReconcile.setAttribute("class", "table-marges");
+		tablePrepareReconcile.setAttribute("class", "table-marges col-lg-6");
 		var tbody = document.createElement("tbody");
 		tablePrepareReconcile.appendChild(tbody);
 
@@ -304,11 +361,15 @@ function createReconciliationPreparation(uuid, presentTags, nbInput){
 			tbody.appendChild(row);
 			var cellInput = row.insertCell(0);
 			cellInput.innerHTML = columnPrepare[i];
+			cellInput.style = "text-align:left";
 
 			var dropdownReconcile = document.createElement("select");
 			dropdownReconcile.name = "dropdownReconcile_" + nbInput + "_" + i;
+			dropdownReconcile.setAttribute('class', "selectpicker");
 			dropdownReconcile.id = "dropdownReconcile_" + nbInput + "_" + i;
 			dropdownReconcile.style.display = "block";
+			dropdownReconcile.setAttribute('data-style', "btn-white");
+			dropdownReconcile.setAttribute('data-width', "100%");
 			var cellReconcile = row.insertCell(1);
 
 			for(var j = 0 ; j < presentTags.length; j++){
@@ -321,12 +382,16 @@ function createReconciliationPreparation(uuid, presentTags, nbInput){
 				dropdownReconcile.appendChild(optionTag);
 			}
 			cellReconcile.appendChild(dropdownReconcile);
+
 			//tablePrepareReconcile.appendChild(row);
 			//tablePrepareReconcile.appendChild(cellInput);
 			//tablePrepareReconcile.appendChild(cellReconcile);
 		}
 
 		divReconciliationCheck.appendChild(tablePrepareReconcile);
+
+		$(".selectpicker").selectpicker();
+
 
 		var buttonStartReconciliation = document.createElement('button');
 		buttonStartReconciliation.id = "buttonStartReconciliation_" + nbInput;
@@ -427,11 +492,12 @@ function getColumChecked(nbInput){
 }
 
 function startReconciliation(nbInput, uuid){
-
-	var urlTaxo = document.getElementById("urlAPItaxo_" + nbInput).value;
+	var selectUrl = document.getElementById("selectUrl_" + nbInput);
+	var urlTaxo = selectUrl.options[selectUrl.selectedIndex].text;
+	//var urlTaxo = document.getElementById("urlAPItaxo_" + nbInput).value;
 	console.log("url : " + urlTaxo);
 	if(urlTaxo != ""){
-		console.log("start reconcile");
+		//console.log("start reconcile");
 		var separator = "";
 		var texte =  document.getElementById("csvDropdown_" + nbInput).options[document.getElementById("csvDropdown_" + nbInput).selectedIndex].value; 
 		if(texte == "comma"){
@@ -457,11 +523,11 @@ function startReconciliation(nbInput, uuid){
 function doReconciliation(nbInput, contentFile, separator){
 
 	var lines = contentFile.split("\n");
-	console.log(contentFile);
+	//console.log(contentFile);
 	var firstLine = lines[0];
 	var headers = lines[0].split(separator);
 	var rows = createDataJSON(headers, lines, separator);
-	console.log(headers);
+	//console.log(headers);
 	var cols = createTitleJSON(headers);
 	var input = new InputObject(nbInput, rows, cols, contentFile, firstLine, []);
 	//console.log("before : " );
@@ -483,7 +549,7 @@ function doReconciliation(nbInput, contentFile, separator){
 
 
 	if(tableReconcile == null && tableReconcileWrapper == null){
-		console.log("tableReconcile and wrapper are null");
+		//console.log("tableReconcile and wrapper are null");
 		//var tableReconcile = document.createElement("div");
 		var tableReconcile = document.createElement("table");
 		tableReconcile.id = "tableReconcile_" + nbInput;
@@ -522,7 +588,7 @@ function doReconciliation(nbInput, contentFile, separator){
 	var tagsReconcile = this.getTagsReconcileFromTable(nbInput);
 	var columnCheck = this.getColumChecked(nbInput);
 	var inputObj = this.getInput(nbInput);
-	console.log(inputList);
+	//console.log(inputList);
 	//console.log("nbInput : " + nbInput);
 	inputObj.tagsReconcile = tagsReconcile;
 	//console.log(inputObj);
@@ -699,7 +765,10 @@ function addTableForReconcile(nbInput, columnCheck, row){
 		}
 
 	}
-	var urlTaxo = $('#urlAPItaxo_' + nbInput).val();
+	var selectUrl = document.getElementById("selectUrl_" + nbInput);
+	var urlTaxo = selectUrl.options[selectUrl.selectedIndex].text;
+
+	//var urlTaxo = $('#urlAPItaxo_' + nbInput).val();
 	//http://data1.kew.org/reconciliation/reconcile/IpniName
 	//http://refine.taxonomics.org/gbifchecklists/reconcile
 	var scientificName = rows[indexRow][idColumnCheck];

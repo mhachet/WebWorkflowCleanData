@@ -5,23 +5,19 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet"	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-<link
-	href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
-<link
-	href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"
-	rel="stylesheet" type="text/css">
-<link
-	href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic'
-	rel='stylesheet' type='text/css'>
-<link
-	href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
-	rel='stylesheet' type='text/css'>
-<link rel="stylesheet" type="text/css"
-	href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.css">
-<link href="css/clean-blog.css" rel="stylesheet">
- 
+   <!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"	rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.css">
+    <link href="css/clean-blog.css" rel="stylesheet">-->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.css" rel="stylesheet">
+    <link href="css/materialize.css" rel="stylesheet">
+    <link href="css/clean-blog.css" rel="stylesheet">
+    <link href="css/bootstrap-select.css" rel="stylesheet">
 <title>Biodiversity Linked Organisms Occurrences Megadatasets</title>
 </head>
 <body>
@@ -70,41 +66,108 @@
                 <div class="post-preview">
                     <h2>Documentation</h2>
                 </div>
-                <hr class="col-lg-12"></hr>
+                <hr class="col-lg-12"/>
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 paragraphe">
                     <div class="post-preview">
-                        <h3 class="post-subtitle">Masks validation tool</h3>
-                        <p>
-                            The mask validation tool valid or not each occurencce are correctly included in raster file.
-                        </p>
-                         <blockquote>
-                             <h4 class="post-meta">What's a raster file ?</h4>
-                             <p>
-                            In its simplest form, a raster consists of a matrix of cells (or pixels) organized into rows and columns (or a grid) where each cell contains a value representing information, such as temperature. Rasters are digital aerial photographs, imagery from satellites, digital pictures, or even scanned maps. The dimension of the cells can be as large or as small as needed to represent the surface conveyed by the raster dataset and the features within the surface.
-For more information, go to <a onclick="window.open(this.href); return false;" href="http://webhelp.esri.com/arcgisdesktop/9.2/index.cfm?TopicName=What_is_raster_data%3F">ArcGIS</a>. 
-                                </p>     
-                        </blockquote>
-                        <p>
-                          To explain the mask validation tool, I'll take an example (<a href="#img_raster_1">figure 1</a>).
-                        </p>
-                        <div class="divImg img-responsive" id="img_raster_1">
-                            <img src="images/rasterTuto.png" alt="">
-                            <span class="caption text-muted">Figure 1 : example for mask validation tool</span>
-                        </div>
-                        <p>
-                            For this example (<a href="#img_raster_1">figure 1</a>), an occurence is georeferenced and marked by red cross. The geolocalisation is correct : the red cross is inside a land (green). There are three differents raster from the smallest (left grid) to the largest (right grid). Consequently, for the first raster, occurence is included in a valid cell, but not for the other.
-                        </p>
-                        
-                        <blockquote>
-                             <h4 class="post-meta">Where is the problem ?</h4>
-                             <p>
-                                Tools for raster treatment like (?????) use informations contained in cells. Sometimes, cells have informations for land cells and not for water cells. For the last, these programs don't suport these occurences. Often, a filtering is necessary before.
+                        <div class="row" id="help-mapping-div">
+                            <h3 class="post-subtitle">Mapping to DarwinCore tool</h3>
+                            <hr class="col-lg-12 hr-result"/>
+                            <p>
+                                The mapping tool help to convert your file to a standard : the DarwinCore.
                             </p>
-                        </blockquote>
-                        
-                        <p>
-                            Our mask validation tool do this checking to set appart all wrong occurences. To use this validation, you have to insert one or more raster files. VERIFIER FORMAT PRIS EN CHARGE. You can found raster files here : <a onclick="window.open(this.href); return false;" href="http://www.worldclim.org/">WorldClim</a>
-                        </p>
+                            <blockquote>
+                                <h4 class="post-meta">What's the DarwinCore ?</h4>
+                                <p>
+                                    The Darwin Core is body of standards. It includes a glossary of terms (in other contexts these might be called properties,
+                                    elements, fields, columns, attributes, or concepts) intended to facilitate the sharing of information about biological
+                                    diversity by providing reference definitions, examples, and commentaries. The Darwin Core is primarily based on taxa,
+                                    their occurrence in nature as documented by observations, specimens, samples, and related information.
+                                </p>
+                                <p>
+                                    source : <a href="http://rs.tdwg.org/dwc/index.htm">TDWG.org</a>
+                                </p>
+                            </blockquote>
+                            <p>
+                                The DarwinCore standard contains many terms, explained <a href="http://rs.tdwg.org/dwc/terms/index.htm">here</a>.
+                                To use our workflow, your data have to be in this DarwinCore format.
+                                To be easier for you, your data are read (csv format necessary at least) and all columns name are displayed.
+                                If your column name is recognized by the DarwinCore standard, so this one are automatically mapped.
+                                If not, you can choose the correct DarwinCore term corresponding.
+                            </p>
+                            <div class="divImg img-responsive" id="div_img_mapping_1">
+                                <img id="img_mapping_1" src="images/documentation_mapping.jpg" alt="">
+                                <span class="caption text-muted">Figure 1 : example for mapping DarwinCore tool</span>
+                            </div>
+                            <p>
+                                On the left side, there are your columns, and on the right side, DarwinCore terms.
+                                In this example, the "establishmentMeans" term is recognized by the tool.
+                                The "isoCode" isn't recognized, so you can choose the equivalent term thanks to the list : "countryCode".
+                            </p>
+
+                        </div>
+                        <div class="row" id="help-raster-div">
+                            <h3 class="post-subtitle">Masks validation tool</h3>
+                            <hr class="col-lg-12 hr-result"/>
+                            <p>
+                                The mask validation tool valid or not each occurencce are correctly included in raster file.
+                            </p>
+                             <blockquote>
+                                 <h4 class="post-meta">What's a raster file ?</h4>
+                                 <p>
+                                In its simplest form, a raster consists of a matrix of cells (or pixels) organized into rows and columns (or a grid) where each cell contains a value representing information, such as temperature. Rasters are digital aerial photographs, imagery from satellites, digital pictures, or even scanned maps. The dimension of the cells can be as large or as small as needed to represent the surface conveyed by the raster dataset and the features within the surface.
+    For more information, go to <a onclick="window.open(this.href); return false;" href="http://webhelp.esri.com/arcgisdesktop/9.2/index.cfm?TopicName=What_is_raster_data%3F">ArcGIS</a>.
+                                    </p>
+                            </blockquote>
+                            <p>
+                              To explain the mask validation tool, I'll take an example (<a href="#img_raster_1">figure 1</a>).
+                            </p>
+                            <div class="divImg img-responsive" id="img_raster_1">
+                                <img src="images/rasterTuto.png" alt="">
+                                <span class="caption text-muted">Figure 2 : example for mask validation tool</span>
+                            </div>
+                            <p>
+                                For this example (<a href="#img_raster_1">figure 1</a>), an occurence is georeferenced and marked by red cross. The geolocalisation is correct : the red cross is inside a land (green). There are three differents raster from the smallest (left grid) to the largest (right grid). Consequently, for the first raster, occurence is included in a valid cell, but not for the other.
+                            </p>
+
+                            <blockquote>
+                                 <h4 class="post-meta">Where is the problem ?</h4>
+                                 <p>
+                                    Tools for raster treatment like (?????) use informations contained in cells. Sometimes, cells have informations for land cells and not for water cells. For the last, these programs don't suport these occurences. Often, a filtering is necessary before.
+                                </p>
+                            </blockquote>
+
+                            <p>
+                                Our mask validation tool do this checking to set appart all wrong occurences. To use this validation, you have to insert one or more raster files. VERIFIER FORMAT PRIS EN CHARGE. You can found raster files here : <a onclick="window.open(this.href); return false;" href="http://www.worldclim.org/">WorldClim</a>
+                            </p>
+                        </div>
+                        <div class="row" id="help-tdwg4-div">
+                            <h3 class="post-subtitle">Check TDWG4 code</h3>
+                            <hr class="col-lg-12 hr-result"/>
+                            <p>
+                                The mapping tool help to convert your file to a standard : the DarwinCore.
+                            </p>
+                        </div>
+                        <div class="row" id="help-reconcile-div">
+                            <h3 class="post-subtitle">Taxonomic Reconciliation</h3>
+                            <hr class="col-lg-12 hr-result"/>
+                            <blockquote>
+                                <h4 class="post-meta">What's the taxonomic reconciliation ?</h4>
+                                <p>
+                                    The taxonomic reconciliation is a tool that, given some text which is a name or label for something, and optionally some
+                                    additional details, returns a ranked list of potential entities matching the criteria. The candidate text does not
+                                    have to match each entity's official name perfectly, and that's the whole point of reconciliation--to get from
+                                    ambiguous text name to precisely identified entities.
+                                </p>
+                                <p>
+                                    source : <a href="https://github.com/OpenRefine/OpenRefine/wiki/Reconciliation-Service-API">OpenRefine-Reconciliation-Service</a>
+                                </p>
+                            </blockquote>
+                            <p>
+                                Two references are available :
+                                <li><a href="http://data1.kew.org/reconciliation/reconcile/IpniName">http://data1.kew.org/reconciliation/reconcile/IpniName</a></li>
+                            </p>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -119,27 +182,27 @@ For more information, go to <a onclick="window.open(this.href); return false;" h
                     <ul class="list-inline text-center">
                         <li>
                             <a href="http://www.cnrs.fr" target="_blank">
-                                <img src="images/logo_cnrs.jpg" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+                                <img src="images/logo_cnrs.jpg" height="50" width="50" class="img-circle" style="cursor:pointer;"/>
                             </a>
                         </li>
                         <li>
                             <a href="https://www.mnhn.fr/fr" target="_blank">
-                                <img src="images/logo_mnhn.jpg" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+                                <img src="images/logo_mnhn.jpg" height="50" width="50" class="img-circle" style="cursor:pointer;"/>
                             </a>
                         </li>
                         <li>
                             <a href="http://isyeb.mnhn.fr/" target="_blank">
-                               <img src="images/logo_ISYEB.png" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+                               <img src="images/logo_ISYEB.png" height="50" width="50" class="img-circle" style="cursor:pointer;"/>
                             </a>
                         </li>
                         <li>
                             <a href="http://www.upmc.fr/" target="_blank">
-                                <img src="images/logo_upmc.png" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+                                <img src="images/logo_upmc.png" height="50" width="50" class="img-circle" style="cursor:pointer;"/>
                             </a>
                         </li>
                         <li>
                             <a href="http://www.ephe.fr/" target="_blank">
-                                <img src="images/logo_ephe.png" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+                                <img src="images/logo_ephe.png" height="50" width="50" class="img-circle" style="cursor:pointer;"/>
                             </a>
                         </li>
                     </ul>

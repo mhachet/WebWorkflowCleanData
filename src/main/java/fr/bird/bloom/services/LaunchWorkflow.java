@@ -115,7 +115,8 @@ public class LaunchWorkflow {
 
 			if (this.inputParameters.isRaster()) {
 				step8.setInvolved(true);
-				boolean rasterFilesIsValid = this.isValidRasterFiles();
+				//boolean rasterFilesIsValid = this.isValidRasterFiles();
+				boolean rasterFilesIsValid = true;
 				if (rasterFilesIsValid) {
 					this.launchRasterOption();
 				} else {
@@ -160,7 +161,7 @@ public class LaunchWorkflow {
 
 			}
 
-			this.dataTreatment.deleteTables();
+			//this.dataTreatment.deleteTables();
 		}
 		else{
 

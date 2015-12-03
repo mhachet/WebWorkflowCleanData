@@ -131,7 +131,7 @@
                 <div id="headerStep0_involved" class="post-preview col-lg-8">
                     <h4 class="post-meta">Checking input files format </h4>
                 </div>
-                <div class="fixed-table-body col-lg-6">
+                <div class="fixed-table-body">
                     <table data-toggle="table" data-card-view="true" class="table table-hover" style="margin-top: 0px;" data-height="299" data-response-handler="responseHandler" id=divStep0>
                         <thead style="display: none;">
                             <tr>
@@ -176,7 +176,7 @@
                 <div id="headerStep1_NotInvolved" class="post-preview col-lg-8">
                     <h4 class="post-meta">Step 1 : Mapping to DarwinCore format isn't involved in process</h4>
                 </div>
-                <div class="fixed-table-body col-lg-6">
+                <div class="fixed-table-body">
                     <table data-toggle="table" data-card-view="true" class="table table-hover" style="margin-top: 0px;" data-height="299" data-response-handler="responseHandler" id=divStep1>
                         <thead style="display: none;">
                             <tr>
@@ -228,7 +228,7 @@
                 <div id="headerStep2_NotInvolved" class="post-preview col-lg-8">
                     <h4 class="post-meta">Step 2 : Reconciliation Service isn't involved in process</h4>
                 </div>
-                <div class="fixed-table-body col-lg-6">
+                <div class="fixed-table-body">
                     <table data-toggle="table" data-card-view="true" class="table table-hover" style="margin-top: 0px;" id=divStep2>
                         <thead style="display: none;">
                             <tr>
@@ -282,7 +282,7 @@
                 <div id="headerStep3_NotInvolved" class="post-preview col-lg-8">
                     <h4 class="post-meta">Step 3 : Check coordinates isn't involved in process</h4>
                 </div>
-                <div class="fixed-table-body col-lg-6">
+                <div class="fixed-table-body">
                     <table data-toggle="table" data-card-view="true" class="table table-hover" style="margin-top: 0px;" id=divStep3>
                         <thead style="display: none;">
                             <tr>
@@ -328,7 +328,7 @@
                 <div id="headerStep4_NotInvolved" class="post-preview col-lg-8">
                     <h4 class="post-meta">Step 4 : Check geospatial issue isn't involved in process</h4>
                 </div>
-                <div class="fixed-table-body col-lg-6">
+                <div class="fixed-table-body">
                     <table data-toggle="table" data-card-view="true" class="table table-hover" style="margin-top: 0px;" id=divStep4>
                         <thead style="display: none;">
                             <tr>
@@ -374,7 +374,7 @@
                 <div id="headerStep5_NotInvolved" class="post-preview col-lg-8">
                     <h4 class="post-meta">Step 5 : Check synonym isn't involved in process</h4>
                 </div>
-                <div class="fixed-table-body col-lg-6">
+                <div class="fixed-table-body">
                     <table data-toggle="table" data-card-view="true" class="table table-hover" style="margin-top: 0px;" id="divStep5">
                         <thead style="display: none;">
                             <tr>
@@ -404,7 +404,7 @@
                 <div id="headerStep6_NotInvolved" class="post-preview col-lg-8">
                     <h4 class="post-meta">Step 6 : Check TDWG code isn't involved in process</h4>
                 </div>
-                <div class="fixed-table-body col-lg-6">
+                <div class="fixed-table-body">
                     <table data-toggle="table" data-card-view="true" class="table table-hover" style="margin-top: 0px;" id=divStep6>
                         <thead style="display: none;">
                         <tr>
@@ -434,7 +434,7 @@
                 <div id="headerStep7_NotInvolved" class="post-preview col-lg-8">
                     <h4 class="post-meta">Step 7 : Iso2 code checking isn't involved in process</h4>
                 </div>
-                <div class="fixed-table-body col-lg-6">
+                <div class="fixed-table-body">
                     <table data-toggle="table" data-card-view="true" class="table table-hover" style="margin-top: 0px;" id=divStep7>
                         <thead style="display: none;">
                             <tr>
@@ -480,12 +480,16 @@
                 <div id="headerStep8_NotInvolved" class="post-preview col-lg-8">
                     <h4 class="post-meta">Step 8 : Check coordinates in raster cells isn't involved in process</h4>
                 </div>
-                <div class="fixed-table-body col-lg-6">
+                <div class="fixed-table-body">
                    <table data-toggle="table" data-card-view="true" class="table table-hover" style="margin-top: 0px;" id=divStep8>
                        <thead style="display: none;">
                            <tr>
                                <th style="">
                                    <div class="th-inner">Success</div>
+                                   <div class="fht-cell"></div>
+                               </th>
+                               <th style="">
+                                   <div class="th-inner">Number of wrong occurrences</div>
                                    <div class="fht-cell"></div>
                                </th>
                                <th style="">
@@ -518,7 +522,7 @@
                 <div id="headerStep9_NotInvolved" class="post-preview col-lg-8">
                     <h4 class="post-meta">Step 9 : EstablishmentMeans check isn't involved in process</h4>
                 </div>
-                <div class="fixed-table-body col-lg-6">
+                <div class="fixed-table-body">
                     <table data-toggle="table" data-card-view="true" class="table table-hover" style="margin-top: 0px;" id=divStep9>
                         <thead style="display: none;">
                             <tr>

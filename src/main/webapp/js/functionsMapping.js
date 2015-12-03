@@ -76,7 +76,7 @@ function mappingDWC(counter, change_mapping_reconcile){
 		var divTableReconcile = document.getElementById("divTableReconcile_" + counter);
 		var tableReconcile = document.getElementById("tableReconcile_" + counter + "_wrapper");
 		var tablePrepareReconcile = document.getElementById("tablePrepareReconcile_" + counter);
-		var divUrlTaxo = document.getElementById("divUrlTaxo_" + counter);
+		var divTaxo = document.getElementById("divTaxo_" + counter);
 
 		var divMessageReconcileCancelled  = document.getElementById("divMessageReconcileCancelled_" + counter);
 		var divMessageReconcileSaved = document.getElementById("divMessageReconcileSaved_" + counter);
@@ -107,7 +107,7 @@ function mappingDWC(counter, change_mapping_reconcile){
 
 			if(tablePrepareReconcile){
 				divReconciliationCheck.removeChild(tablePrepareReconcile);
-				divReconciliationCheck.removeChild(divUrlTaxo);
+				divReconciliationCheck.removeChild(divTaxo);
 			}
 
 			if(divTableReconcile){
@@ -241,9 +241,23 @@ function createMapping(firstLineInput, dwcTags, presentTags, nbInput){
 
 		}
 
-		var infosMapping = document.createElement('h6');
-		infosMapping.setAttribute('id', "infosMapping_" + nbInput);
-		infosMapping.innerHTML = "Note : If you don't choose map one of your column, this one will be deleted.";
+		var help_mapping = document.createElement('h6');
+		help_mapping.innerHTML = "For more information, see the documentation about the ";
+		var refDocMapping = document.createElement('a');
+		refDocMapping.setAttribute('href', "DocumentationPage.html#help-mapping-div");
+		refDocMapping.innerHTML = "mapping to DarwinCore";
+
+		var noteMapping = document.createElement('h6');
+		//noteMapping.setAttribute('id', "infosMapping_" + nbInput);
+		noteMapping.innerHTML = "Note : If you don't choose map one of your column, this one will be deleted.";
+
+		var infosMapping = document.createElement('div');
+		infosMapping.setAttribute('id',"infosMapping_" + nbInput);
+
+		infosMapping.appendChild(help_mapping);
+		infosMapping.appendChild(noteMapping);
+
+		help_mapping.appendChild(refDocMapping);
 		divMapping.appendChild(infosMapping);
 		divMapping.appendChild(mappingTable);
 		mappingTable.setAttribute('class', "centered table-marges");

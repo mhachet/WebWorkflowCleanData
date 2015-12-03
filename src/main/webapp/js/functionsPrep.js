@@ -532,7 +532,7 @@ function cancelInputFile(nb_input, action){
 	var divTableReconcile = document.getElementById("divTableReconcile_" + nb_input);
 	var divReconciliationCheck = document.getElementById("divReconciliationCheck_" + nb_input);
 	var divSubmitReconcile = document.getElementById("divSubmitReconcile_" + nb_input);
-	var divUrlTaxo = document.getElementById("divUrlTaxo_" + nb_input);
+	var divTaxo = document.getElementById("divTaxo_" + nb_input);
 	var divMessageReconcileCancelled  = document.getElementById("divMessageReconcileCancelled_" + nb_input);
 	var divMessageReconcileSaved = document.getElementById("divMessageReconcileSaved_" + nb_input);
 	var divButtonCancelReconciliation = document.getElementById("divButtonCancelReconciliation_" + nb_input);
@@ -574,7 +574,7 @@ function cancelInputFile(nb_input, action){
 
 	if(tablePrepareReconcile){
 		divReconciliationCheck.removeChild(tablePrepareReconcile);
-		divReconciliationCheck.removeChild(divUrlTaxo);
+		divReconciliationCheck.removeChild(divTaxo);
 	}
 
 	if(divMessageReconcileSaved){
@@ -706,7 +706,7 @@ function actionMappingButton(nb_input, action){
 			buttonConvert.setAttribute('class', "btn btn-default waves-effect waves-light font-medium-button");
 
 			divLoad.appendChild(buttonConvert);
-			$("#convert_" + nb_input).text('Map to Dwc');
+			$("#convert_" + nb_input).text('To DarwinCore');
 			divAddLoad.appendChild(divLoad);
 
 		}

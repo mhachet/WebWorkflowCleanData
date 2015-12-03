@@ -61,13 +61,13 @@ public class SendMail {
 		String password = "";
 		String smtpPort = "";
 		try{
-			System.out.println(getResourcePath());
 			BufferedReader buff = new BufferedReader(new FileReader(getResourcePath() + ".properties_mail"));
 			try {
 				String line;
 				int count = 0;
 				while ((line = buff.readLine()) != null) {
 					switch (count) {
+
 						case 0: smtpHost = line.split("\t")[1];
 							break;
 						case 1: from = line.split("\t")[1];
@@ -76,8 +76,8 @@ public class SendMail {
 							break;
 						case 3: password = line.split("\t")[1];
 							break;
-						/*case 4 : smtpPort = line.split("\t")[1];
-							break;*/
+						case 4 : smtpPort = line.split("\t")[1];
+							break;
 					}
 					count ++;
 				}
@@ -88,12 +88,12 @@ public class SendMail {
 			System.out.println("Erreur --" + ioe.toString());
 		}
 
-		System.out.println("smtpHost : " + smtpHost + "\nfrom : " + from + "\nusername : " + username + "\npassword : " + password);
+		System.out.println("smtpHost : " + smtpHost + "\nport : " + smtpPort + "\nfrom : " + from + "\nusername : " + username + "\npassword : " + password);
 
 		final Properties props = new Properties();
 		props.put("mail.smtp.host", smtpHost);
 		props.put("mail.smtp.auth", "true");
-		//props.put("mail.smtp.port", smtpPort);
+		props.put("mail.smtp.port", smtpPort);
 		props.put("mail.smtp.starttls.enable", "true");
 		props.put("username", username);
 		props.put("password", password);

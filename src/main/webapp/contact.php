@@ -69,7 +69,7 @@
 				<?php
 				if (isset ( $_POST ) && isset ( $_POST ['name'] ) && isset ( $_POST ['email'] ) && isset ( $_POST ['object'] ) && isset ( $_POST ['message'] )) {
 					if (! empty ( $_POST ['name'] ) && ! empty ( $_POST ['email'] ) && ! empty ( $_POST ['message'] )) {
-						$destinataire = "mhachet@mnhn.fr";
+						$destinataire = "melanie.hachet@mnhn.com";
 						$sujet = "Contact request from " . $_POST ['name'] . " - " . $_POST ['object'];
 						$message = "Name : " . $_POST ['name'] . "<br>";
 						$message .= "email : " . $_POST ['email'] . "<br>";
@@ -86,9 +86,9 @@
                         	echo "</blockquote>";
                         	echo "</div>";
 						} else {
-							echo "<h3>Sorry ... An error occured when submitting the form by email.</h3>";
+							echo "<h3>Sorry ... A error occured when submitting the form by email.</h3>";
 							echo "<hr class='col-lg-12'</hr>";
-							echo "<h4 class='contactRequest'>Your message sent</h4>";
+							echo "<h4 class='contactRequest'>Your message </h4>";
 							echo "<blockquote>";
                             echo "<p>" . str_replace("\r\n", "<br>", $_POST ['message']) . "<p>";
                         	echo "</blockquote>";
@@ -109,27 +109,27 @@
                     <ul class="list-inline text-center">
                         <li>
                             <a href="http://www.cnrs.fr" target="_blank">
-                                <img src="images/logo_cnrs.jpg" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+                                <img src="images/logo_cnrs.jpg" height="50" width="50" class="img-circle" style="cursor:pointer;">
                             </a>
                         </li>
                         <li>
                             <a href="https://www.mnhn.fr/fr" target="_blank">
-                                <img src="images/logo_mnhn.jpg" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+                                <img src="images/logo_mnhn.jpg" height="50" width="50" class="img-circle" style="cursor:pointer;">
                             </a>
                         </li>
                         <li>
                             <a href="http://isyeb.mnhn.fr/" target="_blank">
-                               <img src="images/logo_ISYEB.png" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+                               <img src="images/logo_ISYEB.png" height="50" width="50" class="img-circle" style="cursor:pointer;">
                             </a>
                         </li>
                         <li>
                             <a href="http://www.upmc.fr/" target="_blank">
-                                <img src="images/logo_upmc.png" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+                                <img src="images/logo_upmc.png" height="50" width="50" class="img-circle" style="cursor:pointer;">
                             </a>
                         </li>
                         <li>
                             <a href="http://www.ephe.fr/" target="_blank">
-                                <img src="images/logo_ephe.png" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+                                <img src="images/logo_ephe.png" height="50" width="50" class="img-circle" style="cursor:pointer;">
                             </a>
                         </li>
                     </ul>

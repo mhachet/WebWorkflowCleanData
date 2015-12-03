@@ -206,7 +206,7 @@ public class RasterTreatment {
 		List<String> decimalLatitude = dataTreatment.getFileDarwinCore().getDecimalLatitudeClean();
 		List<String> decimalLongitude = dataTreatment.getFileDarwinCore().getDecimalLongitudeClean();
 		List<String> idLine = dataTreatment.getFileDarwinCore().getIDClean();
-
+		System.out.println("nb clean id : " + idLine.size());
 
 		File validRaster = new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getUuid() + "/rasterAnalyse/validRaster.txt");
 		File errorRaster = new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getUuid() + "/rasterAnalyse/errorRaster.txt");
@@ -322,8 +322,8 @@ public class RasterTreatment {
 			e.printStackTrace();
 		} 
 		File outputRaster = new File(BloomConfig.getDirectoryPath() + "temp/" + dataTreatment.getUuid() + "/rasterAnalyse/outputRaster.csv");
-		InputStreamReader ipsr=new InputStreamReader(ips);
-		BufferedReader br=new BufferedReader(ipsr);
+		InputStreamReader ipsr = new InputStreamReader(ips);
+		BufferedReader br = new BufferedReader(ipsr);
 		String ligne;
 		String [] arraySplit;
 		int count = 0;
@@ -331,16 +331,22 @@ public class RasterTreatment {
 			while ((ligne=br.readLine())!=null){
 				//System.out.println(count + "   line : " + ligne);
 				if(count > 0){
-					arraySplit = ligne.split(" ");
+					arraySplit = ligne.trim().split("\\s+");
 					if(ligne.contains("<0 rows>")){
 						//System.out.println("array : " + ligne);
 					}
 					else{
-						/*for(int i=0; i < arraySplit.length; i++){
+						for(int i=0; i < arraySplit.length; i++) {
 							System.out.println("array : " + arraySplit[i]);
-						}*/
-						
-						listValidData.add(Integer.parseInt(arraySplit[1]));
+						}
+						try{
+
+							listValidData.add(Integer.parseInt(arraySplit[1]));
+						}
+						catch (NumberFormatException nfe) {
+							System.err.println(ligne);
+							nfe.printStackTrace();
+						}
 					}
 				}
 				count++;

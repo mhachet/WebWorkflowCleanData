@@ -2,26 +2,24 @@
 <html>
 <head>
 
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet"	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-<link
-	href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
-<link
-	href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"
-	rel="stylesheet" type="text/css">
-<link
-	href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic'
-	rel='stylesheet' type='text/css'>
-<link
-	href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
-	rel='stylesheet' type='text/css'>
-<link rel="stylesheet" type="text/css"
-	href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.css">
-<link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.5/css/bootstrap-select.min.css" rel="stylesheet" />
-<link href="css/clean-blog.css" rel="stylesheet">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--<link href="css/bootstrap.css" rel="stylesheet">-->
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="http://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" />-->
+    <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css" rel="stylesheet">-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href="http://cdn.datatables.net/1.10.7/css/jquery.dataTables.css" rel="stylesheet" type="text/css" >
+
+    <!--<link href="css/bootstrap-theme.css" rel="stylesheet">-->
+    <link href="css/materialize.css" rel="stylesheet">
+    <link href="css/clean-blog.css" rel="stylesheet">
+    <link href="css/bootstrap-select.css" rel="stylesheet">
 <!--<link href="css/HomePage.css" rel="stylesheet">-->
  
 <title>Biodiversity Linked Organisms Occurrences Megadatasets</title>
@@ -76,7 +74,7 @@
 						<h2 class="post-title">Workflow begining</h2>
 						<h3 class="post-subtitle">Choose your inputs preferences</h3>
 					</div>
-					<hr class="col-lg-12"></hr>
+					<hr class="col-lg-12"/>
 					<div class="post-preview col-lg-12" id="bloc-inputs">
 						<div class="post-preview">
 							<h3 class="post-subtitle">Select inputs files</h3>
@@ -134,29 +132,38 @@
                             <div id="divSubmitReconcile_0" class="col-lg-12 center"></div>
                         </div>
                      </div>
-                    <hr class="col-lg-12"></hr>
+                    <hr class="col-lg-12"/>
 					<div class="post-preview col-lg-12" id="bloc-synonym">
 						<h3 class="post-subtitle">Synonyms taxons</h3>
                             <input id="synonyms" type="checkbox" name="synonyms" value="synonyms"> 
                             <label for="synonyms">Include synonyms taxons</label>
 					</div>
-					<hr class="col-lg-12"></hr>
+					<hr class="col-lg-12"/>
 					<div class="post-preview col-lg-12" id="bloc-divRaster">
-						<h3 class="post-subtitle">Bioclimatic and habitat validation tool</h3>
-						<input id="compteur_raster" type="hidden" name="compteur_raster" value=0 /> 
+						<h3 class="post-subtitle">
+                            Bioclimatic and habitat validation tool
+                            <a href="DocumentationPage.html#help-raster-div">
+                                <span class="glyphicon glyphicon-question-sign"></span>
+                            </a>
+                        </h3>
+
+						<input id="compteur_raster" type="hidden" name="compteur_raster" value=0 />
                         <input id="compteur_header" type="hidden" name="compteur_header" value=0 /> 
                         <input type="checkbox" id="raster" name="raster" value="raster" onclick="addDeleteRasterFile()"> 
                         <label for="raster">Check data in raster cells</label>
 						<div id="divRasterFiles" style="margin-left: 40px">
                         </div>
 					</div>
-					<hr class="col-lg-12"></hr>
+					<hr class="col-lg-12"/>
 					<div class="post-preview col-lg-12" id="bloc-tdwg4">
 						<h3 class="post-subtitle">TDWG4 checking</h3>
 						<input type="checkbox" id="tdwg4" name="tdwg4" value="tdwg4">
 				        <label for="tdwg4">Botanic data (check tdwg4 code)</label>
+                        <a href="DocumentationPage.html#help-tdwg4-div">
+                            <span class="glyphicon glyphicon-question-sign"></span>
+                        </a>
 					</div>
-					<hr class="col-lg-12"></hr>
+					<hr class="col-lg-12"/>
 					<div class=" post-preview col-lg-12" id="bloc-introduce">
 						<h3 class="post-subtitle">What is the status of your occurrences?</h3>
 						<h4 class="post-meta">Filter your occurrences using the EstablishmentMeans column (DarwinCore term)</h4>
@@ -199,7 +206,7 @@
 						</div>
 					</div>
 			         
-    		         <hr class="col-lg-12"></hr>
+    		         <hr class="col-lg-12"/>
                     <div class="post-preview col-lg-12" id="bloc-mail">
                         <h3 class="post-subtitle">Please put an email to receive your results.</h3>
                         <div class="col-xs-12 div-email">
@@ -237,27 +244,27 @@
                     <ul class="list-inline text-center">
                         <li>
                             <a href="http://www.cnrs.fr" target="_blank">
-                                <img src="images/logo_cnrs.jpg" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+                                <img src="images/logo_cnrs.jpg" height="50" width="50" class="img-circle" style="cursor:pointer;"/>
                             </a>
                         </li>
                         <li>
                             <a href="https://www.mnhn.fr/fr" target="_blank">
-                                <img src="images/logo_mnhn.jpg" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+                                <img src="images/logo_mnhn.jpg" height="50" width="50" class="img-circle" style="cursor:pointer;"/>
                             </a>
                         </li>
                         <li>
                             <a href="http://isyeb.mnhn.fr/" target="_blank">
-                               <img src="images/logo_ISYEB.png" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+                               <img src="images/logo_ISYEB.png" height="50" width="50" class="img-circle" style="cursor:pointer;"/>
                             </a>
                         </li>
                         <li>
                             <a href="http://www.upmc.fr/" target="_blank">
-                                <img src="images/logo_upmc.png" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+                                <img src="images/logo_upmc.png" height="50" width="50" class="img-circle" style="cursor:pointer;"/>
                             </a>
                         </li>
                         <li>
                             <a href="http://www.ephe.fr/" target="_blank">
-                                <img src="images/logo_ephe.png" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+                                <img src="images/logo_ephe.png" height="50" width="50" class="img-circle" style="cursor:pointer;"/>
                             </a>
                         </li>
                     </ul>
@@ -266,21 +273,17 @@
             </div>
         </div>
     </footer>
-	<script
-		src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="application/javascript">
-    </script>
-    <script type="application/javascript" src="bootstrap/js/bootstrap.min.js"></script>
-	<script type="application/javascript" src="js/jquery.watable.js"></script>
+    <script type="text/javascript" src="js/jquery-2.1.4.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>-->
+	<!--<script type="application/javascript" src="js/jquery.watable.js"></script>-->
+    <script type="text/javascript" src="js/materialize.js"></script>
 	<script type="text/javascript" src="js/ReconciliationFunctions.js"></script>
 	<script type="text/javascript" src="js/functionsPrep.js"></script>
 	<script type="text/javascript" src="js/functionsMapping.js"></script>
-
-	<script type="text/javascript" charset="utf8"
-		src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.js">
-    </script>
-	<script
-		src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.5/js/bootstrap-select.min.js"></script>
-	<script type="text/javascript"></script>
+	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap-select.js"></script>
 </body>
 </html>
