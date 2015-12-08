@@ -6,28 +6,22 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet"	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-	<link
-			href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" />
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
-	<link
-			href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"
-			rel="stylesheet" type="text/css">
-	<link
-			href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic'
-			rel='stylesheet' type='text/css'>
-	<link
-			href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
-			rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" type="text/css"
-		  href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.css">
+	<!--<link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css" rel="stylesheet" >-->
+	<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"	rel="stylesheet" type="text/css">
+	<link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'	rel='stylesheet' type='text/css'>
 	<link href="css/clean-blog.css" rel="stylesheet">
+	<link href="css/bootstrap-select.min.css" rel="stylesheet">
+	<link href="http://cdn.datatables.net/1.10.7/css/jquery.dataTables.css" rel="stylesheet" type="text/css" >
+	<link href="css/materialize.css" rel="stylesheet">
+	<link href="css/clean-blog.css" rel="stylesheet">
+	<link href="css/bootstrap-select.css" rel="stylesheet">
 
 	<title>BLOOM</title>
 </head>
 <body>
-<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+<!--<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
 	<div class="container-fluid">
-		<!-- Brand and toggle get grouped for better mobile display -->
 		<div class="navbar-header page-scroll">
 			<button type="button" class="navbar-toggle" data-toggle="collapse"
 					data-target="#bs-example-navbar-collapse-1">
@@ -36,9 +30,9 @@
 					class="icon-bar"></span>
 			</button>
 		</div>
-
+-->
 		<!-- Collect the nav links, forms, and other content for toggling -->
-		<div class="collapse navbar-collapse"
+<!--		<div class="collapse navbar-collapse"
 			 id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav navbar-right">
 				<li><a href="HomePage.html">Home</a></li>
@@ -48,17 +42,26 @@
 				<li><a href="Contact.html">Contact</a></li>
 			</ul>
 		</div>
-		<!-- /.navbar-collapse -->
 	</div>
-	<!-- /.container --> </nav>
-<header class="intro-header" style="background-image: url('images/Font2.png')"> <!--style="background-color: #a3a3a3">-->
-
-	<div class="container">
+</nav>-->
+<nav>
+	<div class="nav-wrapper #4db6ac teal lighten-2">
+		<ul id="nav" class="right hide-on-med-and-down">
+			<li><a href="HomePage.html">Home</a></li>
+			<li><a href="LaunchPage.html">Start</a></li>
+			<li><a href="AboutPage.html">About</a></li>
+			<li><a href="DocumentationPage.html">Documentation</a></li>
+			<li><a href="Contact.html">Contact</a></li>
+		</ul>
+	</div>
+</nav>
+<header>
+	<div class="container section no-pad-bot">
 		<div class="row">
 			<div class="col-lg-12 col-lg-offset-2 col-md-10 col-md-offset-1">
 				<div class="post-heading">
 					<h1>BLOOM</h1>
-					<h2 class="subheading">Workflow for open data cleaning</h2>
+					<h2 class="subheading">Workflow for open data curation</h2>
 				</div>
 			</div>
 		</div>
@@ -66,38 +69,44 @@
 </header>
 
 <div class="container">
-	<div class="row mainRowHome">
-		<div class="col-lg-12">
-			<h1 class="homeTitle">Biodiversity Linked Organisms Occurrences Megadatasets</h1>
-			<hr></hr>
-		</div>
-	</div>
-	<div class="row mainRowHome">
-		<div class="col-lg-4 col-lg-offset-4">
-			<h3 class="homeFirstTitle">What Is BLOOM Doing?</h3>
-			<hr></hr>
-		</div>
-	</div>
+
 	<div id="divBody" class="row">
+		<div class="row mainRowHome">
+			<div class="col-lg-12">
+				<h1 class="homeTitle">Biodiversity Linked Organisms Occurrences Megadatasets</h1>
+				<hr class="col-lg-10" style="margin-left: 100px;">
+			</div>
+		</div>
+
+		<div class="row mainRowHome">
+			<div class="col-lg-4 col-lg-offset-4">
+				<h3 class="homeFirstTitle">What Is BLOOM ?</h3>
+				<hr>
+			</div>
+		</div>
 		<div class="row homeContainer">
 			<div class="col-md-4 post-preview">
 				<h2 class="homeTitle">Mapping to DarwinCore standard</h2>
 				<br>
-				<p class="homePostTitle">Thanks to a friendly interface, so easy to use, you could easily convert all your csv files to the DarwinCore standard.
+				<p class="homePostTitle">
+					Conversion to DwC format is easy through our user-friendly interface.
 					Users will be able to select a column of their data set and choose the corresponding column in DarwinCore.
+				</p>
+				<p>
+					More information : <a href="http://rs.tdwg.org/dwc/" target="_blank">rs.tdwg.org/dwc/</a>
 				</p>
 			</div>
 			<div class="col-md-3"></div>
-			<div class="col-md-4 post-preview">
-				<img class="img-responsive" src="images/icone_home_mapping.png">
+			<div class="col-md-4 post-preview ">
+				<a href="DocumentationPage.html#help-mapping-div"> <img class="img-responsive cursor-img" src="images/icone_home_mapping.png"></a>
 			</div>
 			<div class="col-md-1"></div>
 		</div>
-		<hr></hr>
+		<hr>
 		<div class="row homeContainer">
 			<div class="col-md-1"></div>
-			<div class="col-md-4 post-preview">
-				<img class="img-responsive" src="images/icone_home_reconcile.png">
+			<div class="col-md-4 post-preview ">
+				<a href="DocumentationPage.html#help-reconcile-div"><img class="img-responsive cursor-img" src="images/icone_home_reconcile.png"></a>
 			</div>
 			<div class="col-md-2"></div>
 			<div class="col-md-5 post-preview">
@@ -106,38 +115,39 @@
 				</h2>
 				<br>
 				<p class="homePostTitle">The tool integrates a reconciliation service API, which returns a list of potential entities matching the criteria from text.
-					Many addresses exist to resolve syntaxic errors (some could be found here :
+					Many addresses exist to resolve syntaxic errors.
+					Some could be found here :
 					<br><a href="http://dev.gbif.org/wiki/display/POR/Webservice+API" target="_blank">dev.gbif.org/wiki/display/POR/Webservice+API</a>
-					<br><a href="https://www.biodiversitycatalogue.org/services/84" target="_blank">biodiversitycatalogue.org/services/84</a>).
+					<br><a href="https://www.biodiversitycatalogue.org/services/84" target="_blank">biodiversitycatalogue.org/services/84</a>
 				</p>
 			</div>
 		</div>
-		<hr></hr>
+		<hr>
 		<div class="row homeContainer">
 			<div class="col-md-4 post-preview">
 				<h2 class="homeTitle">
-					Check your geographic coordinates !
+					Detection of  errors in geographic values
 				</h2>
 				<br>
 				<p class="homePostTitle">post title geographic coordinates</p>
 			</div>
 			<div class="col-md-3"></div>
 			<div class="col-md-4 post-preview">
-				<img class="img-responsive" src="images/icone_home_geographic.png">
+				<img class="img-responsive cursor-img" src="images/icone_home_geographic.png">
 			</div>
 			<div class="col-md-1"></div>
 		</div>
-		<hr></hr>
+		<hr>
 		<div class="row homeContainer">
 			<div class="col-md-1"></div>
 			<div class="col-md-4 post-preview">
-				<img class="img-responsive" src="images/icone_home_raster.png">
+				<a href="DocumentationPage.html#help-raster-div"><img class="img-responsive cursor-img" src="images/icone_home_raster.png"></a>
 			</div>
 
 			<div class="col-md-2"></div>
 			<div class="col-md-5 post-preview">
 				<h2 class="homeTitle">
-					A raster problem ?
+					Detection of errors depending on the raster file used and its grid cells
 				</h2>
 				<br>
 				<p class="homePostTitle">Raster files that contain a lot of informations on temperature,
@@ -157,27 +167,27 @@
 				<ul class="list-inline text-center">
 					<li>
 						<a href="http://www.cnrs.fr" target="_blank">
-							<img src="images/logo_cnrs.jpg" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+							<img src="images/logo_cnrs.jpg" height="50" width="50" class="img-circle" style="cursor:pointer;">
 						</a>
 					</li>
 					<li>
 						<a href="https://www.mnhn.fr/fr" target="_blank">
-							<img src="images/logo_mnhn.jpg" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+							<img src="images/logo_mnhn.jpg" height="50" width="50" class="img-circle" style="cursor:pointer;">
 						</a>
 					</li>
 					<li>
 						<a href="http://isyeb.mnhn.fr/" target="_blank">
-							<img src="images/logo_ISYEB.png" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+							<img src="images/logo_ISYEB.png" height="50" width="50" class="img-circle" style="cursor:pointer;">
 						</a>
 					</li>
 					<li>
 						<a href="http://www.upmc.fr/" target="_blank">
-							<img src="images/logo_upmc.png" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+							<img src="images/logo_upmc.png" height="50" width="50" class="img-circle" style="cursor:pointer;">
 						</a>
 					</li>
 					<li>
 						<a href="http://www.ephe.fr/" target="_blank">
-							<img src="images/logo_ephe.png" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+							<img src="images/logo_ephe.png" height="50" width="50" class="img-circle" style="cursor:pointer;"><
 						</a>
 					</li>
 				</ul>

@@ -60,7 +60,8 @@ public class UploadController extends HttpServlet{
 		} catch (FileUploadException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}            
+		}
+		System.out.println("getDirectoryPath : " + getDirectoryPath());
 		for (FileItem item : items) {
 			DiskFileItem itemFile = (DiskFileItem) item;
 			String filename = itemFile.getName();
@@ -95,7 +96,7 @@ public class UploadController extends HttpServlet{
 
 				File file = null;
 				if(fileExtensionName != ""){
-					file = new File(getDirectoryPath() + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + "." + fileExtensionName);
+					file = new File(getDirectoryPath() + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + "." + "csv");
 				}
 				else{
 					file = new File(getDirectoryPath() + "temp/" + uuid + "/data/input_" + nbInput + "_" + uuid + ".csv");

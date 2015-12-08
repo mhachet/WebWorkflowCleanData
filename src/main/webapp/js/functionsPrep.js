@@ -811,6 +811,7 @@ function activeRunning(){
 		var divRunning = document.getElementById('running');   
 		var divBody = document.getElementById('divBody');
 		divRunning.style.display = 'block';
+		divRunning.setAttribute('class', "container-loading");
 		divBody.style.display = 'none';
 	}
 	
