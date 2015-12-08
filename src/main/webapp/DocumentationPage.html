@@ -5,68 +5,51 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-   <!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-    <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
+    <link rel="stylesheet"	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+   <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css" rel="stylesheet" >-->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"	rel="stylesheet" type="text/css">
     <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.css">
-    <link href="css/clean-blog.css" rel="stylesheet">-->
-    <link href="css/bootstrap.css" rel="stylesheet">
-    <link href="css/bootstrap-theme.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'	rel='stylesheet' type='text/css'>
+    <link href="css/clean-blog.css" rel="stylesheet">
+    <link href="css/bootstrap-select.min.css" rel="stylesheet">
+    <link href="http://cdn.datatables.net/1.10.7/css/jquery.dataTables.css" rel="stylesheet" type="text/css" >
     <link href="css/materialize.css" rel="stylesheet">
     <link href="css/clean-blog.css" rel="stylesheet">
     <link href="css/bootstrap-select.css" rel="stylesheet">
 <title>Biodiversity Linked Organisms Occurrences Megadatasets</title>
 </head>
 <body>
-	<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
-	<div class="container-fluid">
-		<!-- Brand and toggle get grouped for better mobile display -->
-		<div class="navbar-header page-scroll">
-			<button type="button" class="navbar-toggle" data-toggle="collapse"
-				data-target="#bs-example-navbar-collapse-1">
-				<span class="sr-only">Toggle navigation</span> <span
-					class="icon-bar"></span> <span class="icon-bar"></span> <span
-					class="icon-bar"></span>
-			</button>
-		</div>
-
-		<!-- Collect the nav links, forms, and other content for toggling -->
-		<div class="collapse navbar-collapse"
-			id="bs-example-navbar-collapse-1">
-			<ul class="nav navbar-nav navbar-right">
-				<li><a href="HomePage.html">Home</a></li>
-                <li><a href="LaunchPage.html">Start</a></li>
-				<li><a href="AboutPage.html">About</a></li>
-				<li><a href="DocumentationPage.html">Documentation</a></li>
-				<li><a href="Contact.html">Contact</a></li>
-			</ul>
-		</div>
-		<!-- /.navbar-collapse -->
-	</div>
-	<!-- /.container --> </nav>
-	<header class="intro-header"
-		style="background-image: url('images/Font2.png')">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <div class="post-heading">
-                        <h1>BLOOM</h1>
-                        <h2 class="subheading">Workflow for open data cleaning</h2>
-                    </div>
+<nav>
+    <div class="nav-wrapper #4db6ac teal lighten-2">
+        <ul id="nav" class="right hide-on-med-and-down">
+            <li><a href="HomePage.html">Home</a></li>
+            <li><a href="LaunchPage.html">Start</a></li>
+            <li><a href="AboutPage.html">About</a></li>
+            <li><a href="DocumentationPage.html">Documentation</a></li>
+            <li><a href="Contact.html">Contact</a></li>
+        </ul>
+    </div>
+</nav>
+<header>
+    <div class="container section no-pad-bot">
+        <div class="row">
+            <div class="col-lg-12 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>BLOOM</h1>
+                    <h2 class="subheading">Workflow for open data curation</h2>
                 </div>
             </div>
         </div>
-	</header>
+    </div>
+</header>
 	<div class="container">
 		<div id="divBody" class="row">
 			<div class="col-lg-12">
                 <div class="post-preview">
                     <h2>Documentation</h2>
                 </div>
-                <hr class="col-lg-12"/>
+                <hr>
+            </div>
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 paragraphe">
                     <div class="post-preview">
                         <div class="row" id="help-mapping-div">
@@ -150,6 +133,9 @@
                         <div class="row" id="help-reconcile-div">
                             <h3 class="post-subtitle">Taxonomic Reconciliation</h3>
                             <hr class="col-lg-12 hr-result"/>
+                            <p>
+                                Thanks to a reference, scientific names can be checked
+                            </p>
                             <blockquote>
                                 <h4 class="post-meta">What's the taxonomic reconciliation ?</h4>
                                 <p>
@@ -162,12 +148,27 @@
                                     source : <a href="https://github.com/OpenRefine/OpenRefine/wiki/Reconciliation-Service-API">OpenRefine-Reconciliation-Service</a>
                                 </p>
                             </blockquote>
-                            <p>
-                                Two references are available :
-                                <li><a href="http://data1.kew.org/reconciliation/reconcile/IpniName">http://data1.kew.org/reconciliation/reconcile/IpniName</a></li>
-                            </p>
-                        </div>
+                            <div>
+                                <p>
+                                    These references are available and you can contact us to add a new reference.
+                                </p>
 
+                                <div>
+                                    <li><a href="http://data1.kew.org/reconciliation/reconcile/IpniName">http://data1.kew.org/reconciliation/reconcile/IpniName</a></li>
+                                    <p>
+                                        The data exposed by this service is from the International Plant Names Index (IPNI - available online at http://www.ipni.org).
+                                        IPNI is a database of the names and associated basic bibliographical details of seed plants, ferns and lycophytes.
+                                        </p>
+                                    source : <a href="https://www.biodiversitycatalogue.org/services/84">Biodiversity Catalogue Service</a>
+                                </div>
+                                <div>
+                                    <li><a href="http://refine.taxonomics.org/gbifchecklists/reconcile">http://refine.taxonomics.org/gbifchecklists/reconcile</a></li>
+                                    <p>
+                                        Gbif reference
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

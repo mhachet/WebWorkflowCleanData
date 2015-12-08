@@ -112,11 +112,12 @@ public class LaunchWorkflow {
 				step6.setStep6_ok(sucessTdwgTreatment);
 				step6.setInvolved(true);
 			}
-
+			System.out.println("raster option : " + inputParameters.isRaster());
 			if (this.inputParameters.isRaster()) {
 				step8.setInvolved(true);
-				//boolean rasterFilesIsValid = this.isValidRasterFiles();
-				boolean rasterFilesIsValid = true;
+				boolean rasterFilesIsValid = this.isValidRasterFiles();
+				//boolean rasterFilesIsValid = true;
+				System.out.println("raster valid : " + rasterFilesIsValid);
 				if (rasterFilesIsValid) {
 					this.launchRasterOption();
 				} else {
@@ -161,7 +162,7 @@ public class LaunchWorkflow {
 
 			}
 
-			//this.dataTreatment.deleteTables();
+			this.dataTreatment.deleteTables();
 		}
 		else{
 

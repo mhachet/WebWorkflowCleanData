@@ -9,54 +9,48 @@
 <!DOCTYPE html PUBLIC "-//W4C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-	<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css" rel="stylesheet" >-->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"	rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'	rel='stylesheet' type='text/css'>
     <link href="css/clean-blog.css" rel="stylesheet">
-<title>Biodiversity Linked Organisms Occurrences Megadatasets</title>
+    <link href="css/bootstrap-select.min.css" rel="stylesheet">
+    <link href="http://cdn.datatables.net/1.10.7/css/jquery.dataTables.css" rel="stylesheet" type="text/css" >
+    <link href="css/materialize.css" rel="stylesheet">
+    <link href="css/clean-blog.css" rel="stylesheet">
+    <link href="css/bootstrap-select.css" rel="stylesheet">
+
+    <title>Biodiversity Linked Organisms Occurrences Megadatasets</title>
 </head>
 <body onload="javascript:initialiseFinalPage()">
-	<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
-	<div class="container-fluid">
-		<!-- Brand and toggle get grouped for better mobile display -->
-		<div class="navbar-header page-scroll">
-			<button type="button" class="navbar-toggle" data-toggle="collapse"
-				data-target="#bs-example-navbar-collapse-1">
-				<span class="sr-only">Toggle navigation</span> <span
-					class="icon-bar"></span> <span class="icon-bar"></span> <span
-					class="icon-bar"></span>
-			</button>
-		</div>
-
-		<!-- Collect the nav links, forms, and other content for toggling -->
-		<div class="collapse navbar-collapse"
-			id="bs-example-navbar-collapse-1">
-			<ul class="nav navbar-nav navbar-right">
-				<li><a href="HomePage.html">Home</a></li>
-                <li><a href="LaunchPage.html">Start</a></li>
-				<li><a href="AboutPage.html">About</a></li>
-				<li><a href="DocumentationPage.html">Documentation</a></li>
-				<li><a href="Contact.html">Contact</a></li>
-			</ul>
-		</div>
-		<!-- /.navbar-collapse -->
-	</div>
-	<!-- /.container --> </nav>
-	<header class="intro-header"
-		style="background-image: url('images/Font2.png')">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <div class="post-heading">
-                        <h1>BLOOM</h1>
-                        <h2 class="subheading">Workflow for open data cleaning</h2>
-                    </div>
+<nav>
+    <div class="nav-wrapper #4db6ac teal lighten-2">
+        <ul id="nav" class="right hide-on-med-and-down">
+            <li><a href="HomePage.html">Home</a></li>
+            <li><a href="LaunchPage.html">Start</a></li>
+            <li><a href="AboutPage.html">About</a></li>
+            <li><a href="DocumentationPage.html">Documentation</a></li>
+            <li><a href="Contact.html">Contact</a></li>
+        </ul>
+    </div>
+</nav>
+<header>
+    <div class="container section no-pad-bot">
+        <div class="row">
+            <div class="col-lg-12 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>BLOOM</h1>
+                    <h2 class="subheading">Workflow for open data curation</h2>
                 </div>
             </div>
         </div>
-	</header>
+    </div>
+</header>
 	<div class="container">
 		<div id="divBody" class="row">
 			<div class="col-lg-12">
@@ -127,7 +121,7 @@
                         type="hidden" id="step9_ok" value="${step9.step9_ok}" />
                     <input type="hidden" id="nbOutputClean" value="${fn:length(finalisation.listPathsOutputFiles)}">
                 </div>
-                <hr class="col-lg-12 hr-result"></hr>
+                <hr class="col-lg-12 hr-result">
                 <div id="headerStep0_involved" class="post-preview col-lg-8">
                     <h4 class="post-meta">Checking input files format </h4>
                 </div>
@@ -167,7 +161,7 @@
                         </tbody>
                     </table>
                 </div>
-                <hr class="col-lg-12 hr-result"></hr>
+                <hr class="col-lg-12 hr-result">
                 <!-- <a href="output/test_ipt_ok.csv"/>Test download</a>
 				<a href="test_ipt_ok.csv"/>Test download 2</a> -->
                 <div id="headerStep1_involved" class="post-preview col-lg-8">
@@ -220,7 +214,7 @@
                         </tbody>
                     </table>
                 </div>
-                <hr class="col-lg-12 hr-result"></hr>
+                <hr class="col-lg-12 hr-result">
 
                 <div id="headerStep2_involved" class="post-preview col-lg-8">
                     <h4 class="post-meta">Step 2 : Reconciliation Service</h4>
@@ -274,8 +268,7 @@
                         </tbody>
                     </table>
                 </div>
-                <hr class="col-lg-12 hr-result"></hr>
-
+                <hr class="col-lg-12 hr-result">
                 <div id="headerStep3_involved" class="post-preview col-lg-8">
                     <h4 class="post-meta">Step 3 : Check coordinates</h4>
                 </div>
@@ -320,7 +313,7 @@
                         </tbody>
                     </table>
                 </div>
-                <hr class="col-lg-12 hr-result"></hr>
+                <hr class="col-lg-12 hr-result">
 
                 <div id="headerStep4_involved" class="post-preview col-lg-8">
                     <h4 class="post-meta">Step 4 : Check geospatial issue</h4>
@@ -366,7 +359,7 @@
                         </tbody>
                     </table>
                 </div>
-                <hr class="col-lg-12 hr-result"></hr>
+                <hr class="col-lg-12 hr-result">
 
                 <div id="headerStep5_involved" class="post-preview col-lg-8">
                     <h4 class="post-meta">Step 5 : Check synonym</h4>
@@ -396,7 +389,7 @@
                         </tbody>
                     </table>
                 </div>
-                <hr class="col-lg-12 hr-result"></hr>
+                <hr class="col-lg-12 hr-result">
 
                 <div id="headerStep6_involved" class="post-preview col-lg-8">
                     <h4 class="post-meta">Step 6 : Check TDWG code</h4>
@@ -426,7 +419,7 @@
                         </tbody>
                     </table>
                 </div>
-                <hr class="col-lg-12 hr-result"></hr>
+                <hr class="col-lg-12 hr-result">
 
                 <div id="headerStep7_involved" class="post-preview col-lg-8">
                     <h4 class="post-meta">Step 7 : Iso2 code was checked</h4>
@@ -472,7 +465,7 @@
                         </tbody>
                     </table>
                 </div>
-                <hr class="col-lg-12 hr-result"></hr>
+                <hr class="col-lg-12 hr-result">
                     
                 <div id="headerStep8_involved" class="post-preview col-lg-8">
                     <h4 class="post-meta">Step 8 : Check coordinates in raster cells</h4>
@@ -514,7 +507,7 @@
                        </tbody>
                     </table>
                 </div>
-                <hr class="col-lg-12 hr-result"></hr>
+                <hr class="col-lg-12 hr-result">
 
                 <div class="post-preview col-lg-8">
                     <h4 id="headerStep9_involved" class="post-meta">Step 9 : EstablishmentMeans check</h4>
@@ -560,7 +553,7 @@
                         </tbody>
                     </table>
                 </div>
-                <hr class="col-lg-12 hr-result"></hr>
+                <hr class="col-lg-12 hr-result">
 
                 <div id="downloadFinalFiles">
                     <div class="post-preview col-lg-8">
@@ -585,27 +578,27 @@
                     <ul class="list-inline text-center">
                         <li>
                             <a href="http://www.cnrs.fr" target="_blank">
-                                <img src="images/logo_cnrs.jpg" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+                                < src="images/logo_cnrs.jpg" height="50" width="50" class="img-circle" style="cursor:pointer;">
                             </a>
                         </li>
                         <li>
                             <a href="https://www.mnhn.fr/fr" target="_blank">
-                                <img src="images/logo_mnhn.jpg" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+                                <img src="images/logo_mnhn.jpg" height="50" width="50" class="img-circle" style="cursor:pointer;">
                             </a>
                         </li>
                         <li>
                             <a href="http://isyeb.mnhn.fr/" target="_blank">
-                               <img src="images/logo_ISYEB.png" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+                               <img src="images/logo_ISYEB.png" height="50" width="50" class="img-circle" style="cursor:pointer;">
                             </a>
                         </li>
                         <li>
                             <a href="http://www.upmc.fr/" target="_blank">
-                                <img src="images/logo_upmc.png" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+                                <img src="images/logo_upmc.png" height="50" width="50" class="img-circle" style="cursor:pointer;">
                             </a>
                         </li>
                         <li>
                             <a href="http://www.ephe.fr/" target="_blank">
-                                <img src="images/logo_ephe.png" height="50" width="50" class="img-circle" style="cursor:pointer;"></img>
+                                <img src="images/logo_ephe.png" height="50" width="50" class="img-circle" style="cursor:pointer;">
                             </a>
                         </li>
                     </ul>
