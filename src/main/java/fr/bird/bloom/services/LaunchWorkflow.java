@@ -251,10 +251,12 @@ public class LaunchWorkflow {
 					//System.out.println("new CSVFile isMapping true line 203 LaunchWorkflow");
 					CSVFile csvMappedFile = new CSVFile(mappingDwc.getMappedFile());
 					csvMappedFile.setSeparator(mappingDwc.getNoMappedFile().getSeparator());
+					//System.out.println("reconcileFile ref if mapping : " + csvMappedFile.getCsvFile().getAbsolutePath());
 					this.dataTreatment.reconcileService(reconcileService, csvMappedFile, idFile);
 				}
 				else{
 					//System.out.println("new CSVFile isMapping false line 208 LaunchWorkflow");
+					//System.out.println("reconcileFile ref : " + mappingDwc.getNoMappedFile().getCsvFile().getAbsolutePath());
 					this.dataTreatment.reconcileService(reconcileService, mappingDwc.getNoMappedFile(), idFile);
 				}
 				String pathReconcileFile = reconcileService.getReconcileFile().getAbsolutePath().replace(BloomConfig.getDirectoryPath(),"output/"); //change to 'output/'
@@ -278,13 +280,15 @@ public class LaunchWorkflow {
 			ReconciliationService reconcileFile = mappingReconcilePrep.getReconcileDWC();
 			boolean isValid = mappingReconcilePrep.isValid();
 			String separator = mappingFile.getNoMappedFile().getSeparator().getSymbol();
+
 			if(isValid){
 				if(reconcileFile.isReconcile()){
+					separator = ",";
 					darwinCoreModified = this.dataTreatment.initialiseFile(reconcileFile.getReconcileFile(), idFile, separator);
 
 				}
 				else if(mappingFile.getMappingInvolved()){
-
+					separator = ",";
 					darwinCoreModified = this.dataTreatment.initialiseFile(mappingFile.getMappedFile(), idFile, separator);
 
 				}
@@ -347,7 +351,7 @@ public class LaunchWorkflow {
 				mappingFile.setSuccessMapping(Boolean.toString(false));
 				reconciliationService.setSuccessReconcile(Boolean.toString(false));
 				validInputFiles.put(mappingReconcilePrep.getIdFile(), false);
-				System.out.println(mappingReconcilePrep.getIdFile() + " => false");
+				//System.out.println(mappingReconcilePrep.getIdFile() + " => false");
 			}
 			else{
 				//System.out.println("separator true : " + csvFileNoMapped.getSeparator());
@@ -372,7 +376,7 @@ public class LaunchWorkflow {
 					//System.out.println("separator true true : " + csvFileNoMapped.getSeparator());
 					mappingFile.setSuccessMapping(Boolean.toString(true));
 					validInputFiles.put(mappingReconcilePrep.getIdFile(), true);
-					System.out.println(mappingReconcilePrep.getIdFile() + " => true");
+					//System.out.println(mappingReconcilePrep.getIdFile() + " => true");
 				}
 			}
 
@@ -545,7 +549,7 @@ public class LaunchWorkflow {
 			DatabaseTreatment newConnection = new DatabaseTreatment(statement);
 
 			List<String > resultCleanTable = newConnection.getCleanTableFromIdFile(idFile, inputParameters.getUuid());
-			String nameFile = originalName.replace("." + originalExtension, "") + "_" + inputParameters.getUuid() + "_clean.csv";
+			String nameFile = originalName.replace("." + originalExtension, "") + "_" + idFile + "_" + inputParameters.getUuid() + "_clean.csv";
 			File cleanOutput = this.dataTreatment.createFileCsv(resultCleanTable, nameFile, "final_results");
 
 			listFinalOutput.add(cleanOutput);

@@ -211,14 +211,7 @@ public class MainController extends HttpServlet {
 
                 listMappingFiles.add(newMappingDWC);
 
-                newMappingDWC.initialiseMapping(uuid);
-                Map<String, String> connectionTags = new HashMap<>();
-                List<String> tagsNoMapped = newMappingDWC.getTagsListNoMapped();
-                for (int i = 0; i < tagsNoMapped.size(); i++) {
-                    connectionTags.put(tagsNoMapped.get(i) + "_" + i, "");
-                }
-                //System.out.println("connectionTagsControler : " + connectionTags);
-                newMappingDWC.setConnectionTags(connectionTags);
+
                 newMappingDWC.getNoMappedFile().setCsvName(file.getName());
                 //inputParameters.getInputFilesList().add(csvFile.getCsvFile());
                 //newMappingDWC.setFilename(itemFile.getName());
@@ -285,7 +278,7 @@ public class MainController extends HttpServlet {
                     for (Entry<String, String> entry : connectionTags.entrySet()) {
                         String[] tableKey = entry.getKey().split("_");
                         String idKey = tableKey[tableKey.length - 1];
-                        if (idDropdown.equals(idKey)) {
+                        if(idDropdown.equals(idKey)){
                             connectionTags.put(entry.getKey(), valueDropdown);
                         }
                     }
@@ -322,7 +315,7 @@ public class MainController extends HttpServlet {
                             HashMap<Integer, String> linesConnectedNewName = new HashMap<>();
                             reconciliationService.setLinesConnectedNewName(linesConnectedNewName);
                             reconciliationService.setFilename(listMappingReconcileDWC.get(i).getOriginalName());
-                            listReconcileFiles.add(reconciliationService);
+                            //listReconcileFiles.add(reconciliationService);
                             //System.out.println("in reconcileActive : " + reconciliationService.getLinesConnectedNewName());
                         } else {
                             reconciliationService.setReconcile(false);
@@ -353,12 +346,15 @@ public class MainController extends HttpServlet {
                 //System.out.println("valueradio : " + value);
                 int idFile = Integer.parseInt(tableauField[tableauField.length - 2]);
                 int idLine = Integer.parseInt(tableauField[tableauField.length - 1]);
-                //System.out.println(idLine);
+                System.out.println(idFile + " - " + idLine);
+
                 ReconciliationService reconciliationService = listReconcileFiles.get(idFile);
+                System.out.println("idReconcile : " + listReconcileFiles.size());
                 if (reconciliationService.isReconcile()) {
                     Map<Integer, String> linesConnnectedNewName = reconciliationService.getLinesConnectedNewName();
-                    //System.out.println("in group : " + linesConnnectedNewName);
+
                     linesConnnectedNewName.put(idLine, value);
+                    System.out.println("in group : " + linesConnnectedNewName);
                 }
 
             } else if (fieldName.contains("csvDropdown_")) { //retrieving CSV separator
@@ -377,7 +373,15 @@ public class MainController extends HttpServlet {
                     if (idFile == (idInput)) {
                         MappingDwC mappingDWC = listMappingReconcileDWC.get(i).getMappingDWC();
                         mappingDWC.getNoMappedFile().setSeparator(CSVFile.Separator.fromString(separator));
-                        //System.out.println("separator : " + item.getString());
+                        //System.out.println("separator : " + mappingDWC.getNoMappedFile().getSeparator());
+                        mappingDWC.initialiseMapping(uuid);
+                        Map<String, String> connectionTags = new HashMap<>();
+                        List<String> tagsNoMapped = mappingDWC.getTagsListNoMapped();
+                        for (int j = 0; j < tagsNoMapped.size(); j++) {
+                            connectionTags.put(tagsNoMapped.get(j) + "_" + j, "");
+                        }
+                        //System.out.println("connectionTagsControler : " + connectionTags);
+                        mappingDWC.setConnectionTags(connectionTags);
                     }
                 }
 

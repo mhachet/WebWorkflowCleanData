@@ -14,6 +14,7 @@
     <link href="css/bootstrap-select.min.css" rel="stylesheet">
     <link href="http://cdn.datatables.net/1.10.7/css/jquery.dataTables.css" rel="stylesheet" type="text/css" >
     <link href="css/materialize.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="css/clean-blog.css" rel="stylesheet">
     <link href="css/bootstrap-select.css" rel="stylesheet">
 <title>Biodiversity Linked Organisms Occurrences Megadatasets</title>
@@ -50,122 +51,165 @@
                 </div>
                 <hr>
             </div>
-                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 paragraphe">
+                <div class="col-lg-9 col-lg-offset-1 col-md-10 col-md-offset-1 paragraphe">
                     <div class="post-preview">
                         <div class="row" id="help-mapping-div">
                             <h3 class="post-subtitle">Mapping to DarwinCore tool</h3>
                             <hr class="col-lg-12 hr-result"/>
-                            <p>
-                                The mapping tool help to convert your file to a standard : the DarwinCore.
-                            </p>
-                            <blockquote>
-                                <h4 class="post-meta">What's the DarwinCore ?</h4>
+                            <div class="docu-margin">
                                 <p>
-                                    The Darwin Core is body of standards. It includes a glossary of terms (in other contexts these might be called properties,
-                                    elements, fields, columns, attributes, or concepts) intended to facilitate the sharing of information about biological
-                                    diversity by providing reference definitions, examples, and commentaries. The Darwin Core is primarily based on taxa,
-                                    their occurrence in nature as documented by observations, specimens, samples, and related information.
+                                    The mapping tool help to convert your file to a standard : the DarwinCore.
                                 </p>
+                                <blockquote>
+                                    <h4 class="post-meta">What's the DarwinCore ?</h4>
+                                    <p>
+                                        The Darwin Core is body of standards. It includes a glossary of terms (in other contexts these might be called properties,
+                                        elements, fields, columns, attributes, or concepts) intended to facilitate the sharing of information about biological
+                                        diversity by providing reference definitions, examples, and commentaries. The Darwin Core is primarily based on taxa,
+                                        their occurrence in nature as documented by observations, specimens, samples, and related information.
+                                    </p>
+                                    <p>
+                                        source : <a href="http://rs.tdwg.org/dwc/index.htm">TDWG.org</a>
+                                    </p>
+                                </blockquote>
                                 <p>
-                                    source : <a href="http://rs.tdwg.org/dwc/index.htm">TDWG.org</a>
+                                    The DarwinCore standard contains many terms, explained <a href="http://rs.tdwg.org/dwc/terms/index.htm">here</a>.
+                                    To use our workflow, your data have to be in this DarwinCore format.
+                                    To be easier for you, your data are read (csv format necessary at least) and all columns name are displayed.
+                                    If your column name is recognized by the DarwinCore standard, so this one are automatically mapped.
+                                    If not, you can choose the correct DarwinCore term corresponding.
                                 </p>
-                            </blockquote>
-                            <p>
-                                The DarwinCore standard contains many terms, explained <a href="http://rs.tdwg.org/dwc/terms/index.htm">here</a>.
-                                To use our workflow, your data have to be in this DarwinCore format.
-                                To be easier for you, your data are read (csv format necessary at least) and all columns name are displayed.
-                                If your column name is recognized by the DarwinCore standard, so this one are automatically mapped.
-                                If not, you can choose the correct DarwinCore term corresponding.
-                            </p>
-                            <div class="divImg img-responsive" id="div_img_mapping_1">
-                                <img id="img_mapping_1" src="images/documentation_mapping.jpg" alt="">
-                                <span class="caption text-muted">Figure 1 : example for mapping DarwinCore tool</span>
+                                <div class="divImg img-responsive" id="div_img_mapping_1">
+                                    <img id="img_mapping_1" src="images/documentation_mapping.jpg" alt="">
+                                    <span class="caption text-muted">Figure 1 : example for mapping DarwinCore tool</span>
+                                </div>
+                                <p>
+                                    On the left side, there are your columns, and on the right side, DarwinCore terms.
+                                    In this example, the "establishmentMeans" term is recognized by the tool.
+                                    The "isoCode" isn't recognized, so you can choose the equivalent term thanks to the list : "countryCode".
+                                </p>
                             </div>
-                            <p>
-                                On the left side, there are your columns, and on the right side, DarwinCore terms.
-                                In this example, the "establishmentMeans" term is recognized by the tool.
-                                The "isoCode" isn't recognized, so you can choose the equivalent term thanks to the list : "countryCode".
-                            </p>
-
                         </div>
                         <div class="row" id="help-raster-div">
                             <h3 class="post-subtitle">Masks validation tool</h3>
                             <hr class="col-lg-12 hr-result"/>
-                            <p>
-                                The mask validation tool valid or not each occurencce are correctly included in raster file.
-                            </p>
-                             <blockquote>
-                                 <h4 class="post-meta">What's a raster file ?</h4>
-                                 <p>
-                                In its simplest form, a raster consists of a matrix of cells (or pixels) organized into rows and columns (or a grid) where each cell contains a value representing information, such as temperature. Rasters are digital aerial photographs, imagery from satellites, digital pictures, or even scanned maps. The dimension of the cells can be as large or as small as needed to represent the surface conveyed by the raster dataset and the features within the surface.
-    For more information, go to <a onclick="window.open(this.href); return false;" href="http://webhelp.esri.com/arcgisdesktop/9.2/index.cfm?TopicName=What_is_raster_data%3F">ArcGIS</a>.
-                                    </p>
-                            </blockquote>
-                            <p>
-                              To explain the mask validation tool, I'll take an example (<a href="#img_raster_1">figure 1</a>).
-                            </p>
-                            <div class="divImg img-responsive" id="img_raster_1">
-                                <img src="images/rasterTuto.png" alt="">
-                                <span class="caption text-muted">Figure 2 : example for mask validation tool</span>
-                            </div>
-                            <p>
-                                For this example (<a href="#img_raster_1">figure 1</a>), an occurence is georeferenced and marked by red cross. The geolocalisation is correct : the red cross is inside a land (green). There are three differents raster from the smallest (left grid) to the largest (right grid). Consequently, for the first raster, occurence is included in a valid cell, but not for the other.
-                            </p>
-
-                            <blockquote>
-                                 <h4 class="post-meta">Where is the problem ?</h4>
-                                 <p>
-                                    Tools for raster treatment like (?????) use informations contained in cells. Sometimes, cells have informations for land cells and not for water cells. For the last, these programs don't suport these occurences. Often, a filtering is necessary before.
+                            <div class="docu-margin">
+                                <p>
+                                    The mask validation tool valid or not each occurencce are correctly included in raster file.
                                 </p>
-                            </blockquote>
+                                 <blockquote>
+                                     <h4 class="post-meta">What's a raster file ?</h4>
+                                     <p>
+                                    In its simplest form, a raster consists of a matrix of cells (or pixels) organized into rows and columns (or a grid) where each cell contains a value representing information, such as temperature. Rasters are digital aerial photographs, imagery from satellites, digital pictures, or even scanned maps. The dimension of the cells can be as large or as small as needed to represent the surface conveyed by the raster dataset and the features within the surface.
+        For more information, go to <a onclick="window.open(this.href); return false;" href="http://webhelp.esri.com/arcgisdesktop/9.2/index.cfm?TopicName=What_is_raster_data%3F">ArcGIS</a>.
+                                        </p>
+                                </blockquote>
+                                <p>
+                                  To explain the mask validation tool, I'll take an example (<a href="#img_raster_1">figure 1</a>).
+                                </p>
+                                <div class="divImg img-responsive" id="img_raster_1">
+                                    <img src="images/rasterTuto.png" alt="">
+                                    <span class="caption text-muted">Figure 2 : example for mask validation tool</span>
+                                </div>
+                                <p>
+                                    For this example (<a href="#img_raster_1">figure 1</a>), an occurence is georeferenced and marked by red cross. The geolocalisation is correct : the red cross is inside a land (green). There are three differents raster from the smallest (left grid) to the largest (right grid). Consequently, for the first raster, occurence is included in a valid cell, but not for the other.
+                                </p>
 
-                            <p>
-                                Our mask validation tool do this checking to set appart all wrong occurences. To use this validation, you have to insert one or more raster files. VERIFIER FORMAT PRIS EN CHARGE. You can found raster files here : <a onclick="window.open(this.href); return false;" href="http://www.worldclim.org/">WorldClim</a>
-                            </p>
+                                <blockquote>
+                                     <h4 class="post-meta">Where is the problem ?</h4>
+                                     <p>
+                                        Tools for raster treatment like (?????) use informations contained in cells. Sometimes, cells have informations for land cells and not for water cells. For the last, these programs don't suport these occurences. Often, a filtering is necessary before.
+                                    </p>
+                                </blockquote>
+
+                                <p>
+                                    Our mask validation tool do this checking to set appart all wrong occurences. To use this validation, you have to insert one or more raster files. VERIFIER FORMAT PRIS EN CHARGE. You can found raster files here : <a onclick="window.open(this.href); return false;" href="http://www.worldclim.org/">WorldClim</a>
+                                </p>
+                            </div>
                         </div>
                         <div class="row" id="help-tdwg4-div">
-                            <h3 class="post-subtitle">Check TDWG4 code</h3>
+                            <h3 class="post-subtitle">Check TDWG level 4 code</h3>
                             <hr class="col-lg-12 hr-result"/>
-                            <p>
-                                The mapping tool help to convert your file to a standard : the DarwinCore.
-                            </p>
+                            <div class="docu-margin">
+                                <p>
+                                    For specific botanical data, the TDWG level 4 code can be checked.
+                                </p>
+                                <blockquote>
+                                    <h4 class="post-meta">
+                                        What's the TDWG code ?
+                                    </h4>
+                                    <p>
+                                        This scheme meets the need for a standard yet
+                                        adaptable system of geographical units for use in recording plant distributions and arranging specimens.
+                                        Because a purely political arrangement cannot meet all the needs of botanists, the scheme's arrangement compromises
+                                        between a politically and a phytogeographically oriented system. It identifies geographic units worldwide in a four-level
+                                        hierarchy, incorporating continents, regions, provinces and countries. Each geographical unit at each level has its own
+                                        numeric or alphanumeric code.
+                                    </p>
+                                    <p>
+                                        source : <a onclick="window.open(this.href); return false;" href="http://rs.gbif.org/areas/">gbif.org/areas</a>
+                                    </p>
+                                </blockquote>
+                                <p>
+                                    For more accuracy, the level 4 is checked so occurrence coordinates need to be cleaned before.
+                                    After, the TDWG level 4 corresponding to its coordinates is added at the "locationID" DarwinCore term.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row" id="help-geo-div">
+                            <h3 class="post-subtitle">Georeferencement validation tool</h3>
+                            <hr class="col-lg-12 hr-result"/>
+                            <div class="docu-margin">
+                                <p>
+                                    This tool isn't an option. When the workflow is launched, we check if :
+                                </p>
+                                <div class="li-docu">
+                                    <li style="list-style-type: none;"><i class="material-icons dp48 link-launch-page">done</i> there are no outliers values (longitude = 0 or > 180 or < -180; latitude=0 or > 90 or < -90)</li>
+                                    <li style="list-style-type: none;"><i class="material-icons dp48 link-launch-page">done</i> coordinates are present</li>
+                                    <li style="list-style-type: none;"><i class="material-icons dp48 link-launch-page">done</i> specific DarwinCore "hasGeospatialIssues" is present</li>
+                                    <li style="list-style-type: none;"><i class="material-icons dp48 link-launch-page">done</i> coordinates are valid with ISO2</li>
+                                    <li style="list-style-type: none;"><i class="material-icons dp48 link-launch-page">done</i> coordinates are not inside a marine part</li>
+                                </div>
+                            </div>
                         </div>
                         <div class="row" id="help-reconcile-div">
                             <h3 class="post-subtitle">Taxonomic Reconciliation</h3>
                             <hr class="col-lg-12 hr-result"/>
-                            <p>
-                                Thanks to a reference, scientific names can be checked
-                            </p>
-                            <blockquote>
-                                <h4 class="post-meta">What's the taxonomic reconciliation ?</h4>
+                            <div class="docu-margin">
                                 <p>
-                                    The taxonomic reconciliation is a tool that, given some text which is a name or label for something, and optionally some
-                                    additional details, returns a ranked list of potential entities matching the criteria. The candidate text does not
-                                    have to match each entity's official name perfectly, and that's the whole point of reconciliation--to get from
-                                    ambiguous text name to precisely identified entities.
+                                    Thanks to a reference, scientific names can be checked
                                 </p>
-                                <p>
-                                    source : <a href="https://github.com/OpenRefine/OpenRefine/wiki/Reconciliation-Service-API">OpenRefine-Reconciliation-Service</a>
-                                </p>
-                            </blockquote>
-                            <div>
-                                <p>
-                                    These references are available and you can contact us to add a new reference.
-                                </p>
-
-                                <div>
-                                    <li><a href="http://data1.kew.org/reconciliation/reconcile/IpniName">http://data1.kew.org/reconciliation/reconcile/IpniName</a></li>
+                                <blockquote>
+                                    <h4 class="post-meta">What's the taxonomic reconciliation ?</h4>
                                     <p>
-                                        The data exposed by this service is from the International Plant Names Index (IPNI - available online at http://www.ipni.org).
-                                        IPNI is a database of the names and associated basic bibliographical details of seed plants, ferns and lycophytes.
-                                        </p>
-                                    source : <a href="https://www.biodiversitycatalogue.org/services/84">Biodiversity Catalogue Service</a>
-                                </div>
-                                <div>
-                                    <li><a href="http://refine.taxonomics.org/gbifchecklists/reconcile">http://refine.taxonomics.org/gbifchecklists/reconcile</a></li>
-                                    <p>
-                                        Gbif reference
+                                        The taxonomic reconciliation is a tool that, given some text which is a name or label for something, and optionally some
+                                        additional details, returns a ranked list of potential entities matching the criteria. The candidate text does not
+                                        have to match each entity's official name perfectly, and that's the whole point of reconciliation--to get from
+                                        ambiguous text name to precisely identified entities.
                                     </p>
+                                    <p>
+                                        source : <a href="https://github.com/OpenRefine/OpenRefine/wiki/Reconciliation-Service-API">OpenRefine-Reconciliation-Service</a>
+                                    </p>
+                                </blockquote>
+                                <div>
+                                    <p>
+                                        These references are available and you can contact us to add a new reference.
+                                    </p>
+
+                                    <div>
+                                        <li><a href="http://data1.kew.org/reconciliation/reconcile/IpniName">http://data1.kew.org/reconciliation/reconcile/IpniName</a></li>
+                                        <p>
+                                            The data exposed by this service is from the International Plant Names Index (IPNI - available online at http://www.ipni.org).
+                                            IPNI is a database of the names and associated basic bibliographical details of seed plants, ferns and lycophytes.
+                                            </p>
+                                        source : <a href="https://www.biodiversitycatalogue.org/services/84">Biodiversity Catalogue Service</a>
+                                    </div>
+                                    <div>
+                                        <li><a href="http://refine.taxonomics.org/gbifchecklists/reconcile">http://refine.taxonomics.org/gbifchecklists/reconcile</a></li>
+                                        <p>
+                                            Gbif reference
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

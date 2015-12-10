@@ -140,8 +140,7 @@ public class Treatment {
 		Map<Integer, String> linesConnectedNewName = reconcileService.getLinesConnectedNewName();
 		List<String> listLinesReconciled = new ArrayList<>();
 		try{
-			System.out.println(referenceFileReconcile.getCsvFile().getAbsolutePath());
-			InputStream inputStreamReference = new FileInputStream(referenceFileReconcile.getCsvFile()); 
+			InputStream inputStreamReference = new FileInputStream(referenceFileReconcile.getCsvFile());
 			InputStreamReader inputStreamReaderReference = new InputStreamReader(inputStreamReference);
 			BufferedReader readerReference = new BufferedReader(inputStreamReaderReference);
 			String line = "";
@@ -160,6 +159,7 @@ public class Treatment {
 				}
 				else{
 					for(Entry<Integer, String> entry : linesConnectedNewName.entrySet()){
+						//System.out.println(entry.getKey() + " - " + entry.getValue());
 						if(entry.getKey() + 1 == countLine){
 							lineSplit[tagReconcileColumn] = entry.getValue();
 						}
@@ -193,7 +193,7 @@ public class Treatment {
 	 * @return List<String>
 	 */
 	public DarwinCore initialiseFile(File inputFile, int nbFile, String separator) throws IOException{
-
+		System.out.println("dwc filename : " + inputFile.getAbsolutePath());
 		fileDarwinCore = new DarwinCore(inputFile, nbFile, this.getUuid());
 		File darwinCoreFileTemp = fileDarwinCore.readDarwinCoreFile(separator);
 		fileDarwinCore.setDarwinCoreFileTemp(darwinCoreFileTemp);
@@ -294,9 +294,9 @@ public class Treatment {
 					}*/
 					lines = "";
 				}
-				if(countLine % 100000 == 0){
-					System.out.println(countLine + " insert");
-				}
+				/*if(countLine % 100000 == 0){
+					//System.out.println(countLine + " insert");
+				}*/
 				countLine ++;
 			}
 			lines = lines.substring(0,lines.length()-1);
@@ -315,6 +315,7 @@ public class Treatment {
 			messages.add("\n--- Insert line " + countLine + " in DarwinCoreInput table ---");
 			messages.add(countLine + " => " + sqlInsert);
 			messages.addAll(newConnection.executeSQLcommand(choiceStatement, sqlInsert));
+			//System.out.println("insertFileSQL : " + sqlInsert);
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -327,8 +328,9 @@ public class Treatment {
 				e.printStackTrace();
 			}
 		}
+
 		/*
-		//System.out.println("insertFileSQL : " + insertFileSQL);
+
 		ConnectionDatabase newConnection = new ConnectionDatabase();
 		String choiceStatement = "execute";
 		List<String> messages = new ArrayList<String>();

@@ -251,7 +251,7 @@ public class CSVFile {
             }
         }
 
-        System.out.println("nbLines : " + count);
+        //System.out.println("nbLines : " + count);
 		/*FileReader f = new FileReader(this.csvFile);
 		BufferedReader bf = new BufferedReader(f);
 		Scanner scanner = new Scanner(bf);
