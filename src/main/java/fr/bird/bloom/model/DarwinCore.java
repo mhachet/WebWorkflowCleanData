@@ -161,6 +161,7 @@ public class DarwinCore extends CSVFile{
 					else{
 						String newLine = "";
 						for(int j = 0 ; j < lineSplit.size() ; j++){
+							//System.out.println(lineSplit.get(j));
 							if(j == decimalLatitudeID || j == decimalLongitudeID){
 								String checkedLatLong = "";
 								String noCheckedLatLong = lineSplit.get(j);
@@ -174,6 +175,7 @@ public class DarwinCore extends CSVFile{
 
 						}
 						newLine += Integer.toString(idFile_) + ",0,\"" + this.getUuid() + "\"\n";
+						//System.out.println(newLine);
 						writer.write(newLine);
 					}
 					
@@ -208,10 +210,12 @@ public class DarwinCore extends CSVFile{
 
 	public List<String> getSplitedLine(String separator, String line){
 		List<String> splitedLine = new ArrayList<>();
-		String regex = "(^|(?<=,))([^\",])*((?=,)|$)|((?<=^\")|(?<=,\"))([^\"]|\"\")*((?=\",)|(?=\"$))";
+		String regex = "(^|(?<=" + separator + "))([^\"" + separator + "])*((?=" + separator + ")|$)|((?<=^\")|(?<=" + separator + "\"))([^\"]|\"\")*((?=\"" + separator + ")|(?=\"$))";
+
 		Pattern p = Pattern.compile(regex);
 		Matcher m = p.matcher(line);
-		// System.out.println("******");
+		//System.out.println("******");
+		//System.out.println(line);
 		while (m.find()){
 			splitedLine.add(m.group());
 			//System.out.println(m.group());

@@ -87,8 +87,8 @@ public class MappingDwC {
         String firstNewLine = "";
         int nbCol = connectionTags.size();
         int countTags = 0;
-        System.out.println("value " + connectionTags);
-        System.out.println("valuesTags : " + connectionValuesTags);
+        //System.out.println("value " + connectionTags);
+        //System.out.println("valuesTags : " + connectionValuesTags);
 
         int idLatitudeDwcTag = 0;
         int idLongitudeDwcTag = 0;
@@ -112,7 +112,7 @@ public class MappingDwC {
 
         }
         firstNewLine = firstNewLine.substring(0, firstNewLine.length() - 1) + "\n";
-
+        //System.out.println(firstNewLine);
         writerMappedFile.write(firstNewLine);
         int countLines = 0;
         int nbLines = this.getNbLines(noMappedFile.getCsvFile());
@@ -123,8 +123,8 @@ public class MappingDwC {
             for (Entry<String, List<String>> entryValuesTags : connectionValuesTags.entrySet()) {
                 List<String> listValues = entryValuesTags.getValue();
                 String[] splitKey = entryValuesTags.getKey().split("_");
-               // System.out.println("key : " + entryValuesTags.getKey());
-
+                //System.out.println("key : " + entryValuesTags.getKey());
+               // System.out.println("separator  : " + noMappedFile.getCsvFile().get);
                 Integer entryKey = Integer.parseInt(splitKey[splitKey.length - 1]);
                 if (!this.getListInvalidColumns().contains(entryKey)) {
                     if(entryKey.equals(idLatitudeDwcTag) || entryKey.equals(idLongitudeDwcTag)){
@@ -152,7 +152,7 @@ public class MappingDwC {
 
                 countCol++;
             }
-
+            //System.out.println(lineValues);
             writerMappedFile.write(lineValues);
             countLines++;
         }
@@ -223,6 +223,8 @@ public class MappingDwC {
         final String firstLineString = this.getNoMappedFile().getFirstLine();
 
         String [] firstLine = firstLineString.split(separatorRegex);
+        //System.out.print("separatorregex : " + separatorRegex);
+
         List<String> tagsListNoMappedInit = new ArrayList(Arrays.asList(firstLine));
         return tagsListNoMappedInit;
     }
@@ -263,11 +265,12 @@ public class MappingDwC {
 
     public List<String> getSplitedLine(String separator, String line){
         List<String> splitedLine = new ArrayList<>();
-        String regex = "(^|(?<=,))([^\",])*((?=,)|$)|((?<=^\")|(?<=,\"))([^\"]|\"\")*((?=\",)|(?=\"$))";
+        //String regex = "(^|(?<=,))([^\",])*((?=,)|$)|((?<=^\")|(?<=,\"))([^\"]|\"\")*((?=\",)|(?=\"$))";
+        String regex= "(^|(?<=" + separator + "))([^\"" + separator + "])*((?=" + separator + ")|$)|((?<=^\")|(?<=" + separator + "\"))([^\"]|\"\")*((?=\"" + separator + ")|(?=\"$))";
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(line);
        // System.out.println("******");
-        while (m.find()){
+        while (m.find()) {
             splitedLine.add(m.group());
             //System.out.println(m.group());
         }
@@ -292,7 +295,10 @@ public class MappingDwC {
             int countLine = 0;
             while ((line = readerNoMapped.readLine()) != null) {
                 List<String> splitedLine = this.getSplitedLine(noMappedFile.getSeparator().getSymbol(), line);
-                String[] lineSplit = line.split(noMappedFile.getSeparator().getSymbol(), -1);
+                //String[] lineSplit = line.split(noMappedFile.getSeparator().getSymbol(), -1);
+                /*for(int i = 0 ; i < splitedLine.size() ; i++){
+                    System.out.println(splitedLine.get(i));
+                }*/
 
                 List<String> listValuesMap = new ArrayList<>();
                 for (int i = 0; i < splitedLine.size(); i++) {
@@ -301,6 +307,7 @@ public class MappingDwC {
                         id = splitedLine.get(i) + "_" + i;
                         List<String> values = new ArrayList<>();
                         connectionValuesTags.put(id, values);
+                        //System.out.println(id + "  " + values);
                     } else {
                         for (Entry<String, List<String>> entry : connectionValuesTags.entrySet()) {
                             String[] idKeyTable = entry.getKey().split("_");

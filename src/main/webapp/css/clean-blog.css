@@ -713,8 +713,12 @@ input.valid[type="text"]{
 }
 
 .container-loading{
-	padding-bottom: 300px;
-	padding-top: 300px;
+	padding-bottom: 100px;
+	padding-top: 100px;
+	background-color: white;
+	padding-left: 400px;
+	padding-right: 400px;
+	border-radius:20px;
 }
 
 .row{
@@ -843,7 +847,8 @@ input.valid[type="text"]{
 }
 #divBody{
 	margin-top:50px;
-	background-color: #fafafa;
+	/*background-color: #fafafa;*/
+	background-color: white;
 	padding-bottom: 50px;
 	padding-top: 50px;
 	border-radius:20px;
@@ -1009,6 +1014,14 @@ input[type=mail]{
 
 .link-launch-page{
 	color:#36A89D;
+}
+
+.docu-margin{
+	margin-left: 50px;
+}
+
+.li-docu{
+	padding-left: 20px;
 }
 /*
 .col-md-6{
