@@ -4,6 +4,7 @@ import com.github.junrar.Archive;
 import com.github.junrar.exception.RarException;
 import com.github.junrar.impl.FileVolumeManager;
 import com.github.junrar.rarfile.FileHeader;
+import com.opencsv.CSVReader;
 import fr.bird.bloom.utils.BloomConfig;
 import fr.bird.bloom.utils.BloomUtils;
 import org.apache.commons.fileupload.FileItem;
@@ -18,19 +19,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.*;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.GZIPInputStream;
@@ -45,6 +38,7 @@ public class UploadController extends HttpServlet{
 		}
 		return BloomConfig.getDirectoryPath();
 	}
+
 
 	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 		int count = 0;
@@ -187,6 +181,14 @@ public class UploadController extends HttpServlet{
 			while ((line = readerReference.readLine()) != null){
 				contained += line + "\n";
 			}
+			try{
+				inputStreamReaderReference.close();
+				inputStreamReference.close();
+				readerReference.close();
+			}
+			catch (IOException e){
+				e.printStackTrace();
+			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -216,9 +218,17 @@ public class UploadController extends HttpServlet{
 			int countLine = 0;
 			while ((line = readerReference.readLine()) != null){
 				if(countLine == 0){
-					firstLine = line;
+					firstLine = line.replaceAll("\"", "").replaceAll("\'", "");
 					break;
 				}
+			}
+			try{
+				inputStreamReaderReference.close();
+				inputStreamReference.close();
+				readerReference.close();
+			}
+			catch (IOException e){
+				e.printStackTrace();
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

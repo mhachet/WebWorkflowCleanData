@@ -174,9 +174,9 @@ public class MappingDwC {
         String getColumnsName = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='DarwinCoreInput';";
         List<String> messages = new ArrayList<>();
         DatabaseTreatment columnsNameDwC = null;
-
+        Statement statement = null;
         try {
-            Statement statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             columnsNameDwC = new DatabaseTreatment(statement);
             messages.addAll(columnsNameDwC.executeSQLcommand(choiceStatement, getColumnsName));
         } catch (SQLException e) {
@@ -189,6 +189,14 @@ public class MappingDwC {
         //messages.addAll(columnsNameDwC.newConnection(choiceStatement, getColumnsName));
 
         tempList = columnsNameDwC.getResultatSelect();
+        try {
+            if(statement != null) {
+                statement.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         // delete "COLUMN_NAME" and "id_"filename :
         tempList.remove(0);
         tempList.remove(0);
@@ -333,6 +341,8 @@ public class MappingDwC {
                 countLine++;
             }
             readerNoMapped.close();
+            inputStreamReaderNoMapped.close();
+            inputStreamNoMapped.close();
         } catch (Exception e) {
             System.err.println(e);
         }

@@ -25,6 +25,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @WebServlet(name = "ReconcileController")
 public class ReconcileController extends HttpServlet {
@@ -34,6 +36,18 @@ public class ReconcileController extends HttpServlet {
 			BloomConfig.initializeDirectoryPath(getServletContext().getRealPath("/"));
 		}
 		return BloomConfig.getDirectoryPath();
+	}
+
+	public void testRegex(String separator){
+		String s = "\"Maman\"" + separator + "Papa" + separator + "\"\"" + separator + "" + separator + "\"Julie" + separator + " \\\"Franck\\\"\net Tom\"" + separator + "\"Mamy\"" + separator + "\"Papy\"";
+		String regex = "((?:\"(?:\\\\\"|[^\"])*\"\\s*)|(?:[^" + separator + "\"]*\\s*))" + separator +"?";
+		Pattern p = Pattern.compile(regex);
+		Matcher m = p.matcher(s);
+		System.out.println("Chaîne : "+ s +"\nRegex : "+ regex);
+		int hit = 0;
+		while(m.find()) {
+			System.out.println(++hit + " : " + m.group(1));
+		}
 	}
 
 	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
@@ -99,6 +113,8 @@ public class ReconcileController extends HttpServlet {
 			BloomUtils.createDirectory(getDirectoryPath() + "temp/" + uuid + "/final_results/");
 		}
 
+		//this.testRegex(separator);
+
 		String extension = this.getExtension(nbInput, uuid);
 		System.out.println("extension : " + extension);
 		if("preparation".equals(action)){
@@ -151,6 +167,13 @@ public class ReconcileController extends HttpServlet {
 			//response.getWriter().write(array.toString());
 			response.getWriter().print(selectedLines);	
 
+			try{
+				br.close();
+				reader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
 		}
 
 
@@ -198,6 +221,14 @@ public class ReconcileController extends HttpServlet {
 					firstLine = line;
 					break;
 				}
+			}
+			try{
+				inputStreamReaderReference.close();
+				inputStreamReference.close();
+				readerReference.close();
+			}
+			catch (IOException e){
+				e.printStackTrace();
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

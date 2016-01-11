@@ -31,7 +31,7 @@ public class ConnectionDatabase {
      *
      * @return Connection
      */
-    public static Connection getConnection() {
+    public static Connection getConnection() throws SQLException {
         if (connexion == null) {
             try {
                 //System.out.println(getUrl() + "  " + getUser() + "  " + getPassword());
@@ -51,6 +51,7 @@ public class ConnectionDatabase {
                 System.err.println("ERREUR DE CONNEXION : " + e.getMessage());
             }
         }
+
         //executeSQLcommand(choiceStatement, sqlCommand);
 
         return connexion;

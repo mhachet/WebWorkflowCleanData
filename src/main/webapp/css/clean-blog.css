@@ -1023,6 +1023,14 @@ input[type=mail]{
 .li-docu{
 	padding-left: 20px;
 }
+
+.center-content{
+	text-align: center;
+}
+
+.padding-left{
+	padding-left: 20px;
+}
 /*
 .col-md-6{
 	  display:inline-block;

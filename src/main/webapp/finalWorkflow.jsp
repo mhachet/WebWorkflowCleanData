@@ -578,7 +578,7 @@
                     <ul class="list-inline text-center">
                         <li>
                             <a href="http://www.cnrs.fr" target="_blank">
-                                < src="images/logo_cnrs.jpg" height="50" width="50" class="img-circle" style="cursor:pointer;">
+                                <img src="images/logo_cnrs.jpg" height="50" width="50" class="img-circle" style="cursor:pointer;">
                             </a>
                         </li>
                         <li>

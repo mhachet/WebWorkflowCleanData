@@ -339,9 +339,9 @@ public class MainController extends HttpServlet {
                 //System.out.println("fieldName : " + fieldName);
                 String[] tableauField = fieldName.split("_");
                 String value = item.getString();
-                for (int t = 0; t < tableauField.length; t++) {
+                /*for (int t = 0; t < tableauField.length; t++) {
                     System.out.println("tableau : " + tableauField[t]);
-                }
+                }*/
 
                 //System.out.println("valueradio : " + value);
                 int idFile = Integer.parseInt(tableauField[tableauField.length - 2]);
@@ -354,7 +354,7 @@ public class MainController extends HttpServlet {
                     Map<Integer, String> linesConnnectedNewName = reconciliationService.getLinesConnectedNewName();
 
                     linesConnnectedNewName.put(idLine, value);
-                    System.out.println("in group : " + linesConnnectedNewName);
+                    //System.out.println("in group : " + linesConnnectedNewName);
                 }
 
             } else if (fieldName.contains("csvDropdown_")) { //retrieving CSV separator

@@ -295,7 +295,9 @@ public class RasterTreatment {
 					error = true;
 				}
 			}
-			br.close(); 
+			br.close();
+			ips.close();
+			ipsr.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -336,9 +338,9 @@ public class RasterTreatment {
 						//System.out.println("array : " + ligne);
 					}
 					else{
-						for(int i=0; i < arraySplit.length; i++) {
+						/*for(int i=0; i < arraySplit.length; i++) {
 							System.out.println("array : " + arraySplit[i]);
-						}
+						}*/
 						try{
 
 							listValidData.add(Integer.parseInt(arraySplit[1]));
@@ -353,7 +355,9 @@ public class RasterTreatment {
 
 
 			}
-			br.close(); 
+
+			br.close();
+			ipsr.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

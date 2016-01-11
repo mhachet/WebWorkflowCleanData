@@ -139,16 +139,20 @@ public class Treatment {
 		int tagReconcileColumn = 0;
 		Map<Integer, String> linesConnectedNewName = reconcileService.getLinesConnectedNewName();
 		List<String> listLinesReconciled = new ArrayList<>();
+		InputStream inputStreamReference = null;
+		InputStreamReader inputStreamReaderReference = null;
+		BufferedReader readerReference = null;
+
 		try{
-			InputStream inputStreamReference = new FileInputStream(referenceFileReconcile.getCsvFile());
-			InputStreamReader inputStreamReaderReference = new InputStreamReader(inputStreamReference);
-			BufferedReader readerReference = new BufferedReader(inputStreamReaderReference);
+			inputStreamReference = new FileInputStream(referenceFileReconcile.getCsvFile());
+			inputStreamReaderReference = new InputStreamReader(inputStreamReference);
+			readerReference = new BufferedReader(inputStreamReaderReference);
 			String line = "";
 			int countLine = 0;
 			while ((line = readerReference.readLine()) != null){
 				//System.out.println("separator : " + referenceFileReconcile.getSeparator());
 				String [] lineSplit = line.split(referenceFileReconcile.getSeparator().getSymbol(), -1);
-
+				//System.out.println(line);
 				if(countLine == 0){
 					for(int i = 0; i < lineSplit.length; i++){
 						if(lineSplit[i].equals(tagReconcile)){
@@ -162,11 +166,23 @@ public class Treatment {
 						//System.out.println(entry.getKey() + " - " + entry.getValue());
 						if(entry.getKey() + 1 == countLine){
 							lineSplit[tagReconcileColumn] = entry.getValue();
+							//System.out.println(tagReconcileColumn + "  " + lineSplit[tagReconcileColumn] + "  " + "\"" + entry.getValue() +"\"");
 						}
 
 					}
 				}
-				String newLine = StringUtils.join(lineSplit, ",");
+
+				String [] newLineSplit = new String[lineSplit.length];
+				for(int j = 0 ; j < lineSplit.length ; j++){
+					String oldItem = lineSplit[j];
+					String newItem = "\"" + oldItem.replaceAll("\"", "\\\\\"") + "\"";
+					newLineSplit[j] = newItem;
+					//System.out.println(oldItem + " \t" + newItem);
+				}
+
+
+				String newLine = StringUtils.join(newLineSplit, ",");
+				//System.out.println(newLine);
 				listLinesReconciled.add(newLine);
 				countLine++;
 			}
@@ -179,8 +195,21 @@ public class Treatment {
 			reconcileService.setSuccessReconcile(Boolean.toString(false));
 			
 		}
+		try {
+			readerReference.close();
+			inputStreamReference.close();
+			inputStreamReaderReference.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		/*for(int j = 0 ; j < listLinesReconciled.size() ; j++){
+			System.out.println(listLinesReconciled.get(j));
+		}*/
 		File reconcileFile = this.createFileCsv(listLinesReconciled, "reconcile_" + this.getUuid() + "_" + idFile + ".csv", "data");
 		reconcileService.setReconcileFile(reconcileFile);
+
+
 	}
 
 	/**
@@ -193,11 +222,11 @@ public class Treatment {
 	 * @return List<String>
 	 */
 	public DarwinCore initialiseFile(File inputFile, int nbFile, String separator) throws IOException{
-		System.out.println("dwc filename : " + inputFile.getAbsolutePath());
+		//System.out.println("dwc filename : " + inputFile.getAbsolutePath());
 		fileDarwinCore = new DarwinCore(inputFile, nbFile, this.getUuid());
 		File darwinCoreFileTemp = fileDarwinCore.readDarwinCoreFile(separator);
 		fileDarwinCore.setDarwinCoreFileTemp(darwinCoreFileTemp);
-		System.out.println("filename : " + darwinCoreFileTemp.getAbsolutePath());
+		//System.out.println("filename : " + darwinCoreFileTemp.getAbsolutePath());
 		return fileDarwinCore;
 	}
 
@@ -249,7 +278,14 @@ public class Treatment {
 	public void createTableDarwinCoreInput(DarwinCore darwinCoreModified){
 		File darwinCoreFile = darwinCoreModified.getDarwinCoreFileTemp();
 		BufferedReader buff = null;
-		
+		/*FileWriter writer = null;
+
+		File testCount = new File("/home/mhachet/testCount.txt");
+		try {
+			writer = new FileWriter(testCount.getAbsoluteFile());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}*/
 		try {
 			buff = new BufferedReader(new FileReader(darwinCoreFile));
 		} catch (FileNotFoundException e1) {
@@ -269,7 +305,7 @@ public class Treatment {
 				else {
 					lines += "(" + line + "),";
 				}
-				if(countLine % 5000 == 0 && countLine != 0){
+				if(countLine % 1000 == 0 && countLine != 0){
 					largeFile = true;
 					lines = lines.substring(0,lines.length()-1);
 
@@ -289,33 +325,38 @@ public class Treatment {
 					messages.add("\n--- Insert line " + countLine + " in DarwinCoreInput table ---");
 					messages.add(countLine + " => " + sqlInsert);
 					messages.addAll(newConnection.executeSQLcommand(choiceStatement, sqlInsert));
+					//writer.write("Inside" + sqlInsert + "\n\n");
 					/*for(int i = 0 ; i < messages.size() ; i++){
 						writer.write(messages.get(i));
 					}*/
 					lines = "";
 				}
-				/*if(countLine % 100000 == 0){
-					//System.out.println(countLine + " insert");
-				}*/
+				//if(countLine % 100000 == 0){
+
+				//}
 				countLine ++;
 			}
-			lines = lines.substring(0,lines.length()-1);
-			String sqlInsert = "INSERT INTO Workflow.DarwinCoreInput (" + firstLine + ") VALUES " + lines + ";";
-			//System.out.println("small : " + sqlInsert);
-			Statement statement = null;
-			try {
-				statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if(!lines.equals("")){
+				lines = lines.substring(0,lines.length()-1);
+				String sqlInsert = "INSERT INTO Workflow.DarwinCoreInput (" + firstLine + ") VALUES " + lines + ";";
+				//System.out.println("small : " + sqlInsert);
+				Statement statement = null;
+				try {
+					statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				DatabaseTreatment newConnection = new DatabaseTreatment(statement);
+				String choiceStatement = "execute";
+				ArrayList<String> messages = new ArrayList<String>();
+				messages.add("\n--- Insert line " + countLine + " in DarwinCoreInput table ---");
+				messages.add(countLine + " => " + sqlInsert);
+				messages.addAll(newConnection.executeSQLcommand(choiceStatement, sqlInsert));
+				//writer.write("AtTheEnd" + sqlInsert + "\n\n");
+				//System.out.println("insertFileSQL : " + sqlInsert);
 			}
-			DatabaseTreatment newConnection = new DatabaseTreatment(statement);
-			String choiceStatement = "execute";
-			ArrayList<String> messages = new ArrayList<String>();
-			messages.add("\n--- Insert line " + countLine + " in DarwinCoreInput table ---");
-			messages.add(countLine + " => " + sqlInsert);
-			messages.addAll(newConnection.executeSQLcommand(choiceStatement, sqlInsert));
-			//System.out.println("insertFileSQL : " + sqlInsert);
+
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -329,6 +370,11 @@ public class Treatment {
 			}
 		}
 
+		/*try {
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}*/
 		/*
 
 		ConnectionDatabase newConnection = new ConnectionDatabase();
@@ -340,6 +386,7 @@ public class Treatment {
 		for(int i = 0 ; i < messages.size() ; i++){
 			System.out.println(messages.get(i));
 		}*/
+
 	} 
 
 	/**
@@ -477,7 +524,8 @@ public class Treatment {
 		try {
 			writer = new FileWriter(newFile);
 			for(int i = 0 ; i < linesFile.size() ; i++){
-				writer.write(linesFile.get(i) + "\n");
+				//System.out.println(linesFile.get(i));
+				writer.write(linesFile.get(i).replaceAll("\\\\\"", "\\\\\\\"") + "\n");
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

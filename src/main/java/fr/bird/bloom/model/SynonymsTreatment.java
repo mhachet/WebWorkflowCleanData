@@ -63,6 +63,12 @@ public class SynonymsTreatment {
 		}
 
 
+		try{
+			fr.close();
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return tagsList;
 	}
 
@@ -182,6 +188,13 @@ public class SynonymsTreatment {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+
+		}
+		try {
+			fr.close();
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
 		String type = "LONGTEXT default NULL";
@@ -218,7 +231,6 @@ public class SynonymsTreatment {
 			messages.add("nb lignes affectées : " + Integer.toString(resultatSelect.size() - 1));
 			//this.createFileCsv(resultatSelect, "test");
 		}
-
 	}
 
 	public File getSynonymsFile() {

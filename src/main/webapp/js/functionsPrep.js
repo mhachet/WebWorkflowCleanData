@@ -512,7 +512,14 @@ function cancelInputFile(nb_input, action){
 				actionReconcileButton(nb_input, "cancel");
 				console.log(this.responseText);
 				//readInputFile(this.responseText, nbInput);
+
+				var divLoadingIcon = document.getElementById("loadIcon_" + nb_input);
 			}
+			if(divLoadingIcon != null){
+				var divAddLoad = document.getElementById("divAddLoad_" + nb_input);
+				divAddLoad.removeChild(divLoadingIcon);
+			}
+
 		}
 	}
 	
@@ -526,7 +533,7 @@ function cancelInputFile(nb_input, action){
 	var divSubmitMappingCancel = document.getElementById("divSubmitMappingCancel_" + nb_input);
 	
 	var divMessageSaved = document.getElementById("divMessageSaved_" + nb_input);
-	var divMessagedCancelled = document.getElementById("divMessageCancelled_" + nb_input);
+	var divMessageCancelled = document.getElementById("divMessageCancelled_" + nb_input);
 	
 	var tablePrepareReconcile = document.getElementById("tablePrepareReconcile_" + nb_input);
 	var divTableReconcile = document.getElementById("divTableReconcile_" + nb_input);
@@ -569,7 +576,7 @@ function cancelInputFile(nb_input, action){
 		divSubmitMapping.removeChild(divSubmitMappingOK);
 		divSubmitMapping.removeChild(divSubmitMappingCancel);
 		divSubmitMapping.removeChild(divMessageSaved);
-		divSubmitMapping.removeChild(divMessagedCancelled);
+		divSubmitMapping.removeChild(divMessageCancelled);
 	}
 
 	if(tablePrepareReconcile){

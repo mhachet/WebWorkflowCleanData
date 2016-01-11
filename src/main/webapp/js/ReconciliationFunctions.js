@@ -108,7 +108,10 @@ function loadReconcileService(uuid, nb_input){
 		separator = '\t';    
 	}
 
-	var tableReconcileWraper = document.getElementById("tableReconcile_" + nb_input + "_wrapper");
+	var tableReconcileWrapper = document.getElementById("tableReconcile_" + nb_input + "_wrapper");
+	if(tableReconcileWrapper != null) {
+		console.log("id reconcileWrapper : " + tableReconcileWrapper.id);
+	}
 	var divTableReconcile = document.getElementById("divTableReconcile_" + nb_input);
 	var reconcileActive = document.getElementById("reconcileActive_" + nb_input);
 	var divSubmitReconcile = document.getElementById("divSubmitReconcile_" + nb_input);
@@ -123,20 +126,33 @@ function loadReconcileService(uuid, nb_input){
 	var tablePrepareReconcile = document.getElementById("tablePrepareReconcile_" + nb_input);
 	var divReconciliationCheck = document.getElementById("divReconciliationCheck_" + nb_input);
 
+	var tableReconcile = document.getElementById("tableReconcile_" + nb_input);
+
+
 	if(!tablePrepareReconcile){
-		if(!tableReconcileWraper){
-			//console.log("doPrepare");
+		/*var separatorText = document.getElementById("csvDropdown_" + nb_input).value;
+		var separatorSaved = tableReconcile.getAttribute('value');
+		//console.log(divMessageCancelled.id)
+		if(separatorSaved == separatorText){
+			console.log("same separator  : " + separatorText);
+		}
+		else{
+			console.log("not same separator  : " + separatorText + "\t" + separatorSaved);
+		}*/
+		if(!tableReconcileWrapper){
+			console.log("doPrepare");
 			doPreparationReconciliation(uuid, nb_input, separator);
 		}
 		else{
-			//console.log("strange");
+			console.log("strange");
 		}
 	}
 	else{
+
 		if(reconcileActive){
-			//console.log("display prepareTable and remove tableWrapper");
-			if(tableReconcileWraper){
-				divTableReconcile.removeChild(tableReconcileWraper);
+			console.log("display prepareTable and remove tableWrapper");
+			if(tableReconcileWrapper){
+				divTableReconcile.removeChild(tableReconcileWrapper);
 			}
 
 			divMessageReconcileCancelled.style.display = "none";
@@ -149,6 +165,7 @@ function loadReconcileService(uuid, nb_input){
 			reconcileActive.setAttribute('value', 'false');
 		}
 		else{
+			console.log("start reconciliation");
 			startReconciliation(nb_input, uuid);
 
 		}
@@ -256,7 +273,7 @@ function doPreparationReconciliation(uuid, nb_input, separator){
 					divTaxo.appendChild(divNoteReconcile);
 					//divReconciliationCheck.appendChild(noteReconcile);
 					divReconciliationCheck.appendChild(divTaxo);
-
+					divReconciliationCheck.style.display = "block";
 					//$("#labelUrlTaxo_" + nb_input).text("Url reference");
 
 					//$(".selectpicker").selectpicker();
@@ -448,19 +465,19 @@ function createReconciliationPreparation(uuid, presentTags, nbInput){
 
 		var divMessageReconcileSaved = document.createElement('div');
 		divMessageReconcileSaved.setAttribute('id', "divMessageReconcileSaved_" + nbInput);
-		divMessageReconcileSaved.setAttribute('class', "col-lg-12 text-success text-center");
 		divMessageReconcileSaved.style.display = "none";
 
 		var messageReconcileSaved = document.createElement('p');
+		messageReconcileSaved.setAttribute('class', "col-lg-12 text-success text-center");
 		messageReconcileSaved.innerHTML = "Reconciliation service saved";
 		divMessageReconcileSaved.appendChild(messageReconcileSaved);
 
 		var divMessageReconcileCancelled = document.createElement('div');
 		divMessageReconcileCancelled.setAttribute('id', "divMessageReconcileCancelled_" + nbInput);
-		divMessageReconcileCancelled.setAttribute('class', "col-lg-12 text-danger text-center");
 		divMessageReconcileCancelled.style.display = "none";
 
 		var messageReconcileCancelled = document.createElement('p');
+		messageReconcileCancelled.setAttribute('class', "col-lg-12 text-danger text-center");
 		messageReconcileCancelled.innerHTML = "Reconciliation service cancelled";
 		divMessageReconcileCancelled.appendChild(messageReconcileCancelled);
 
@@ -547,6 +564,7 @@ function doReconciliation(nbInput, contentFile, separator){
 	var tableReconcile = document.getElementById("tableReconcile_" + nbInput);
 	var tableReconcileWrapper = document.getElementById("tableReconcile_" + nbInput + "_wrapper");
 
+	var separatorText = "";
 
 	if(tableReconcile == null && tableReconcileWrapper == null){
 		//console.log("tableReconcile and wrapper are null");
@@ -556,6 +574,18 @@ function doReconciliation(nbInput, contentFile, separator){
 		tableReconcile.name = "tableReconcile_" + nbInput;
 		tableReconcile.border = "0";
 		tableReconcile.setAttribute("class", "table-mapping table-marges");
+
+		if(separator == ","){
+			separatorText = 'comma';
+		}
+		else if(separator == ";"){
+			separatorText = 'semiComma';
+		}
+		else{
+			separatorText = 'tab';
+		}
+
+		tableReconcile.setAttribute('value', separatorText);
 
 		var reconcile = $("#reconcileActive_" + nbInput);
 		if(reconcile.length != 1){
