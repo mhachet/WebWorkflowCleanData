@@ -19,76 +19,71 @@ import java.net.URLDecoder;
 public class Download extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final int DEFAULT_BUFFER_SIZE = 100240; // 10 ko
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
+
 	public Download() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		/* Lecture du paramètre 'chemin' passé à la servlet via la déclaration dans le web.xml */
-		String chemin = this.getServletConfig().getInitParameter("chemin");
-		/* Récupération du chemin du fichier demandé au sein de l'URL de la requête */
-		String fichierRequis = request.getPathInfo();
+		/* Read 'downloadpath' parameter in Download servlet thanks declaration in web.xml */
+		String downloadpath = this.getServletConfig().getInitParameter("downloadpath");
+		/* Get filepath asked inside url request*/
+		String requestFile = request.getPathInfo();
 
-		/* Vérifie qu'un fichier a bien été fourni */
-		if ( fichierRequis == null || "/".equals( fichierRequis ) ) {
-			/* Si non, alors on envoie une erreur 404, qui signifie que la ressource demandée n'existe pas */
+		/* Check a file is given */
+		if ( requestFile == null || "/".equals( requestFile ) ) {
+			/* Else 404 error, ressource doesn't exist */
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
 
-		/* Décode le nom de fichier récupéré, susceptible de contenir des espaces et autres caractères spéciaux, et prépare l'objet File */
-		fichierRequis = URLDecoder.decode( fichierRequis, "UTF-8");
-		File fichier = new File( chemin, fichierRequis );
-		//System.out.println(fichier.getAbsolutePath());
-		/* Vérifie que le fichier existe bien */
-		if ( !fichier.exists() ) {
-			/* Si non, alors on envoie une erreur 404, qui signifie que la ressource demandée n'existe pas */
+		/* Decode filename retrieved, may contain space or others specials caracters. Prepare File object */
+		requestFile = URLDecoder.decode( requestFile, "UTF-8");
+		File file = new File( downloadpath, requestFile );
+		System.out.println(file.getAbsolutePath());
+		/*Check file exist */
+		if ( !file.exists() ) {
+			/* Else 404 error, ressource doesn't exist */
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
 
-		/* Récupère le type du fichier */
-		String type = getServletContext().getMimeType( fichier.getName() );
+		/* Retrieve file type */
+		String type = getServletContext().getMimeType( file.getName() );
 
-		/* Si le type de fichier est inconnu, alors on initialise un type par défaut */
+		/* If file type is unknown, so initialize it by default */
 		if ( type == null ) {
 			type = "application/octet-stream";
 		}
 
-		/* Initialise la réponse HTTP */
+		/* Initialise HTTP answer */
 		response.reset();
-		response.setBufferSize( DEFAULT_BUFFER_SIZE );
+		response.setBufferSize(DEFAULT_BUFFER_SIZE);
 		response.setContentType( type );
-		response.setHeader( "Content-Length", String.valueOf( fichier.length() ) );
-		response.setHeader( "Content-Disposition", "attachment; filename=\"" + fichier.getName() + "\"" );
+		response.setHeader( "Content-Length", String.valueOf( file.length() ) );
+		response.setHeader( "Content-Disposition", "attachment; filename=\"" + file.getName() + "\"" );
 
-		/* Prépare les flux */
-		BufferedInputStream entree = null;
-		BufferedOutputStream sortie = null;
+		/* Prepare flows */
+		BufferedInputStream entry = null;
+		BufferedOutputStream exit = null;
 		try {
-			/* Ouvre les flux */
-			entree = new BufferedInputStream( new FileInputStream( fichier ), DEFAULT_BUFFER_SIZE );
-			sortie = new BufferedOutputStream( response.getOutputStream(), DEFAULT_BUFFER_SIZE );
-			/* Lit le fichier et écrit son contenu dans la réponse HTTP */
+			/* Open flows */
+			entry = new BufferedInputStream( new FileInputStream( file ), DEFAULT_BUFFER_SIZE );
+			exit = new BufferedOutputStream( response.getOutputStream(), DEFAULT_BUFFER_SIZE );
+			/* Read file and write the content in the HTTP answer */
 			byte[] tampon = new byte[DEFAULT_BUFFER_SIZE];
 			int longueur;
-			while ( ( longueur = entree.read( tampon ) ) > 0 ) {
-				sortie.write( tampon, 0, longueur );
+			while ( ( longueur = entry.read( tampon ) ) > 0 ) {
+				exit.write(tampon, 0, longueur);
 			}
 		} finally {
 			try {
-				sortie.close();
+				exit.close();
 			} catch ( IOException ignore ) {
 			}
 			try {
-				entree.close();
+				entry.close();
 			} catch ( IOException ignore ) {
 			}
 		}

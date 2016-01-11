@@ -198,7 +198,15 @@ public class LaunchWorkflow {
 				step9.setStep9_ok(false);
 			}
 		}
-
+/*
+		try {
+			ConnectionDatabase.getConnection().close();
+			System.err.println("Connection database closed");
+		} catch (SQLException e) {
+			System.err.println("Impossible to close the database connection");
+			e.printStackTrace();
+		}
+		*/
 	}
 
 
@@ -370,7 +378,6 @@ public class LaunchWorkflow {
 						}
 					}
 					validInputFiles.put(mappingReconcilePrep.getIdFile(), validFile);
-					System.out.println(mappingReconcilePrep.getIdFile() + " => " + validFile);
 				}
 				else{
 					//System.out.println("separator true true : " + csvFileNoMapped.getSeparator());
@@ -379,6 +386,7 @@ public class LaunchWorkflow {
 					//System.out.println(mappingReconcilePrep.getIdFile() + " => true");
 				}
 			}
+			//System.out.println("idFile : " + mappingReconcilePrep.getIdFile() + "is valid : " + validFile);
 
 		}
 

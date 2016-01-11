@@ -17,11 +17,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -88,51 +84,109 @@ public class GeographicTreatment {
 	public List<String> checkCoordinatesIso2Code(){
 
 
-		this.getDarwinCore().associateIdData();
+		//this.getDarwinCore().associateIdData();
 
 		List<String> listToDelete = new ArrayList<>();
 
-		Map<String, List<String>> idAssoData = this.getDarwinCore().getIdAssoData();
+		//Map<String, List<String>> idAssoData = this.getDarwinCore().getIdAssoData();
 		final String resourcePath = BloomConfig.getResourcePath();
+		List<String> idList = this.getDarwinCore().getID();
+		//int iLatitude = this.getDarwinCore().getIndiceFromTag("decimalLatitude_");
+		//int iLongitude = this.getDarwinCore().getIndiceFromTag("decimalLongitude_");
+		//int iIso2 = this.getDarwinCore().getIndiceFromTag("countryCode_");
+		//int iGbifID = this.getDarwinCore().getIndiceFromTag("gbifID_");
 
-		int iLatitude = this.getDarwinCore().getIndiceFromTag("decimalLatitude_");
-		int iLongitude = this.getDarwinCore().getIndiceFromTag("decimalLongitude_");
-		int iIso2 = this.getDarwinCore().getIndiceFromTag("countryCode_");
-		int iGbifID = this.getDarwinCore().getIndiceFromTag("gbifID_");
 		int nbWrongIso2 = 0;
 		List<String> listIDtoDelete = new ArrayList<>();
-
-		for (String id_ : idAssoData.keySet()) {
+		for(int i = 0 ; i< idList.size() ; i++){
+			String id_ = idList.get(i);
+			//System.out.println(id_);
+		//for (String id_ : idAssoData.keySet()) {
+			//System.out.println(id_);
 			if(!"id_".equals(id_ )){
-				List<String> listInfos = idAssoData.get(id_);
+				//List<String> listInfos = idAssoData.get(id_);
+				boolean errorIso = true;
+				boolean errorCoord = false;
+				float latitude = -1;
+				float longitude = -1;
+				String iso2 = "error";
+				String gbifId_ = "error";
+				String iso3 = "error";
 
-				float latitude;
-				float longitude;
-				String iso2;
-				String iso3;
-				String gbifId_ = "";
+				String valueLatitude = this.getDarwinCore().getValueFromColumn("decimalLatitude_", id_.replaceAll("\"", ""));
+				System.err.println("decimalLatitude : " + valueLatitude);
+				if(!valueLatitude.equals("error")){
+					try {
+						latitude = Float.parseFloat(valueLatitude.replaceAll("\"", ""));
+					}
+					catch(NumberFormatException ex) {
+						errorCoord = true;
+					}
+				}
 
-				latitude = Float.parseFloat(listInfos.get(iLatitude).replace("\"", ""));
-				longitude = Float.parseFloat(listInfos.get(iLongitude).replace("\"", ""));
-				iso2 = listInfos.get(iIso2);
-				iso3 = this.convertIso2ToIso3(iso2);
-				gbifId_ = listInfos.get(iGbifID);
 
-				File geoJsonFile = new File(resourcePath + "gadm_json/" + iso3.toUpperCase() + "_adm0.json");
-				GeometryFactory geometryFactory = new GeometryFactory();
-				Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
-				/*System.out.println("--------------------------------------------------------------");
-				System.out.println("------------------ Check point in polygon --------------------");
-				System.out.println("Lat : " + latitude + "\tLong : " +  longitude);
-				System.out.println("id_ : " + id_ + "\tgbifID : " + gbifId_ + "\tIso3 : " + iso3 + "\tiso2 : " + iso2);
-				 */
-				boolean isContained = this.polygonContainedPoint(point, geoJsonFile);
-				/*
-				System.out.println("The point is contained in the polygone : " + isContained);
-				System.out.println("--------------------------------------------------------------\n");
-				 */
+				String valueLongitude = this.getDarwinCore().getValueFromColumn("decimalLongitude_", id_.replaceAll("\"", ""));
+				if(!valueLongitude.equals("error")){
+					try {
+						longitude = Float.parseFloat(valueLongitude.replaceAll("\"", ""));
+					}
+					catch(NumberFormatException ex) {
+						errorCoord = true;
+					}
+				}
 
-				if(!isContained){
+				iso2 = this.getDarwinCore().getValueFromColumn("countryCode_", id_.replaceAll("\"", "")).replaceAll("\"", "");
+				//gbifId_ = this.getDarwinCore().getValueFromColumn("gbifID_", id_.replaceAll("\"", "")).replaceAll("\"", "");
+
+
+				if(!iso2.equals("error") && !errorCoord){
+					iso3 = this.convertIso2ToIso3(iso2);
+
+					/*
+					try {
+						latitude = Float.parseFloat(listInfos.get(iLatitude).replace("\"", ""));
+					}
+					catch (NumberFormatException nfe){
+						System.err.println(listInfos.get(iLatitude).replace("\"", ""));
+					}
+					longitude = Float.parseFloat(listInfos.get(iLongitude).replace("\"", ""));
+					iso2 = listInfos.get(iIso2);
+					*/
+
+					//gbifId_ = listInfos.get(iGbifID);
+					if(!iso3.equals("error")){
+						File geoJsonFile = new File(resourcePath + "gadm_json/" + iso3.toUpperCase() + "_adm0.json");
+						GeometryFactory geometryFactory = new GeometryFactory();
+						Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
+						System.out.println("--------------------------------------------------------------");
+						System.out.println("------------------ Check point in polygon --------------------");
+						System.out.println("Lat : " + latitude + "\tLong : " +  longitude);
+						System.out.println("id_ : " + id_ + "\tIso3 : " + iso3 + "\tiso2 : " + iso2);
+
+						boolean isContained = this.polygonContainedPoint(point, geoJsonFile);
+
+						System.out.println("The point is contained in the polygone : " + isContained);
+						System.out.println("--------------------------------------------------------------\n");
+
+
+						if(!isContained){
+							errorIso = true;
+							//nbWrongIso2 ++;
+							//listIDtoDelete.add(id_);
+						}
+						else{
+							errorIso = false;
+						}
+					}
+					else{
+						errorIso = true;
+					}
+				}
+				else{
+					errorIso = true;
+				}
+
+				if(errorIso){
 					nbWrongIso2 ++;
 					listIDtoDelete.add(id_);
 				}
@@ -194,16 +248,12 @@ public class GeographicTreatment {
 			//String sqlSelectID =  + id_ + ";";
 			messagesSelectID.add("\n--- Select wrong matching between polygon and Iso2 code ---\n");
 			messagesSelectID.addAll(newConnectionSelectID.executeSQLcommand("executeQuery", sqlIDCleanToSelect));
-			messagesSelectID.add(sqlIDCleanToSelect);
-			for (int j = 0; j < messagesSelectID.size(); j++) {
-				System.out.println(messagesSelectID.get(j));
-			}
-			List<String> selectIDResults = newConnectionSelectID.getResultatSelect();
-			//messagesSelectID.add("nb lignes affectées :" + Integer.toString(selectIDResults.size() - 1));
+			//messagesSelectID.add(sqlIDCleanToSelect);
 			for (int j = 0; j < messagesSelectID.size(); j++) {
 				System.out.println(messagesSelectID.get(j));
 			}
 
+			List<String> selectIDResults = newConnectionSelectID.getResultatSelect();
 			for (int k = 0; k < selectIDResults.size(); k++) {
 				if (!listToDelete.contains(selectIDResults.get(k))) {
 					listToDelete.add(selectIDResults.get(k));
@@ -226,7 +276,9 @@ public class GeographicTreatment {
 			for (int i = 0; i < messagesDeleteID.size(); i++) {
 				System.out.println(messagesDeleteID.get(i));
 			}
+
 		}
+
 
 		this.setNbWrongIso2(nbWrongIso2);
 
@@ -257,8 +309,11 @@ public class GeographicTreatment {
 		messages.addAll(newConnection.executeSQLcommand("executeQuery", sqlConvertIso2Iso3));
 
 		List<String> resultatConvert = newConnection.getResultatSelect();
+
 		if(resultatConvert.size() != 2){
-			System.err.println("Several iso2");
+			//System.err.println(iso2 + "\t" + resultatConvert + "\t" + listInfos);
+			System.err.println("error to convert iso2 to iso3.\n Iso2 : " + iso2);
+			iso3 = "error";
 		}
 		else{
 			iso3 = resultatConvert.get(1).replaceAll("\"", "");

@@ -125,14 +125,17 @@ public class SendMail {
 	}
 
 	public MimeMessage setTextMimeMessage(MimeMessage message) throws MessagingException {
+		String source = "bloom.snv.jussieu.fr/bloom/";
+		//String source = "http:localhost:8080/bloom/";
 		StringBuilder content = new StringBuilder("To download results from mapping to DarwinCore<br>");
+		content.append("These files will be available 3 days.<br>");
 		List<String> filenameInputs = new ArrayList<>();
 		//if(this.getStep1().isInvolved()){
 			Map<Integer,MappingDwC> infos_mapping = this.getStep1().getInfos_mapping();
 			for (Entry<Integer, MappingDwC> idFile : infos_mapping.entrySet()){
 				MappingDwC mappingDWC = idFile.getValue();
 				if(mappingDWC.getMappingInvolved()) {
-					content.append("Mapped file ").append(mappingDWC.getFilename()).append(" : <a href=\"http:localhost:8080/bloom/").append(mappingDWC.getFilepath()).append("\"> Download link</a><br>");
+					content.append("Mapped file ").append(mappingDWC.getFilename()).append(" : <a href=\"" + source).append(mappingDWC.getFilepath()).append("\"> Download link</a><br>");
 				}
 				filenameInputs.add(mappingDWC.getFilename());
 			}
@@ -144,36 +147,36 @@ public class SendMail {
 			Map<Integer,ReconciliationService> infos_reconcile = this.getStep2().getInfos_reconcile();
 			for (Entry<Integer, ReconciliationService> idFile : infos_reconcile.entrySet()){
 				//ReconciliationService reconcile = infos_reconcile.get(idFile);
-				content.append("Renamed file ").append(idFile.getValue().getFilename()).append(" => <a href=\"http:localhost:8080/bloom/").append(idFile.getValue().getFilepath()).append("\"> Download link</a><br>");
+				content.append("Renamed file ").append(idFile.getValue().getFilename()).append(" => <a href=\"" + source).append(idFile.getValue().getFilepath()).append("\"> Download link</a><br>");
 			}
 		}
 		content.append( "<br></br>");
 		if(this.getStep3().isInvolved()){
 			String pathWrongCoordinates = this.getStep3().getPathWrongCoordinates();
-			content.append("File with wrong coordinates : <a href=\"http:localhost:8080/bloom/").append(pathWrongCoordinates).append("\"> Download link</a><br>");
+			content.append("File with wrong coordinates : <a href=\"" + source).append(pathWrongCoordinates).append("\"> Download link</a><br>");
 		}
 		content.append( "<br></br>");
 		if(this.getStep4().isInvolved()) {
 			String pathWrongGeoIssue = this.getStep3().getPathWrongCoordinates();
-			content.append("File with wrong geo-issues : <a href=\"http:localhost:8080/bloom/").append(pathWrongGeoIssue).append("\"> Download link</a><br>");
+			content.append("File with wrong geo-issues : <a href=\"" + source).append(pathWrongGeoIssue).append("\"> Download link</a><br>");
 		}
 		content.append( "<br></br>");
 		if(this.getStep7().isInvolved()){
 			String pathWrongIso2 = this.getStep7().getPathWrongIso2();
-			content.append("File with wrong iso2 code : <a href=\"http:localhost:8080/bloom/").append(pathWrongIso2).append("\"> Download link</a><br>");
+			content.append("File with wrong iso2 code : <a href=\"" + source).append(pathWrongIso2).append("\"> Download link</a><br>");
 		}
 		content.append( "<br></br>");
 		if(this.getStep8().isInvolved()){
 			String pathWrongRaster = this.getStep8().getPathWrongRaster();
 			String pathMatrixResultRaster = this.getStep8().getPathMatrixResultRaster();
-			content.append("Wrong occurences for raster files : <a href=\"http:localhost:8080/bloom/").append(pathWrongRaster).append("\"> Download link</a><br>");
-			content.append("Matrix result for raster analyse : <a href=\"http:localhost:8080/bloom/").append(pathMatrixResultRaster).append("\"> Download link</a><br>");
+			content.append("Wrong occurences for raster files : <a href=\"" + source).append(pathWrongRaster).append("\"> Download link</a><br>");
+			content.append("Matrix result for raster analyse : <a href=\"" + source).append(pathMatrixResultRaster).append("\"> Download link</a><br>");
 
 		}
 		content.append( "<br></br>");
 		if(this.getStep9().isInvolved()){
 			String pathWrongEstablishmentMeans = this.getStep9().getPathWrongEstablishmentMeans();
-			content.append("File with wrong establishmentMeans option : <a href=\"http:localhost:8080/bloom/").append(pathWrongEstablishmentMeans).append("\"> Download link</a><br>");
+			content.append("File with wrong establishmentMeans option : <a href=\"" + source).append(pathWrongEstablishmentMeans).append("\"> Download link</a><br>");
 		}
 
 		content.append( "<br></br>");
@@ -182,7 +185,7 @@ public class SendMail {
 		for(int i = 0; i < finalOutputFile.size(); i++){
 			String cleanFilePath = finalOutputFile.get(i).getAbsolutePath().replace(BloomConfig.getDirectoryPath(), "output/");
 			String filenameInput = filenameInputs.get(i);
-			content.append("Clean file ").append(filenameInput).append(" : <a href=\"http:localhost:8080/bloom/").append(cleanFilePath).append("\"> Download link</a><br>");
+			content.append("Clean file ").append(filenameInput).append(" : <a href=\"" + source).append(cleanFilePath).append("\"> Download link</a><br>");
 		}
 		message.setText(content.toString(), "UTF-8", "html");
 

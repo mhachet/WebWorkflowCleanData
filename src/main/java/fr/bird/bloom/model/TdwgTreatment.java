@@ -42,77 +42,100 @@ public class TdwgTreatment {
 	public void checkIsoTdwgCode(DarwinCore fileDarwinCore){
 		//change example : locationID="TDWG:MXS-JA"
 		this.setSucessTdwgTreatment(true);
-		fileDarwinCore.associateIdData();
-		Map<String, List<String>> idAssoData = fileDarwinCore.getIdAssoData();
+		//fileDarwinCore.associateIdData();
+		//Map<String, List<String>> idAssoData = fileDarwinCore.getIdAssoData();
+		List<String> idListClean = fileDarwinCore.getIDClean();
 
-		int iLatitude = fileDarwinCore.getIndiceFromTag("decimalLatitude_");
-		int iLongitude = fileDarwinCore.getIndiceFromTag("decimalLongitude_");
-		int iIso2 = fileDarwinCore.getIndiceFromTag("countryCode_");
+		//int iLatitude = fileDarwinCore.getIndiceFromTag("decimalLatitude_");
+		//int iLongitude = fileDarwinCore.getIndiceFromTag("decimalLongitude_");
+		//int iIso2 = fileDarwinCore.getIndiceFromTag("countryCode_");
 
-		for (String id_ : idAssoData.keySet()) {
+		//for (String id_ : idAssoData.keySet()) {
+		for(int i = 0 ; i< idListClean.size() ; i++){
+			String id_ = idListClean.get(i);
+			System.out.println(id_);
 			if(!"id_".equals(id_ )){
-				List<String> listInfos = idAssoData.get(id_);
+				//List<String> listInfos = idAssoData.get(id_);
 
-				float latitude = 0;
-				float longitude = 0;
-				String iso2 = "";
+				float latitude = -1;
+				float longitude = -1;
+				String iso2 = "error";
 
+				/*
 				latitude = Float.parseFloat(listInfos.get(iLatitude).replace("\"", ""));
 				longitude = Float.parseFloat(listInfos.get(iLongitude).replace("\"", ""));
 				iso2 = listInfos.get(iIso2);
-				GeometryFactory geometryFactory = new GeometryFactory();
-				Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
-				/*System.out.println("--------------------------------------------------------------");
-				System.out.println("---------------- Check point in TDWG4 code -------------------");
-				System.out.println("Lat : " + latitude + "\tLong : " + longitude);
-				System.out.print("iso2 : " + iso2);*/
-				String tdwg4Code = "";
-				try {
-					tdwg4Code = this.tdwg4ContainedPoint(point, iso2.replaceAll("\"", ""));
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					this.setSucessTdwgTreatment(false);
-					e.printStackTrace();
-				}
-				//System.out.println("\ttdwg4 : " + tdwg4Code);
-				//System.out.println("--------------------------------------------------------------");
-
-				Statement statement = null;
-				try {
-					statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				DatabaseTreatment newConnectionSelectID = new DatabaseTreatment(statement);
-				String sqlSelectID = "SELECT locationID_ FROM Workflow.Clean_" + this.getUuid() + " WHERE Clean_" + this.getUuid() + ".id_=" + id_ + ";";
-				newConnectionSelectID.executeSQLcommand("executeQuery", sqlSelectID);
-				List<String> selectIDResults = newConnectionSelectID.getResultatSelect();
-
-				String newLocationID = "";
-				if(selectIDResults.size() > 1 && !selectIDResults.get(1).replaceAll("\"", "").isEmpty()){
-					newLocationID = selectIDResults.get(1).replaceAll("\"", "") + ";TDWG=" + tdwg4Code;
-				}
-				else{
-					newLocationID = "TDWG=" + tdwg4Code;
+				*/
+				String valueLatitude = fileDarwinCore.getValueFromColumn("decimalLatitude_", id_.replaceAll("\"", ""));
+				if(!valueLatitude.equals("error")){
+					latitude = Float.parseFloat(valueLatitude.replaceAll("\"", ""));
 				}
 
-				String sqlUpdateTDWG = "UPDATE Workflow.Clean_" + this.getUuid() + " SET Clean_" + this.getUuid() + ".locationID_=\"" + newLocationID + "\" WHERE Clean_" + this.getUuid() + ".id_=" + id_ + ";";
-
-				Statement statementUpdateClean = null;
-				try {
-					statementUpdateClean = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				String valueLongitude = fileDarwinCore.getValueFromColumn("decimalLongitude_", id_.replaceAll("\"", ""));
+				if(!valueLongitude.equals("error")){
+					longitude = Float.parseFloat(valueLongitude.replaceAll("\"", ""));
 				}
-				DatabaseTreatment newConnectionUpdateClean = new DatabaseTreatment(statementUpdateClean);
-				List<String> messages = newConnectionUpdateClean.executeSQLcommand("executeUpdate", sqlUpdateTDWG);
 
-				for(int i = 0; i < messages.size(); i++){
-					if(messages.get(i).contains("Connection error : ")){
+				iso2 = fileDarwinCore.getValueFromColumn("countryCode_", id_.replaceAll("\"", "")).replaceAll("\"", "");
+				//gbifId_ = this.getDarwinCore().getValueFromColumn("gbifID_", id_.replaceAll("\"", "")).replaceAll("\"", "");
+
+				if(!iso2.equals("error") && latitude != -1 && longitude != -1) {
+					GeometryFactory geometryFactory = new GeometryFactory();
+					Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
+					System.out.println("--------------------------------------------------------------");
+					System.out.println("---------------- Check point in TDWG4 code -------------------");
+					System.out.println("id : " + id_ + "\tLat : " + latitude + "\tLong : " + longitude);
+					System.out.print("iso2 : " + iso2);
+					String tdwg4Code = "";
+					try {
+						tdwg4Code = this.tdwg4ContainedPoint(point, iso2.replaceAll("\"", ""));
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
 						this.setSucessTdwgTreatment(false);
+						e.printStackTrace();
 					}
+					System.out.println("\ttdwg4 : " + tdwg4Code);
+					System.out.println("--------------------------------------------------------------");
+
+					Statement statement = null;
+					try {
+						statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					DatabaseTreatment newConnectionSelectID = new DatabaseTreatment(statement);
+					String sqlSelectID = "SELECT locationID_ FROM Workflow.Clean_" + this.getUuid() + " WHERE Clean_" + this.getUuid() + ".id_=" + id_ + ";";
+					newConnectionSelectID.executeSQLcommand("executeQuery", sqlSelectID);
+					List<String> selectIDResults = newConnectionSelectID.getResultatSelect();
+
+					String newLocationID = "";
+					if (selectIDResults.size() > 1 && !selectIDResults.get(1).replaceAll("\"", "").isEmpty()) {
+						newLocationID = selectIDResults.get(1).replaceAll("\"", "") + ";TDWG=" + tdwg4Code;
+					} else {
+						newLocationID = "TDWG=" + tdwg4Code;
+					}
+
+					String sqlUpdateTDWG = "UPDATE Workflow.Clean_" + this.getUuid() + " SET Clean_" + this.getUuid() + ".locationID_=\"" + newLocationID + "\" WHERE Clean_" + this.getUuid() + ".id_=" + id_ + ";";
+					//System.out.println(sqlUpdateTDWG);
+					Statement statementUpdateClean = null;
+					try {
+						statementUpdateClean = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					DatabaseTreatment newConnectionUpdateClean = new DatabaseTreatment(statementUpdateClean);
+					//List<String> messages =
+					newConnectionUpdateClean.executeSQLcommand("executeUpdate", sqlUpdateTDWG);
+
+					/*
+					for (int j = 0; j < messages.size(); i++) {
+						if (messages.get(j).contains("Connection error : ")) {
+							this.setSucessTdwgTreatment(false);
+						}
+					}
+					*/
 				}
 			}
 		}
