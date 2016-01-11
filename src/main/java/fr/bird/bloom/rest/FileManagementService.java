@@ -13,7 +13,11 @@ public class FileManagementService {
 
     public static File storeInputFile(String fileUrl, String uuid) {
         try {
-            final File destination = new File(BloomConfig.getDirectoryPath() + "temp/input_" + uuid + ".csv");
+            if (BloomConfig.getDirectoryPath() == null) {
+                BloomConfig.initializeDirectoryPath(FileUtils.getUserDirectory().getAbsolutePath() + "/");
+            }
+            //final File destination = new File(BloomConfig.getDirectoryPath() + "temp/input_" + uuid + ".csv");
+            final File destination = new File(BloomConfig.getDirectoryPath() + "temp/" + uuid + "/data/input_" + uuid + ".csv");
             FileUtils.copyURLToFile(new URL(fileUrl), destination);
             return destination;
         } catch (IOException e) {

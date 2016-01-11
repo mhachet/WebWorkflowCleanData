@@ -49,6 +49,7 @@ public class WorkflowServiceAppTest {
                 CSVFile.Separator.COMMA,
                 false,
                 "https://www.dropbox.com/s/e0thy0dloxu9xs7/test_ipt_ok.csv?dl=1",
+                false,
                 headerMap);
     }
 

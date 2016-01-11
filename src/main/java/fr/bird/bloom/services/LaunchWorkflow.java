@@ -94,7 +94,7 @@ public class LaunchWorkflow {
 
 		Map<Integer, Boolean> validInputFiles = this.isValidInputFiles();
 		if(validInputFiles.containsValue(true)) {
-
+			System.out.println("valid : ");
 			this.launchWorkflow();
 			step3.setInvolved(true);
 			step4.setInvolved(true);
@@ -165,7 +165,7 @@ public class LaunchWorkflow {
 			this.dataTreatment.deleteTables();
 		}
 		else{
-
+			System.out.println("no valid : ");
 			//if(!step1.isInvolved()){
 			List<MappingReconcilePreparation> listMappingReconcileFiles =  inputParameters.getListMappingReconcileFiles();
 			Map<Integer, MappingDwC> infos_mapping = step1.getInfos_mapping();
@@ -222,7 +222,7 @@ public class LaunchWorkflow {
 		Map<Integer, ReconciliationService> reconcilePath = step2.getInfos_reconcile();
 		Map<Integer, MappingDwC> hashMapStep1 = step1.getInfos_mapping();
 		step1.setNbInputs(listMappingReconcileDWC.size());
-
+		//System.out.println("listMappingReconcileDWC size " + listMappingReconcileDWC.size());
 		/**
 		 * pre-treatment for mapping and reconcile
 		 */
@@ -240,7 +240,8 @@ public class LaunchWorkflow {
 			boolean isMapping = mappingDwc.getMappingInvolved();
 
 			boolean isValid = preparation.isValid();
-
+			//System.out.println("isMapping : " + isMapping);
+			//System.out.println("isValid : " + isValid);
 			if(isMapping && isValid){
 				step1.setInvolved(isMapping);
 
@@ -355,15 +356,16 @@ public class LaunchWorkflow {
 			CSVFile csvFileNoMapped = mappingFile.getNoMappedFile();
 
 			if(csvFileNoMapped.getSeparator() == CSVFile.Separator.INCONSISTENT || csvFileNoMapped.getSeparator() == CSVFile.Separator.UNKNOWN){
-				//System.out.println("separator false : " + csvFileNoMapped.getSeparator());
+				System.out.println("separator false : " + csvFileNoMapped.getSeparator());
 				mappingFile.setSuccessMapping(Boolean.toString(false));
 				reconciliationService.setSuccessReconcile(Boolean.toString(false));
 				validInputFiles.put(mappingReconcilePrep.getIdFile(), false);
 				//System.out.println(mappingReconcilePrep.getIdFile() + " => false");
 			}
 			else{
-				//System.out.println("separator true : " + csvFileNoMapped.getSeparator());
+				System.out.println("separator true : " + csvFileNoMapped.getSeparator());
 				if(!mappingReconcilePrep.getMappingDWC().getMappingInvolved()){
+					System.out.println("not involved");
 					mappingFile.setSuccessMapping(Boolean.toString(true));
 					String [] listTagsInput = csvFileNoMapped.getFirstLine().split(csvFileNoMapped.getSeparator().getSymbol());
 					List<String> tagsDwcOfficial = mappingFile.getTagsListDwC();
@@ -380,13 +382,17 @@ public class LaunchWorkflow {
 					validInputFiles.put(mappingReconcilePrep.getIdFile(), validFile);
 				}
 				else{
-					//System.out.println("separator true true : " + csvFileNoMapped.getSeparator());
+					System.out.println("separator true true : " + csvFileNoMapped.getSeparator());
 					mappingFile.setSuccessMapping(Boolean.toString(true));
 					validInputFiles.put(mappingReconcilePrep.getIdFile(), true);
-					//System.out.println(mappingReconcilePrep.getIdFile() + " => true");
+					System.out.println(mappingReconcilePrep.getIdFile() + " => true");
 				}
 			}
-			//System.out.println("idFile : " + mappingReconcilePrep.getIdFile() + "is valid : " + validFile);
+
+			for (Entry<Integer, Boolean> entry : validInputFiles.entrySet()) {
+				System.out.println(entry.getKey() + "\t" + entry.getValue());
+			}
+
 
 		}
 

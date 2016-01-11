@@ -4,13 +4,11 @@ package fr.bird.bloom.rest;
 import fr.bird.bloom.beans.InputParameters;
 import fr.bird.bloom.dto.ServiceInput;
 import fr.bird.bloom.dto.WorkflowResults;
-import fr.bird.bloom.model.CSVFile;
-import fr.bird.bloom.model.MappingDwC;
-import fr.bird.bloom.model.MappingReconcilePreparation;
-import fr.bird.bloom.model.ReconciliationService;
+import fr.bird.bloom.model.*;
 import fr.bird.bloom.services.LaunchWorkflow;
 import fr.bird.bloom.utils.BloomUtils;
 import org.apache.commons.io.FilenameUtils;
+import java.util.Map.Entry;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -18,8 +16,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -72,6 +69,9 @@ public class WorkflowService {
         inputParameters.setNbInputs(input.getNbInput());
         inputParameters.setEmailUser(input.getUserEmail());
         inputParameters.setSendEmail(input.isSendEmail());
+        inputParameters.setMapping(input.isMapping());
+        inputParameters.setCsvHeaderToDarwinCoreHeaderMapping(input.getCsvHeaderToDarwinCoreHeaderMapping());
+        System.out.println("ismapping : " + inputParameters.isMapping());
 
         File file = FileManagementService.storeInputFile(input.getInputFileUrl(), uuid);
 
@@ -80,15 +80,27 @@ public class WorkflowService {
         CSVFile csvFile = new CSVFile(file);
         MappingDwC newMappingDWC = new MappingDwC(csvFile, false);
         newMappingDWC.getNoMappedFile().setSeparator(input.getSeparator());
-
+        newMappingDWC.setMappingInvolved(inputParameters.isMapping());
 
         newMappingDWC.initialiseMapping(uuid);
         Map<String, String> connectionTags = new HashMap<>();
         List<String> tagsNoMapped = newMappingDWC.getTagsListNoMapped();
-        for (int i = 0; i < tagsNoMapped.size(); i++) {
-            connectionTags.put(tagsNoMapped.get(i) + "_" + i, "");
+        Map <String, DwcHeaders> connectHeaders = inputParameters.getCsvHeaderToDarwinCoreHeaderMapping();
+
+        int i = 0;
+        for(Entry <String, DwcHeaders> entryDwC : connectHeaders.entrySet()) {
+            String header = entryDwC.getKey();
+            DwcHeaders headerDWC = entryDwC.getValue();
+            connectionTags.put(header + "_" + i, headerDWC.getHeaderValue());
+            i ++;
         }
+        /*for (int i = 0; i < tagsNoMapped.size(); i++) {
+            System.out.println(tagsNoMapped.get(i));
+            connectionTags.put(tagsNoMapped.get(i) + "_" + i, "");
+        }*/
+
         //System.out.println("connectionTagsControler : " + connectionTags);
+
         newMappingDWC.setConnectionTags(connectionTags);
         newMappingDWC.getNoMappedFile().setCsvName(file.getName());
         //inputParameters.getInputFilesList().add(csvFile.getCsvFile());
