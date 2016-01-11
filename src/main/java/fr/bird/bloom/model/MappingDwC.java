@@ -87,8 +87,8 @@ public class MappingDwC {
         String firstNewLine = "";
         int nbCol = connectionTags.size();
         int countTags = 0;
-        //System.out.println("value " + connectionTags);
-        //System.out.println("valuesTags : " + connectionValuesTags);
+        System.out.println("value " + connectionTags);
+        System.out.println("valuesTags : " + connectionValuesTags);
 
         int idLatitudeDwcTag = 0;
         int idLongitudeDwcTag = 0;
@@ -209,6 +209,7 @@ public class MappingDwC {
             String[] tag = tempList.get(i).split("_");
             String tagRename = tag[0].replace("\"", "");
             tagsListDwCInit.add(tagRename);
+            //System.out.print(tagRename + "," );
         }
 
         return tagsListDwCInit;
@@ -233,6 +234,9 @@ public class MappingDwC {
         String [] firstLine = firstLineString.split(separatorRegex);
         //System.out.print("separatorregex : " + separatorRegex);
 
+        /*for(int i = 0; i < firstLine.length ; i++){
+            System.out.print(firstLine[i] + ",");
+        }*/
         List<String> tagsListNoMappedInit = new ArrayList(Arrays.asList(firstLine));
         return tagsListNoMappedInit;
     }
@@ -246,11 +250,11 @@ public class MappingDwC {
         List<String> presentTagsInit = new ArrayList<>();
         List<String> noMappedTags = this.getTagsListNoMapped();
         List<String> DwCtags = this.getTagsListDwC();
-
         for (int i = 0; i < noMappedTags.size(); i++) {
             String noMappedTag = noMappedTags.get(i);
             if (DwCtags.contains(noMappedTag)) {
                 presentTagsInit.add(noMappedTag);
+                //System.out.print(noMappedTag + ",");
             }
         }
         return presentTagsInit;

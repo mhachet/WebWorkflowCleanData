@@ -5,8 +5,11 @@ package fr.bird.bloom.beans;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import fr.bird.bloom.model.DwcHeaders;
 import fr.bird.bloom.model.MappingReconcilePreparation;
 
 /**
@@ -22,7 +25,9 @@ public class InputParameters {
     private List<File> inputSynonymsList = new ArrayList<>();
     private List<String> establishmentList = new ArrayList<>();
     private List<MappingReconcilePreparation> listMappingReconcileFiles = new ArrayList<>();
+    private Map<String, DwcHeaders> csvHeaderToDarwinCoreHeaderMapping;
 
+    private boolean mapping;
     private boolean synonym;
     private boolean tdwg4Code;
     private boolean raster;
@@ -31,6 +36,41 @@ public class InputParameters {
     private int nbInput = 0;
     private String emailUser;
     private boolean sendEmail;
+
+
+    /**
+     *
+     * @return Map<String, DwcHeaders>
+     */
+    public Map<String, DwcHeaders> getCsvHeaderToDarwinCoreHeaderMapping() {
+        return csvHeaderToDarwinCoreHeaderMapping;
+    }
+
+    /**
+     *
+     * @param csvHeaderToDarwinCoreHeaderMapping
+     * @return void
+     */
+    public void setCsvHeaderToDarwinCoreHeaderMapping(Map<String, DwcHeaders> csvHeaderToDarwinCoreHeaderMapping) {
+        this.csvHeaderToDarwinCoreHeaderMapping = csvHeaderToDarwinCoreHeaderMapping;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public boolean isMapping() {
+        return mapping;
+    }
+
+    /**
+     *
+     * @param mapping
+     * @return void
+     */
+    public void setMapping(boolean mapping) {
+        this.mapping = mapping;
+    }
 
     /**
      * @return ArrayList<MappingReconcilePreparation>
