@@ -71,7 +71,7 @@ public class WorkflowService {
         inputParameters.setSendEmail(input.isSendEmail());
         inputParameters.setMapping(input.isMapping());
         inputParameters.setCsvHeaderToDarwinCoreHeaderMapping(input.getCsvHeaderToDarwinCoreHeaderMapping());
-        System.out.println("ismapping : " + inputParameters.isMapping());
+        //System.out.println("ismapping : " + inputParameters.isMapping());
 
         File file = FileManagementService.storeInputFile(input.getInputFileUrl(), uuid);
 
