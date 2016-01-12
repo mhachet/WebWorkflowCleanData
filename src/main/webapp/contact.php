@@ -49,7 +49,7 @@
 				<?php
 				if (isset ( $_POST ) && isset ( $_POST ['name'] ) && isset ( $_POST ['email'] ) && isset ( $_POST ['object'] ) && isset ( $_POST ['message'] )) {
 					if (! empty ( $_POST ['name'] ) && ! empty ( $_POST ['email'] ) && ! empty ( $_POST ['message'] )) {
-						$destinataire = "melanie.hachet@mnhn.com";
+						$destinataire = "melanie.hachet@gmail.com";
 						$sujet = "Contact request from " . $_POST ['name'] . " - " . $_POST ['object'];
 						$message = "Name : " . $_POST ['name'] . "<br>";
 						$message .= "email : " . $_POST ['email'] . "<br>";
