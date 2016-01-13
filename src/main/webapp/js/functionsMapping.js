@@ -7,22 +7,44 @@ function loadMappingDwc(contentFirstLine, nb_input){
 	var tableMapping = document.getElementById("mappingTable_" + nb_input);
 	var divMapping = document.getElementById("divMapping_" + nb_input);
 	var mappingActive = document.getElementById("mappingActive_" + nb_input);
+	var infosMapping = document.getElementById("infosMapping_" + nb_input);
 
 	var divSubmitMapping = document.getElementById("divSubmitMapping_" + nb_input);
 	var divSubmitMappingOK = document.getElementById("divSubmitMappingOK_" + nb_input);
 	var divSubmitMappingCancel = document.getElementById("divSubmitMappingCancel_" + nb_input);
 
 	var divMessageSaved = document.getElementById("divMessageSaved_" + nb_input);
-	var divMessagedCancelled = document.getElementById("divMessageCancelled_" + nb_input);
+	var divMessageCancelled = document.getElementById("divMessageCancelled_" + nb_input);
+
+
 	if(tableMapping){
-		divMapping.style.display = "block";
-		//tableMapping.style.display="block";
-		divSubmitMapping.style.display = "block";
-		divSubmitMappingOK.style.display = "block";
-		divSubmitMappingCancel.style.display ="block";
-		divMessageSaved.style.display = "none";
-		divMessagedCancelled.style.display = "none";
-		mappingActive.value = "false";
+		var separatorText = document.getElementById("csvDropdown_" + nb_input).value;
+		var separatorSaved = tableMapping.getAttribute('value');
+		//console.log(divMessageCancelled.id)
+		if(separatorSaved == separatorText){
+			//console.log("same separator  : " + separatorText);
+			divMapping.style.display = "block";
+			//tableMapping.style.display="block";
+			divSubmitMapping.style.display = "block";
+			divSubmitMappingOK.style.display = "block";
+			divSubmitMappingCancel.style.display ="block";
+			divMessageSaved.style.display = "none";
+			divMessageCancelled.style.display = "none";
+			mappingActive.value = "false";
+		}
+		else {
+			//console.log("not same separator  : " + separatorText + "\t" + separatorSaved);
+			divMapping.removeChild(tableMapping);
+			divMapping.removeChild(infosMapping);
+			divMapping.removeChild(mappingActive);
+			divSubmitMapping.removeChild(divMessageCancelled);
+			divSubmitMapping.removeChild(divMessageSaved);
+			divSubmitMapping.removeChild(divSubmitMappingCancel);
+			divSubmitMapping.removeChild(divSubmitMappingOK);
+
+			prepareMapping(contentFirstLine, nb_input);
+		}
+
 	}
 	else{
 		
@@ -63,7 +85,7 @@ function mappingDWC(counter, change_mapping_reconcile){
 		var divSubmitMappingCancel = document.getElementById("divSubmitMappingCancel_" + counter);
 		var mappingActive = document.getElementById("mappingActive_" + counter);
 		var divMessageSaved = document.getElementById("divMessageSaved_" + counter);
-		var divMessagedCancelled = document.getElementById("divMessageCancelled_" + counter);
+		var divMessageCancelled = document.getElementById("divMessageCancelled_" + counter);
 
 		var divReconciliationCheck = document.getElementById("divReconciliationCheck_" + counter);
 		var divSubmitReconcile = document.getElementById("divSubmitReconcile_" + counter);
@@ -76,7 +98,7 @@ function mappingDWC(counter, change_mapping_reconcile){
 		var divTableReconcile = document.getElementById("divTableReconcile_" + counter);
 		var tableReconcile = document.getElementById("tableReconcile_" + counter + "_wrapper");
 		var tablePrepareReconcile = document.getElementById("tablePrepareReconcile_" + counter);
-		var divUrlTaxo = document.getElementById("divUrlTaxo_" + counter);
+		var divTaxo = document.getElementById("divTaxo_" + counter);
 
 		var divMessageReconcileCancelled  = document.getElementById("divMessageReconcileCancelled_" + counter);
 		var divMessageReconcileSaved = document.getElementById("divMessageReconcileSaved_" + counter);
@@ -89,7 +111,7 @@ function mappingDWC(counter, change_mapping_reconcile){
 				divSubmitMappingOK.style.display = "block";
 				divSubmitMappingCancel.style.display ="block";
 				divMessageSaved.style.display = "none";
-				divMessagedCancelled.style.display = "none";
+				divMessageCancelled.style.display = "none";
 				mappingActive.value = "false";
 			}
 		}
@@ -102,12 +124,12 @@ function mappingDWC(counter, change_mapping_reconcile){
 				divSubmitMapping.removeChild(divSubmitMappingOK);
 				divSubmitMapping.removeChild(divSubmitMappingCancel);
 				divSubmitMapping.removeChild(divMessageSaved);
-				divSubmitMapping.removeChild(divMessagedCancelled);
+				divSubmitMapping.removeChild(divMessageCancelled);
 			}
 
 			if(tablePrepareReconcile){
 				divReconciliationCheck.removeChild(tablePrepareReconcile);
-				divReconciliationCheck.removeChild(divUrlTaxo);
+				divReconciliationCheck.removeChild(divTaxo);
 			}
 
 			if(divTableReconcile){
@@ -138,8 +160,6 @@ function mappingDWC(counter, change_mapping_reconcile){
 	var result = "";
 	var count = 0;
 	buttonConvert.addEventListener('click', function() {
-
-
 		//performAjaxSubmit(counter, isChange);
 	}, false);
 
@@ -187,7 +207,7 @@ function prepareMapping(contentFirstFile, nbInput){
 		}
 
 	}
-	createMapping(firstLine, dwcTags, presentTags, nbInput);
+	createMapping(firstLine, dwcTags, presentTags, nbInput, separator);
 
 	//divMapping.removeChild(progressbar);
 
@@ -195,17 +215,31 @@ function prepareMapping(contentFirstFile, nbInput){
 }
 
 
-function createMapping(firstLineInput, dwcTags, presentTags, nbInput){
+function createMapping(firstLineInput, dwcTags, presentTags, nbInput, separator){
 	var mappingTable = document.getElementById("mappingTable_" + nbInput);
 	var divSubmitMapping = document.getElementById("divSubmitMapping_" + nbInput);
 	var divMapping = document.getElementById("divMapping_" + nbInput);
 	divMapping.style.display = "block";
+	var separatorText = "";
+
+
 	if(mappingTable == null){
 
 		var mappingTable = document.createElement("table");
 		mappingTable.id = "mappingTable_" + nbInput;
 		mappingTable.name = "mappingTable_" + nbInput;
 		mappingTable.border = "0";
+		console.log("separator createMapping : " + separator);
+		if(separator == ","){
+			separatorText = 'comma';
+		}
+		else if(separator == ";"){
+			separatorText = 'semiComma';
+		}
+		else{
+			separatorText = 'tab';
+		}
+		mappingTable.setAttribute('value', separatorText);
 
 		var tbody = document.createElement("tbody");
 		mappingTable.appendChild(tbody);
@@ -221,7 +255,9 @@ function createMapping(firstLineInput, dwcTags, presentTags, nbInput){
 			var dropdownDwC = document.createElement("select");
 			dropdownDwC.style.display = "block";
 			dropdownDwC.name = "dropdownDwC_" + i;
+			dropdownDwC.id = "dropdownDwC_" + i;
 			var cellDwC = row.insertCell(1);
+			cellDwC.setAttribute('class', "input-field col s12 m5");
 
 			//tbody.appendChild(cellDwC);
 			for(var j = 0 ; j <  dwcTags.length ; j++){
@@ -243,9 +279,23 @@ function createMapping(firstLineInput, dwcTags, presentTags, nbInput){
 
 		}
 
-		var infosMapping = document.createElement('h6');
-		infosMapping.setAttribute('id', "infosMapping_" + nbInput);
-		infosMapping.innerHTML = "Note : If you don't choose map one of your column, this one will be deleted.";
+		var help_mapping = document.createElement('h6');
+		help_mapping.innerHTML = "For more information, see the documentation about the ";
+		var refDocMapping = document.createElement('a');
+		refDocMapping.setAttribute('href', "DocumentationPage.html#help-mapping-div");
+		refDocMapping.innerHTML = "mapping to DarwinCore";
+
+		var noteMapping = document.createElement('h6');
+		//noteMapping.setAttribute('id', "infosMapping_" + nbInput);
+		noteMapping.innerHTML = "Note : If you don't choose map one of your column, this one will be deleted.";
+
+		var infosMapping = document.createElement('div');
+		infosMapping.setAttribute('id',"infosMapping_" + nbInput);
+
+		infosMapping.appendChild(help_mapping);
+		infosMapping.appendChild(noteMapping);
+
+		help_mapping.appendChild(refDocMapping);
 		divMapping.appendChild(infosMapping);
 		divMapping.appendChild(mappingTable);
 		mappingTable.setAttribute('class', "centered table-marges");
@@ -256,6 +306,11 @@ function createMapping(firstLineInput, dwcTags, presentTags, nbInput){
 		mapping.value = "false";
 		mapping.type = "hidden";
 		divMapping.appendChild(mapping);
+
+		/*
+		for(var i = 0 ; i < firstLineInput.length; i++){
+			$("#dropdownDwC_" + i).material_select();
+		}*/
 
 		var buttonOK = document.createElement('button');
 		buttonOK.id = "okMapping_" + nbInput;
@@ -292,18 +347,17 @@ function createMapping(firstLineInput, dwcTags, presentTags, nbInput){
 
 		var divMessageSaved = document.createElement('div');
 		divMessageSaved.setAttribute('id', "divMessageSaved_" + nbInput);
-		divMessageSaved.setAttribute('class', "col-lg-12 text-success text-center");
 		divMessageSaved.style.display = "none";
 		var messageSaved = document.createElement('p');
+		messageSaved.setAttribute('class', "col-lg-12 text-success text-center");
 		messageSaved.innerHTML = "Mapping saved";
 		divMessageSaved.appendChild(messageSaved);
 
 		var divMessageCancelled = document.createElement('div');
 		divMessageCancelled.setAttribute('id', "divMessageCancelled_" + nbInput);
-		divMessageCancelled.setAttribute('class', "col-lg-12 text-danger text-center");
 		divMessageCancelled.style.display = "none";
 		var messageCancelled = document.createElement('p');
-		//messageCancelled.setAttribute('class', "has-warning");
+		messageCancelled.setAttribute('class', "col-lg-12 text-danger text-center");
 		messageCancelled.innerHTML = "Mapping cancelled";
 		divMessageCancelled.appendChild(messageCancelled);
 

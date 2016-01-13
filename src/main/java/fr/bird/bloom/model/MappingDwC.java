@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * src.model
@@ -84,10 +86,12 @@ public class MappingDwC {
 
         String firstNewLine = "";
         int nbCol = connectionTags.size();
-        int countCol = 1;
-        //System.out.println("value " + connectionTags);
-        //System.out.println("valuesTags : " + connectionValuesTags);
+        int countTags = 0;
+        System.out.println("value " + connectionTags);
+        System.out.println("valuesTags : " + connectionValuesTags);
 
+        int idLatitudeDwcTag = 0;
+        int idLongitudeDwcTag = 0;
         for (Entry<String, String> entryDwC : connectionTags.entrySet()) {
             String[] splitKey = entryDwC.getKey().split("_");
             int idColumn = Integer.parseInt(splitKey[splitKey.length - 1]);
@@ -97,38 +101,65 @@ public class MappingDwC {
                 if (!" ".equals(valueNoMapped)) {
                     firstNewLine += valueNoMapped + ",";
                 }
-                countCol++;
+                if(valueNoMapped.equals("decimalLatitude")){
+                    idLatitudeDwcTag = idColumn;
+                }
+                if(valueNoMapped.equals("decimalLongitude")){
+                    idLongitudeDwcTag = idColumn;
+                }
+                countTags++;
             }
 
         }
-        //System.out.println("before : " + firstNewLine);
         firstNewLine = firstNewLine.substring(0, firstNewLine.length() - 1) + "\n";
-
+        //System.out.println(firstNewLine);
         writerMappedFile.write(firstNewLine);
-        //System.out.println("line : " + firstNewLine);
         int countLines = 0;
         int nbLines = this.getNbLines(noMappedFile.getCsvFile());
-        countCol = 1;
+        int countCol = 1;
         while (countLines < nbLines - 1) {
             String lineValues = "";
             countCol = 1;
             for (Entry<String, List<String>> entryValuesTags : connectionValuesTags.entrySet()) {
                 List<String> listValues = entryValuesTags.getValue();
                 String[] splitKey = entryValuesTags.getKey().split("_");
+                //System.out.println("key : " + entryValuesTags.getKey());
+               // System.out.println("separator  : " + noMappedFile.getCsvFile().get);
                 Integer entryKey = Integer.parseInt(splitKey[splitKey.length - 1]);
                 if (!this.getListInvalidColumns().contains(entryKey)) {
-                    lineValues += listValues.get(countLines) + ",";
+                    if(entryKey.equals(idLatitudeDwcTag) || entryKey.equals(idLongitudeDwcTag)){
+                        String coordinate = listValues.get(countLines);
+                        coordinate = coordinate.replace(",", ".");
+                        lineValues += coordinate;
+                        //System.out.println(entryKey + "  " + coordinate);
+                    }
+
+                    else if(listValues.get(countLines).contains(noMappedFile.getSeparator().getSymbol())){
+                        lineValues += "\"" + listValues.get(countLines) + "\"";
+                    }
+                    else {
+                        lineValues += listValues.get(countLines);
+                    }
+
+                    if(countCol == countTags){
+                        lineValues += "\n";
+                    }
+                    else{
+                        lineValues += ",";
+                    }
+
                 }
 
                 countCol++;
             }
-            lineValues = lineValues.substring(0, lineValues.length() - 2) + "\n";
+            //System.out.println(lineValues);
             writerMappedFile.write(lineValues);
             countLines++;
         }
         writerMappedFile.close();
         return mappedFile;
     }
+
 
     /**
      * Found all DwC tags
@@ -143,9 +174,9 @@ public class MappingDwC {
         String getColumnsName = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='DarwinCoreInput';";
         List<String> messages = new ArrayList<>();
         DatabaseTreatment columnsNameDwC = null;
-
+        Statement statement = null;
         try {
-            Statement statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             columnsNameDwC = new DatabaseTreatment(statement);
             messages.addAll(columnsNameDwC.executeSQLcommand(choiceStatement, getColumnsName));
         } catch (SQLException e) {
@@ -158,6 +189,14 @@ public class MappingDwC {
         //messages.addAll(columnsNameDwC.newConnection(choiceStatement, getColumnsName));
 
         tempList = columnsNameDwC.getResultatSelect();
+        try {
+            if(statement != null) {
+                statement.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         // delete "COLUMN_NAME" and "id_"filename :
         tempList.remove(0);
         tempList.remove(0);
@@ -170,6 +209,7 @@ public class MappingDwC {
             String[] tag = tempList.get(i).split("_");
             String tagRename = tag[0].replace("\"", "");
             tagsListDwCInit.add(tagRename);
+            //System.out.print(tagRename + "," );
         }
 
         return tagsListDwCInit;
@@ -192,6 +232,11 @@ public class MappingDwC {
         final String firstLineString = this.getNoMappedFile().getFirstLine();
 
         String [] firstLine = firstLineString.split(separatorRegex);
+        //System.out.print("separatorregex : " + separatorRegex);
+
+        /*for(int i = 0; i < firstLine.length ; i++){
+            System.out.print(firstLine[i] + ",");
+        }*/
         List<String> tagsListNoMappedInit = new ArrayList(Arrays.asList(firstLine));
         return tagsListNoMappedInit;
     }
@@ -205,11 +250,11 @@ public class MappingDwC {
         List<String> presentTagsInit = new ArrayList<>();
         List<String> noMappedTags = this.getTagsListNoMapped();
         List<String> DwCtags = this.getTagsListDwC();
-
         for (int i = 0; i < noMappedTags.size(); i++) {
             String noMappedTag = noMappedTags.get(i);
             if (DwCtags.contains(noMappedTag)) {
                 presentTagsInit.add(noMappedTag);
+                //System.out.print(noMappedTag + ",");
             }
         }
         return presentTagsInit;
@@ -230,6 +275,22 @@ public class MappingDwC {
         this.setListInvalidColumns(invalidColumns);
     }
 
+    public List<String> getSplitedLine(String separator, String line){
+        List<String> splitedLine = new ArrayList<>();
+        //String regex = "(^|(?<=,))([^\",])*((?=,)|$)|((?<=^\")|(?<=,\"))([^\"]|\"\")*((?=\",)|(?=\"$))";
+        String regex= "(^|(?<=" + separator + "))([^\"" + separator + "])*((?=" + separator + ")|$)|((?<=^\")|(?<=" + separator + "\"))([^\"]|\"\")*((?=\"" + separator + ")|(?=\"$))";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(line);
+       // System.out.println("******");
+        while (m.find()) {
+            splitedLine.add(m.group());
+            //System.out.println(m.group());
+        }
+
+       // System.out.println("******");
+        return splitedLine;
+    }
+
     /**
      * Connect tags (from input file) to value (from input file)
      *
@@ -245,29 +306,37 @@ public class MappingDwC {
             String line = "";
             int countLine = 0;
             while ((line = readerNoMapped.readLine()) != null) {
-                String[] lineSplit = line.split(noMappedFile.getSeparator().getSymbol(), -1);
+                List<String> splitedLine = this.getSplitedLine(noMappedFile.getSeparator().getSymbol(), line);
+                //String[] lineSplit = line.split(noMappedFile.getSeparator().getSymbol(), -1);
+                /*for(int i = 0 ; i < splitedLine.size() ; i++){
+                    System.out.println(splitedLine.get(i));
+                }*/
+
                 List<String> listValuesMap = new ArrayList<>();
-                for (int i = 0; i < lineSplit.length; i++) {
+                for (int i = 0; i < splitedLine.size(); i++) {
                     String id = "";
                     if (countLine == 0) {
-                        id = lineSplit[i] + "_" + i;
+                        id = splitedLine.get(i) + "_" + i;
                         List<String> values = new ArrayList<>();
                         connectionValuesTags.put(id, values);
+                        //System.out.println(id + "  " + values);
                     } else {
                         for (Entry<String, List<String>> entry : connectionValuesTags.entrySet()) {
                             String[] idKeyTable = entry.getKey().split("_");
                             String idKey = idKeyTable[idKeyTable.length - 1];
                             if (Integer.parseInt(idKey) == i) {
                                 listValuesMap = entry.getValue();
-                                if (!lineSplit[i].isEmpty()) {
-                                    listValuesMap.add(lineSplit[i]);
+                                id = entry.getKey();
+                                if (!splitedLine.get(i).isEmpty()) {
+                                    listValuesMap.add(splitedLine.get(i));
                                 } else {
                                     listValuesMap.add(" ");
                                 }
 
-                                id = entry.getKey();
+
                             }
                         }
+                        //System.out.println(id + " => " + listValuesMap);
                         connectionValuesTags.put(id, listValuesMap);
                     }
 
@@ -276,6 +345,8 @@ public class MappingDwC {
                 countLine++;
             }
             readerNoMapped.close();
+            inputStreamReaderNoMapped.close();
+            inputStreamNoMapped.close();
         } catch (Exception e) {
             System.err.println(e);
         }

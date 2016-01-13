@@ -18,7 +18,7 @@ import java.util.Map;
 public class Step1_MappingDwc {
 
 	private Map<Integer,MappingDwC> infos_mapping = new HashMap<>();
-	
+	private int nbInputs = 0;
     private boolean involved = false;
     //private HashMap<MappingDwC, String> mappedFilesAssociatedPath = new HashMap<MappingDwC, String>();
    //<!--<c:if test="${count1 == info.idFile}">-->
@@ -43,6 +43,9 @@ public class Step1_MappingDwc {
 	public void setInvolved(boolean involved) {
 		this.involved = involved;
 	}
-    
-    
+
+	public int getNbInputs() {return nbInputs;}
+
+	public void setNbInputs(int nbInputs) {this.nbInputs = nbInputs;}
+
 }

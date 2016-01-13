@@ -7,6 +7,7 @@ public class BloomConfig {
     private static String resourcePath;
     private static String directoryPath = null; // TODO find a better name
     private static boolean directoryPathInitialized = false;
+    private static String outsideFolder;
 
     // properties file
     public final static ResourceBundle bundleConf = ResourceBundle.getBundle("bloom");
@@ -34,6 +35,7 @@ public class BloomConfig {
             throw new IllegalArgumentException("directoryPath cannot be initialized with a null/empty value !");
         }
         directoryPath = value + getProperty("directory.folder.name");
+        //directoryPath = getProperty("directory.folder.name");
         directoryPathInitialized = true;
     }
 

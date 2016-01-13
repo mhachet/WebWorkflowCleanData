@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
         version="3.0">
     <welcome-file-list>
-        <welcome-file>HomePage.html</welcome-file>
+        <welcome-file>LaunchPage.html</welcome-file>
         <welcome-file>finalWorkflow.jsp</welcome-file>
     </welcome-file-list>
     <servlet>
@@ -39,14 +39,16 @@
         <servlet-name>Download</servlet-name>
         <servlet-class>fr.bird.bloom.servlets.Download</servlet-class>
         <init-param>
-            <param-name>chemin</param-name>
-            <param-value>/home/mhachet/workspace/WebWorkflowCleanData/WebContent/output/temp/</param-value>
-            <!--<param-value>/var/lib/tomcat7/WebWorkflowCleanData/output/</param-value>-->
-        </init-param>
+            <param-name>downloadpath</param-name>
+            <param-value>/home/mhachet/workspace/bloom/output/</param-value>
+            <!--<param-value>/mnt/sdb1/bloom/output/</param-value>-->
+        <!--<param-value>/var/lib/tomcat7/WebWorkflowCleanData/output/</param-value>-->
+     </init-param>
     </servlet>
     <servlet-mapping>
         <servlet-name>Download</servlet-name>
         <url-pattern>/temp/*</url-pattern>
+        <!--<url-pattern>/output/*</url-pattern>-->
     </servlet-mapping>
 
     <servlet>
@@ -58,5 +60,7 @@
         <servlet-name>Jersey REST Service</servlet-name>
         <url-pattern>/service/*</url-pattern>
     </servlet-mapping>
-
+    <session-config>
+        <session-timeout>-1</session-timeout>
+    </session-config>
 </web-app>

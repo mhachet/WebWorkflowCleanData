@@ -1,5 +1,7 @@
 package fr.bird.bloom.model;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -72,16 +74,26 @@ public class DatabaseTreatment {
 			else if(Objects.equals(choiceStatement, "executeUpdate")){
 				i = statement.executeUpdate(sql);
 				messages.add(sql);
-				messages.add("nb lignes affectées :" + Integer.toString(i));
+				//messages.add("nb lignes affectées => " + Integer.toString(i));
 			}
 
 			statement.close();
 
 		} catch ( SQLException e ) {
-			messages.add( "Connection error : " + e.getMessage() );
+			messages.add( "Connection error : " + e.getMessage());
+			do {
+				System.out.println("SQLState : " + e.getSQLState());
+				System.out.println("Description :  " + e.getMessage());
+				System.out.println("Error code :   " + e.getErrorCode());
+				System.out.println(sql);
+				System.out.println();
+				e = e.getNextException();
+			}while (e != null);
 		}
 
+
 		return messages;
+
 	}
 	
 	/**
@@ -136,28 +148,30 @@ public class DatabaseTreatment {
 	 */
 	public void setResultatSelect(ResultSetMetaData resultMeta) throws SQLException{
 		resultatSelect = new ArrayList<>();
-		String line = "";
+
+		String firstLine = "";
 		for(int i = 1; i <= resultMeta.getColumnCount(); i++){
-			line += resultMeta.getColumnName(i) + ",";
+			firstLine += resultMeta.getColumnName(i) + ",";
 		}
-		line = line.substring(0, line.length()-1);
-		resultatSelect.add(line);
-		line = "";
-		while(resultSet.next()){         
+		firstLine = firstLine.substring(0, firstLine.length()-1);
+		resultatSelect.add(firstLine);
+
+		while(resultSet.next()){
+			String line = "";
 			for(int i = 1; i <= resultMeta.getColumnCount(); i++){
 
 				try{
+					//System.out.print(resultSet.getObject(i) + "\t");
 					line += "\"" + resultSet.getObject(i) + "\"" + ",";
 				}
 				catch (Exception e) {
-					line += "NULL,";
+					line += "\"\",";
 				}
 
 			}
-			line = line.substring(0, line.length()-1);
-			resultatSelect.add(line);  
-			line = "";
-
+			line = line.substring(0, line.length() - 1);
+			//System.out.println(line);
+			resultatSelect.add(line);
 		}
 	}
 	
