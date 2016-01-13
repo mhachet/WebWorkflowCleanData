@@ -1,6 +1,6 @@
 
 <?php  
-    define( 'MAIL_TO', /* >>>>> */'mhachet@orange.fr'/* <<<<< */ );  //ajouter votre courriel  
+    define( 'MAIL_TO', /* >>>>> */'mhachet@mnhn.fr'/* <<<<< */ );  //ajouter votre courriel
     define( 'MAIL_FROM', 'utilisateur@domaine.tld' ); // valeur par défaut  
     define( 'MAIL_OBJECT', 'objet du message' ); // valeur par défaut  
     define( 'MAIL_MESSAGE', 'votre message' ); // valeur par défaut  

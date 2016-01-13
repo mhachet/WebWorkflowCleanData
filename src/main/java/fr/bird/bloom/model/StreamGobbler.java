@@ -32,7 +32,7 @@ class StreamGobbler extends Thread{
             }
             InputStreamReader isr = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(isr);
-            String line=null;                        
+            String line = null;
             while ( (line = br.readLine()) != null){
                 if (pw != null){
                 	//System.out.println(line);
@@ -44,8 +44,11 @@ class StreamGobbler extends Thread{
             if (pw != null){
             	pw.flush();
             }
+            br.close();
+            isr.close();
         } catch (IOException ioe){
         	ioe.printStackTrace();  
         }
+
     }
 }

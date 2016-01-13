@@ -512,7 +512,14 @@ function cancelInputFile(nb_input, action){
 				actionReconcileButton(nb_input, "cancel");
 				console.log(this.responseText);
 				//readInputFile(this.responseText, nbInput);
+
+				var divLoadingIcon = document.getElementById("loadIcon_" + nb_input);
 			}
+			if(divLoadingIcon != null){
+				var divAddLoad = document.getElementById("divAddLoad_" + nb_input);
+				divAddLoad.removeChild(divLoadingIcon);
+			}
+
 		}
 	}
 	
@@ -526,13 +533,13 @@ function cancelInputFile(nb_input, action){
 	var divSubmitMappingCancel = document.getElementById("divSubmitMappingCancel_" + nb_input);
 	
 	var divMessageSaved = document.getElementById("divMessageSaved_" + nb_input);
-	var divMessagedCancelled = document.getElementById("divMessageCancelled_" + nb_input);
+	var divMessageCancelled = document.getElementById("divMessageCancelled_" + nb_input);
 	
 	var tablePrepareReconcile = document.getElementById("tablePrepareReconcile_" + nb_input);
 	var divTableReconcile = document.getElementById("divTableReconcile_" + nb_input);
 	var divReconciliationCheck = document.getElementById("divReconciliationCheck_" + nb_input);
 	var divSubmitReconcile = document.getElementById("divSubmitReconcile_" + nb_input);
-	var divUrlTaxo = document.getElementById("divUrlTaxo_" + nb_input);
+	var divTaxo = document.getElementById("divTaxo_" + nb_input);
 	var divMessageReconcileCancelled  = document.getElementById("divMessageReconcileCancelled_" + nb_input);
 	var divMessageReconcileSaved = document.getElementById("divMessageReconcileSaved_" + nb_input);
 	var divButtonCancelReconciliation = document.getElementById("divButtonCancelReconciliation_" + nb_input);
@@ -569,12 +576,12 @@ function cancelInputFile(nb_input, action){
 		divSubmitMapping.removeChild(divSubmitMappingOK);
 		divSubmitMapping.removeChild(divSubmitMappingCancel);
 		divSubmitMapping.removeChild(divMessageSaved);
-		divSubmitMapping.removeChild(divMessagedCancelled);
+		divSubmitMapping.removeChild(divMessageCancelled);
 	}
 
 	if(tablePrepareReconcile){
 		divReconciliationCheck.removeChild(tablePrepareReconcile);
-		divReconciliationCheck.removeChild(divUrlTaxo);
+		divReconciliationCheck.removeChild(divTaxo);
 	}
 
 	if(divMessageReconcileSaved){
@@ -657,20 +664,24 @@ function uploadInputFile(nb_input){
 		xhrPOST.onload = function(e) {
 
 			if (this.status == 200) {
-				
+				if(this.responseText == "formatError"){
+					alert("Format not supported.\nPlease give us csv format");
+				}
+				else {
+					var inputLoad = document.getElementById("inp_" + nb_input);
+					inputLoad.setAttribute('value', true);//boolean for valid upload
+
+					actionSeparatorCSV(nb_input, "upload");
+					actionMappingButton(nb_input, "upload");
+					actionReconcileButton(nb_input, "upload");
+
+					var buttonConvert = document.getElementById("convert_" + nb_input);
+					buttonConvert.setAttribute("onclick", "loadMappingDwc('" + this.responseText + "'," + nb_input + ")");
+
+					var reconcileButton = document.getElementById("reconcileButton_" + nb_input);
+					reconcileButton.setAttribute("onclick", "loadReconcileService('" + uuid + "','" + nb_input + "')");
+				}
 				divAddLoad.removeChild(divLoadingIcon);
-				var inputLoad = document.getElementById("inp_" + nb_input);
-				inputLoad.setAttribute('value', true);//boolean for valid upload
-				
-				actionSeparatorCSV(nb_input, "upload");
-				actionMappingButton(nb_input, "upload");
-				actionReconcileButton(nb_input, "upload");
-				
-				var buttonConvert = document.getElementById("convert_" + nb_input);
-				buttonConvert.setAttribute("onclick" , "loadMappingDwc('" + this.responseText + "'," + nb_input + ")");
-				
-				var reconcileButton = document.getElementById("reconcileButton_" + nb_input);
-				reconcileButton.setAttribute("onclick" , "loadReconcileService('" + uuid + "','" + nb_input + "')");
 			}
 		}
 	}
@@ -702,7 +713,7 @@ function actionMappingButton(nb_input, action){
 			buttonConvert.setAttribute('class', "btn btn-default waves-effect waves-light font-medium-button");
 
 			divLoad.appendChild(buttonConvert);
-			$("#convert_" + nb_input).text('Map to Dwc');
+			$("#convert_" + nb_input).text('To DarwinCore');
 			divAddLoad.appendChild(divLoad);
 
 		}
@@ -807,6 +818,7 @@ function activeRunning(){
 		var divRunning = document.getElementById('running');   
 		var divBody = document.getElementById('divBody');
 		divRunning.style.display = 'block';
+		divRunning.setAttribute('class', "container-loading");
 		divBody.style.display = 'none';
 	}
 	
@@ -842,3 +854,4 @@ function checkRasterFiles(){
 	
 	return all_ok;
 }
+
