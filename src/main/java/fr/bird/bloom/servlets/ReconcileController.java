@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.logging.*;
 
 @WebServlet(name = "ReconcileController")
 public class ReconcileController extends HttpServlet {
@@ -97,23 +98,7 @@ public class ReconcileController extends HttpServlet {
 		
 			count ++;
 		}
-		if(!new File(getDirectoryPath() + "temp/").exists()){
-			BloomUtils.createDirectory(getDirectoryPath() + "temp/");
-		}
-		if(!new File(getDirectoryPath() + "temp/" + uuid).exists()){
-			new File(getDirectoryPath() + "temp/" + uuid);
-		}
-		if(!new File(getDirectoryPath() + "temp/" + uuid + "/data/").exists()){
-			BloomUtils.createDirectory(getDirectoryPath() + "temp/" + uuid + "/data/");
-		}
-		if(!new File(getDirectoryPath() + "temp/" + uuid + "/wrong/").exists()){
-			BloomUtils.createDirectory(getDirectoryPath() + "temp/" + uuid + "/wrong/");
-		}
-		if(!new File(getDirectoryPath() + "temp/" + uuid + "/final_results/").exists()){
-			BloomUtils.createDirectory(getDirectoryPath() + "temp/" + uuid + "/final_results/");
-		}
 
-		//this.testRegex(separator);
 
 		String extension = this.getExtension(nbInput, uuid);
 		System.out.println("extension : " + extension);

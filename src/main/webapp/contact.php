@@ -49,8 +49,8 @@
 				<?php
 				if (isset ( $_POST ) && isset ( $_POST ['name'] ) && isset ( $_POST ['email'] ) && isset ( $_POST ['object'] ) && isset ( $_POST ['message'] )) {
 					if (! empty ( $_POST ['name'] ) && ! empty ( $_POST ['email'] ) && ! empty ( $_POST ['message'] )) {
-						$destinataire = "melanie.hachet@gmail.com";
-						$sujet = "Contact request from " . $_POST ['name'] . " - " . $_POST ['object'];
+						$destinataire = "bloom.mnhn@gmail.com";
+						$sujet = "[bloom-contact] Contact request from " . $_POST ['name'] . " - " . $_POST ['object'];
 						$message = "Name : " . $_POST ['name'] . "<br>";
 						$message .= "email : " . $_POST ['email'] . "<br>";
 						$message .= "Message : <br><br>" .  str_replace("\r\n", "<br>", wordwrap($_POST ['message'], 70, "<br>"));

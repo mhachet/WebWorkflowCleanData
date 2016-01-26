@@ -513,13 +513,14 @@ function cancelInputFile(nb_input, action){
 				console.log(this.responseText);
 				//readInputFile(this.responseText, nbInput);
 
-				var divLoadingIcon = document.getElementById("loadIcon_" + nb_input);
-			}
-			if(divLoadingIcon != null){
-				var divAddLoad = document.getElementById("divAddLoad_" + nb_input);
-				divAddLoad.removeChild(divLoadingIcon);
 			}
 
+		}
+
+		var divLoadingIcon = document.getElementById("loadIcon_" + nb_input);
+		if(divLoadingIcon != null){
+			var divAddLoad = document.getElementById("divAddLoad_" + nb_input);
+			divAddLoad.removeChild(divLoadingIcon);
 		}
 	}
 	
@@ -644,7 +645,7 @@ function uploadInputFile(nb_input){
 		
 		var divAddLoad = document.getElementById("divAddLoad_" + nb_input);
 		divAddLoad.appendChild(divLoadingIcon);
-		
+
 		var formdata = new FormData();
 		formdata.append("uuid", uuid);
 		formdata.append("nbInput", nb_input);
@@ -659,30 +660,48 @@ function uploadInputFile(nb_input){
 		xhrPOST.addEventListener("error", transferFailed, false);
 		xhrPOST.addEventListener("abort", transferCanceled, false);
 
-		xhrPOST.send(formdata); 
+		var extension = "";
 
-		xhrPOST.onload = function(e) {
+		if(sampleText.indexOf('.') != -1){
+			extension = sampleText.substr( (sampleText.lastIndexOf('.') +1) );
+		}
+		/*
+		if(sampleText.contains(".")){
+			extension = sampleText.substr( (sampleText.lastIndexOf('.') +1) );
+		}*/
 
-			if (this.status == 200) {
-				if(this.responseText == "formatError"){
-					alert("Format not supported.\nPlease give us csv format");
+		console.log("extension : " + extension);
+		if(extension == "csv" || extension == "zip" || extension == "rar" || extension == "txt" || extension == "") {
+
+			xhrPOST.send(formdata);
+
+			xhrPOST.onload = function (e) {
+
+				if (this.status == 200) {
+					if (this.responseText == "formatError") {
+						alert("Format not supported.\nPlease give us csv format");
+					}
+					else {
+						var inputLoad = document.getElementById("inp_" + nb_input);
+						inputLoad.setAttribute('value', true);//boolean for valid upload
+
+						actionSeparatorCSV(nb_input, "upload");
+						actionMappingButton(nb_input, "upload");
+						actionReconcileButton(nb_input, "upload");
+
+						var buttonConvert = document.getElementById("convert_" + nb_input);
+						buttonConvert.setAttribute("onclick", "loadMappingDwc('" + this.responseText + "'," + nb_input + ")");
+
+						var reconcileButton = document.getElementById("reconcileButton_" + nb_input);
+						reconcileButton.setAttribute("onclick", "loadReconcileService('" + uuid + "','" + nb_input + "')");
+					}
+					divAddLoad.removeChild(divLoadingIcon);
 				}
-				else {
-					var inputLoad = document.getElementById("inp_" + nb_input);
-					inputLoad.setAttribute('value', true);//boolean for valid upload
-
-					actionSeparatorCSV(nb_input, "upload");
-					actionMappingButton(nb_input, "upload");
-					actionReconcileButton(nb_input, "upload");
-
-					var buttonConvert = document.getElementById("convert_" + nb_input);
-					buttonConvert.setAttribute("onclick", "loadMappingDwc('" + this.responseText + "'," + nb_input + ")");
-
-					var reconcileButton = document.getElementById("reconcileButton_" + nb_input);
-					reconcileButton.setAttribute("onclick", "loadReconcileService('" + uuid + "','" + nb_input + "')");
-				}
-				divAddLoad.removeChild(divLoadingIcon);
 			}
+		}
+		else{
+			alert("Format not supported.\nPlease give us csv format");
+			divAddLoad.removeChild(divLoadingIcon);
 		}
 	}
 	
@@ -806,13 +825,33 @@ function actionSeparatorCSV(nb_inp, action){
 
 
 function activeRunning(){
+	var launchWorkflow = new Boolean(false);
+
 	var checkInputs = checkingInputs();
-	//var checkRasters = checkRasterFiles();
-	//alert("raster : " + checkRasters);
+	var isEmail = checkEmail();
+
+	//checkRasters();
+
+	var email = document.getElementById("email");
+
+
+
 	if(checkInputs == false){
 		alert("File(s) aren't uploaded, please upload it/them");
+		launchWorkflow = false;
 	}
-	else{
+	else if(isEmail == false){
+		if (confirm("Are you sure you don't want to fil out an email ? ")){
+			email.setAttribute('class', 'input-email input-email-valid');
+			launchWorkflow = true;
+		}
+		else{
+			var email = document.getElementById('email');
+			email.setAttribute('class', 'input-email email-required');
+			launchWorkflow = false;
+		}
+	}
+	if(launchWorkflow){
 		var submitButton = document.getElementById("workflowLaunch");
 		submitButton.setAttribute('type', 'submit');
 		var divRunning = document.getElementById('running');   
@@ -821,26 +860,65 @@ function activeRunning(){
 		divRunning.setAttribute('class', "container-loading");
 		divBody.style.display = 'none';
 	}
-	
-	
+}
+
+function checkRasters(){
+	var rasterChecked = document.getElementById("raster").checked;
+	var compteur_header = document.getElementById("compteur_header").value;
+	var compteur_raster = document.getElementById("compteur_raster").value;
+
+	if(compteur_header == 0 && compteur_raster == 0){
+
+	}
+	console.log(rasterChecked);
 }
 
 function checkingInputs(){
 	var all_ok = new Boolean(true);
-	var nbInput = document.getElementById("compteur_inp").value;
-	
-	for(var i = 1; i <= nbInput; i++){
+	var nbInput = document.getElementById("compteur_inp");
+	var nbInputValue = nbInput.value;
+	var bloc_inputs = document.getElementById("bloc-inputs");
+
+	for(var i = nbInputValue ; i > 1 ; i--){
 		var input = document.getElementById("inp_" + (i - 1));
 		var upload = input.getAttribute('value');
-		
+		var globalInput = document.getElementById('globalInput_' + (i - 1));
+		if(upload == 'false') {
+			bloc_inputs.removeChild(globalInput);
+			var newNbInput = (i - 1);
+			nbInput.setAttribute('value', newNbInput);
+
+		}
+
+	}
+
+/*
+	for(var i = 1; i <= nbInputValue; i++){
+		var input = document.getElementById("inp_" + (i - 1));
+		var upload = input.getAttribute('value');
+		var globalInput = document.getElementById('globalInput_' + i);
 		if(upload == 'false'){
 			all_ok = false;
+
+			globalInput.setAttribute('class', "col-lg-12 global global-required");
 		}
-	}
+		else{
+			globalInput.setAttribute('class', "col-lg-12 global");
+		}
+	}*/
 	
 	return all_ok;
 }
 
+function checkEmail(){
+	var is_email = new Boolean(true);
+	var email = document.getElementById('email').value;
+	var regEmail = new RegExp('^[0-9a-z._-]+@{1}[0-9a-z.-]{2,}[.]{1}[a-z]{2,5}$','i');
+	is_email = regEmail.test(email);
+
+	return is_email;
+
+}
 function checkRasterFiles(){
 	var all_ok = new Boolean(true);
 	var nbRaster = document.getElementById("compteur_raster").value;

@@ -1,4 +1,5 @@
 package fr.bird.bloom.model;
+import java.util.logging.*;
 
 @SuppressWarnings("unused")
 public enum DwcHeaders {

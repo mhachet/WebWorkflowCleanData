@@ -639,7 +639,7 @@ input.valid[type="text"]{
 .fixed-table-body .card-view .title {
 	font-weight: bold;
 	display: inline-block;
-	min-width: 30%;
+	min-width: 50%;
 	text-align: left !important;
 }
 
@@ -875,10 +875,67 @@ input.valid[type="text"]{
 
 }
 .input-email{
-	border-bottom-color: #3DC
+	background-color: transparent;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+	border-image-outset: 0 0 0 0;
+	border-image-repeat: stretch stretch;
+	border-image-slice: 100% 100% 100% 100%;
+	border-image-source: none;
+	border-image-width: 1 1 1 1;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	border: 0 none #3F3F3F;
+	border-bottom: 1.25px solid;
+	box-sizing: content-box;
+	color: #3F3F3F;
+	floatleftfont-family: "Ruda",sans-serif;
+	font-feature-settings: normal;
+	font-kerning: auto;
+	font-language-override: normal;
+	font-size: 15px;
+	font-size-adjust: none;
+	font-stretch: normal;
+	font-style: normal;
+	font-synthesis: weight style;
+	font-variant: normal;
+	font-variant-alternates: normal;
+	font-variant-caps: normal;
+	font-variant-east-asian: normal;
+	font-variant-ligatures: normal;
+	font-variant-numeric: normal;
+	font-variant-position: normal;
+	font-weight: 400;
+	height: 45px;
+	line-height: 18.75px;
+	margin-bottom: 15px;
+	margin-left: 15px;
+	margin-right: 15px;
+	margin-top: 0px;
+	min-height: 1px;
+	outline-color: #3F3F3F;
+	outline-style: none;
+	outline-width: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 0px;
+	position: relative;
+	transition-delay: 0s;
+	transition-duration: 0.3s;
+	transition-property: all;
+	transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+	width: 1150px;
 }
-
-
+.input-email-valid{
+	border-bottom-color : #36A89D;
+	box-shadow: #36A89D 0 1px 0 0;
+}
+.email-required{
+	border-bottom-color : #FF0000;
+	box-shadow: #FF0000 0 1px 0 0;
+}
+/*
 input[type=mail]{
 	background-color: transparent;
 	border-bottom-left-radius: 0;
@@ -937,7 +994,7 @@ input[type=mail]{
 	-moz-border-right-colors: none;
 	-moz-border-top-colors: none;
 }
-
+*/
 .div-email{
 	/*border-bottom-color: #3DC;
 	border-bottom-style: solid;
@@ -1031,6 +1088,18 @@ input[type=mail]{
 .padding-left{
 	padding-left: 20px;
 }
+
+.marges-span{
+	padding-bottom: 10px;
+}
+
+.global-required{
+	border-color: #FF0000;
+}
+/*
+span.value{
+	text-overflow: ellipsis;
+}*/
 /*
 .col-md-6{
 	  display:inline-block;

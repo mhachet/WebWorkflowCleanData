@@ -45,7 +45,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.UUID;
-
+import java.util.logging.*;
 /**
  * fr.bird.bloom.servlets
  * <p>
@@ -68,10 +68,11 @@ public class MainController extends HttpServlet {
         //this.setUuid(this.generateUUID());
         //this.inputParameters.setUuid(uuid);
 
+
+
         List<FileItem> listFileItems = getMultipartRequestParameters(request);
 
         InputParameters inputParameters = initialiseParameters(listFileItems, response);
-
 
         request.setAttribute("initialise", inputParameters);
 
@@ -175,22 +176,12 @@ public class MainController extends HttpServlet {
             //System.out.println("fieldName : " + fieldName + " item : " + item.getString());
             if (fieldName.contains("formulaire")) {
                 uuid = item.getString();
+
+                this.createOutputLogsFile(uuid);
+                this.createOutputDirectories(uuid);
+
                 inputParameters.setUuid(uuid);
-                if (!new File(getDirectoryPath() + "temp/").exists()) {
-                    BloomUtils.createDirectory(getDirectoryPath() + "temp/");
-                }
-                if (!new File(getDirectoryPath() + "temp/" + uuid).exists()) {
-                    new File(getDirectoryPath() + "temp/" + uuid);
-                }
-                if (!new File(getDirectoryPath() + "temp/" + uuid + "/data/").exists()) {
-                    BloomUtils.createDirectory(getDirectoryPath() + "temp/" + uuid + "/data/");
-                }
-                if (!new File(getDirectoryPath() + "temp/" + uuid + "/wrong/").exists()) {
-                    BloomUtils.createDirectory(getDirectoryPath() + "temp/" + uuid + "/wrong/");
-                }
-                if (!new File(getDirectoryPath() + "temp/" + uuid + "/final_results/").exists()) {
-                    BloomUtils.createDirectory(getDirectoryPath() + "temp/" + uuid + "/final_results/");
-                }
+
             } else if (fieldName.equals(input)) { // retrieving input file
                 DiskFileItem itemFile = (DiskFileItem) item;
                 String fileExtensionName = itemFile.getName();
@@ -428,6 +419,39 @@ public class MainController extends HttpServlet {
 
 
         return inputParameters;
+    }
+
+    public void createOutputLogsFile(String uuid){
+
+        if(!new File(BloomConfig.getDirectoryPath() + "logs/").exists()){
+            BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "logs/");
+        }
+        File logsFile = new File(BloomConfig.getDirectoryPath() + "logs/" + uuid + ".log");
+
+    }
+
+    public boolean createOutputDirectories(String uuid){
+
+        boolean checkDirecotoriesValidity = true;
+
+        if (!new File(getDirectoryPath() + "temp/").exists()) {
+            checkDirecotoriesValidity = false;
+        }
+        if (!new File(getDirectoryPath() + "temp/" + uuid).exists()) {
+            checkDirecotoriesValidity = false;
+        }
+        if (!new File(getDirectoryPath() + "temp/" + uuid + "/data/").exists()) {
+            checkDirecotoriesValidity = false;
+        }
+        if (!new File(getDirectoryPath() + "temp/" + uuid + "/wrong/").exists()) {
+            BloomUtils.createDirectory(getDirectoryPath() + "temp/" + uuid + "/wrong/");
+
+        }
+        if (!new File(getDirectoryPath() + "temp/" + uuid + "/final_results/").exists()) {
+            BloomUtils.createDirectory(getDirectoryPath() + "temp/" + uuid + "/final_results/");
+        }
+
+        return checkDirecotoriesValidity;
     }
 
     public void destroy() {

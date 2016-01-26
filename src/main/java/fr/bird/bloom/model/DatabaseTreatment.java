@@ -9,7 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
+import java.util.logging.*;
 public class DatabaseTreatment {
 
 	private ArrayList<String> resultatSelect;
@@ -112,6 +112,13 @@ public class DatabaseTreatment {
 
 		resultatCleantableFromidFile.remove(0);
 		resultatCleantableFromidFile.add(0, lineClean);
+
+		for (int i = 0; i < resultatCleantableFromidFile.size() ; i++){
+			String lineCleanData = resultatCleantableFromidFile.get(i);
+			//System.out.println("before : " + lineCleanData);
+			lineCleanData = lineCleanData.replace("\\\\\"", "\"");
+			//System.out.println("after : " + lineCleanData);
+		}
 
 		return resultatCleantableFromidFile;
 	}

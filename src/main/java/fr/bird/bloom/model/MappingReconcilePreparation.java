@@ -3,7 +3,7 @@
  * MappingReconcilePreparation
  */
 package fr.bird.bloom.model;
-
+import java.util.logging.*;
 
 /**
  * src.model
