@@ -188,6 +188,7 @@ public class GeographicTreatment {
 							System.out.println("File not found : " + resourcePath + "gadm_json/" + iso3.toUpperCase() + "_adm0.json");
 						}
 
+
 					}
 					else{
 						errorIso = true;
@@ -203,6 +204,8 @@ public class GeographicTreatment {
 				}
 			}
 		}
+
+
 		System.out.println(listIDtoDelete);
 		if(listIDtoDelete.size() > 0) {
 			String sqlIDCleanToSelect = "SELECT abstract_,acceptedNameUsage_,acceptedNameUsageID_,accessRights_,accrualMethod_,accrualPeriodicity_,accrualPolicy_," +
@@ -394,13 +397,18 @@ public class GeographicTreatment {
 	public String getPolygoneType(File geoJsonFile){
 		String typePolygon = "";
 		JSONParser parser = new JSONParser();
+		FileReader geoJsonReader = null;
+
 		try {
-			Object obj = parser.parse(new FileReader(geoJsonFile.getAbsoluteFile()));
+			geoJsonReader = new FileReader(geoJsonFile.getAbsoluteFile());
+			Object obj = parser.parse(geoJsonReader);
 			JSONObject jsonObjectFeatures = (JSONObject) obj;
 			JSONArray features = (JSONArray) jsonObjectFeatures.get("features");
 			JSONObject firstFeature = (JSONObject) features.get(0);
 			JSONObject geometry = (JSONObject) firstFeature.get("geometry");
 			typePolygon = (String) geometry.get("type");
+
+			geoJsonReader.close();
 
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
