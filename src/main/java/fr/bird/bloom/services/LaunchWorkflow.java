@@ -38,7 +38,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 import java.util.Map.Entry;
-
+import java.util.logging.*;
 /**
  * src.model
  *
@@ -92,55 +92,72 @@ public class LaunchWorkflow {
 		step8 = new Step8_CheckCoordinatesRaster();
 		step9 = new Step9_EstablishmentMeans();
 
+		boolean workflowSuccess = true;
 		Map<Integer, Boolean> validInputFiles = this.isValidInputFiles();
 		if(validInputFiles.containsValue(true)) {
-			System.out.println("valid : ");
-			this.launchWorkflow();
-			step3.setInvolved(true);
-			step4.setInvolved(true);
-			step7.setInvolved(true);
+			workflowSuccess = this.launchWorkflow();
+			if(workflowSuccess) {
+				step3.setInvolved(true);
+				step4.setInvolved(true);
+				step7.setInvolved(true);
 
-			if (this.inputParameters.isSynonym()) {
+				if (this.inputParameters.isSynonym()) {
 
-				boolean synonymFileIsValid = this.isValidSynonymFile();
-				this.launchSynonymOption(synonymFileIsValid);
-				step5.setInvolved(true);
-			}
-
-			if (this.inputParameters.isTdwg4Code()) {
-				boolean sucessTdwgTreatment = dataTreatment.tdwgCodeOption();
-				step6.setStep6_ok(sucessTdwgTreatment);
-				step6.setInvolved(true);
-			}
-			System.out.println("raster option : " + inputParameters.isRaster());
-			if (this.inputParameters.isRaster()) {
-				step8.setInvolved(true);
-				boolean rasterFilesIsValid = this.isValidRasterFiles();
-				//boolean rasterFilesIsValid = true;
-				System.out.println("raster valid : " + rasterFilesIsValid);
-				if (rasterFilesIsValid) {
-					this.launchRasterOption();
-				} else {
-					final String supportFiles = BloomConfig.getResourcePath();
-					File defaultRaster = new File(supportFiles + "tmean1.bil");
-					this.inputParameters.getInputRastersList().add(defaultRaster);
-					File defaultHeader = new File(supportFiles + "tmean1.hdr");
-					this.inputParameters.getHeaderRasterList().add(defaultHeader);
-					this.launchRasterOption();
-					//step8.setStep8_ok(false);
+					boolean synonymFileIsValid = this.isValidSynonymFile();
+					this.launchSynonymOption(synonymFileIsValid);
+					step5.setInvolved(true);
 				}
 
+				if (this.inputParameters.isTdwg4Code()) {
+					boolean sucessTdwgTreatment = dataTreatment.tdwgCodeOption();
+					step6.setStep6_ok(sucessTdwgTreatment);
+					step6.setInvolved(true);
+				}
+				if (this.inputParameters.isRaster()) {
+					step8.setInvolved(true);
+					boolean rasterFilesIsValid = this.isValidRasterFiles();
+					if (rasterFilesIsValid) {
+						this.launchRasterOption();
+					} else {
+						final String supportFiles = BloomConfig.getResourcePath();
+						File defaultRaster = new File(supportFiles + "tmean1.bil");
+						this.inputParameters.getInputRastersList().add(defaultRaster);
+						File defaultHeader = new File(supportFiles + "tmean1.hdr");
+						this.inputParameters.getHeaderRasterList().add(defaultHeader);
+						this.launchRasterOption();
+					}
+
+				}
+
+				if (this.inputParameters.isEstablishment()) {
+					this.launchEstablishmentMeansOption();
+					step9.setInvolved(true);
+				}
+
+				this.writeFinalOutput();
 			}
+			else{
 
-			//System.out.println("establishment : " + this.inputParameters.getEstablishmentList());accessRight
-			//keep introduced data
-			if (this.inputParameters.isEstablishment()) {
-				this.launchEstablishmentMeansOption();
-				step9.setInvolved(true);
+				step3.setStep3_ok(false);
+				step4.setStep4_ok(false);
+				step7.setStep7_ok(false);
+
+				if(step5.isInvolved()){
+					step5.setStep5_ok(false);
+				}
+
+				if(step6.isInvolved()){
+					step6.setStep6_ok(false);
+				}
+
+				if(step8.isInvolved()){
+					step8.setStep8_ok(false);
+				}
+
+				if(step9.isInvolved()){
+					step9.setStep9_ok(false);
+				}
 			}
-
-			this.writeFinalOutput();
-
 			if (inputParameters.isSendEmail()) {
 				System.out.println("email option : " + inputParameters.isSendEmail());
 				SendMail mail = new SendMail();
@@ -163,8 +180,17 @@ public class LaunchWorkflow {
 			}
 
 			this.dataTreatment.deleteTables();
+
+			try {
+				if (ConnectionDatabase.getConnection() != null) {
+					ConnectionDatabase.getConnection().close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		else{
+			workflowSuccess = false;
 			System.out.println("no valid : ");
 			//if(!step1.isInvolved()){
 			List<MappingReconcilePreparation> listMappingReconcileFiles =  inputParameters.getListMappingReconcileFiles();
@@ -198,6 +224,8 @@ public class LaunchWorkflow {
 				step9.setStep9_ok(false);
 			}
 		}
+
+		finalisation.setSuccessWorkflow(Boolean.toString(workflowSuccess));
 /*
 		try {
 			ConnectionDatabase.getConnection().close();
@@ -216,7 +244,9 @@ public class LaunchWorkflow {
 	 * @throws IOException
 	 * @return void
 	 */
-	private void launchWorkflow() throws IOException{
+	private boolean launchWorkflow() throws IOException{
+
+		boolean workflowSuccess = true;
 
 		List<MappingReconcilePreparation> listMappingReconcileDWC = this.inputParameters.getListMappingReconcileFiles();
 		Map<Integer, ReconciliationService> reconcilePath = step2.getInfos_reconcile();
@@ -245,10 +275,12 @@ public class LaunchWorkflow {
 			if(isMapping && isValid){
 				step1.setInvolved(isMapping);
 
-				this.dataTreatment.mappingDwC(mappingDwc, idFile);
+				this.dataTreatment.mappingDwC(mappingDwc, idFile, inputParameters.getUuid());
 				String pathMappedFile = mappingDwc.getMappedFile().getAbsolutePath().replace(BloomConfig.getDirectoryPath(),"output/"); //change to 'output/'
 
 				mappingDwc.setFilepath(pathMappedFile);
+
+				preparation.setValid(Boolean.parseBoolean(mappingDwc.getSuccessMapping()));
 			}
 			hashMapStep1.put(idFile, mappingDwc);
 
@@ -313,27 +345,50 @@ public class LaunchWorkflow {
 			}
 
 		}
+		Map<Integer, Boolean> validInputFiles = new HashMap<>();
+		for(int i = 0; i < this.inputParameters.getListMappingReconcileFiles().size() ; i++) {
+			MappingReconcilePreparation mappingReconcilePrep = this.inputParameters.getListMappingReconcileFiles().get(i);
+			boolean isValid = mappingReconcilePrep.isValid();
+			int idPreparation = mappingReconcilePrep.getIdFile();
+			validInputFiles.put(idPreparation, isValid);
+		}
 
-		GeographicTreatment geoTreatment = this.dataTreatment.checkGeographicOption();
+		if(validInputFiles.containsValue(true)) {
 
-		File wrongCoordinatesFile = geoTreatment.getWrongCoordinatesFile();
-		finalisation.setWrongCoordinatesFile(wrongCoordinatesFile);
-		final String pathWrongCoordinatesFile = wrongCoordinatesFile.getAbsolutePath().replace(BloomConfig.getDirectoryPath(), "output/");
-		finalisation.setPathWrongCoordinatesFile(pathWrongCoordinatesFile); //change to 'output/'
-		step3.setNbFound(geoTreatment.getNbWrongCoordinates());
-		step3.setPathWrongCoordinates(finalisation.getPathWrongCoordinatesFile());
+			GeographicTreatment geoTreatment = this.dataTreatment.checkGeographicOption();
 
-		File wrongGeospatial = geoTreatment.getWrongGeoFile();
-		finalisation.setWrongGeospatial(wrongGeospatial);
-		finalisation.setPathWrongGeospatial(wrongGeospatial.getAbsolutePath().replace(BloomConfig.getDirectoryPath(), "output/")); //change to 'output/'
-		step4.setNbFound(geoTreatment.getNbWrongGeospatialIssues());
-		step4.setPathWrongGeoIssue(finalisation.getPathWrongGeospatial());
+			File wrongCoordinatesFile = geoTreatment.getWrongCoordinatesFile();
+			finalisation.setWrongCoordinatesFile(wrongCoordinatesFile);
+			final String pathWrongCoordinatesFile = wrongCoordinatesFile.getAbsolutePath().replace(BloomConfig.getDirectoryPath(), "output/");
+			finalisation.setPathWrongCoordinatesFile(pathWrongCoordinatesFile);
+			step3.setNbFound(geoTreatment.getNbWrongCoordinates());
+			step3.setPathWrongCoordinates(finalisation.getPathWrongCoordinatesFile());
 
-		File wrongPolygon = geoTreatment.getWrongPolygonFile();
-		finalisation.setWrongPolygon(wrongPolygon);
-		finalisation.setPathWrongPolygon(wrongPolygon.getAbsolutePath().replace(BloomConfig.getDirectoryPath(), "output/")); //change to 'output/'
-		step7.setNbFound(geoTreatment.getNbWrongIso2());
-		step7.setPathWrongIso2(finalisation.getPathWrongPolygon());
+			File wrongGeospatial = geoTreatment.getWrongGeoFile();
+			finalisation.setWrongGeospatial(wrongGeospatial);
+			finalisation.setPathWrongGeospatial(wrongGeospatial.getAbsolutePath().replace(BloomConfig.getDirectoryPath(), "output/"));
+			step4.setNbFound(geoTreatment.getNbWrongGeospatialIssues());
+			step4.setPathWrongGeoIssue(finalisation.getPathWrongGeospatial());
+
+			File wrongIso2 = geoTreatment.getWrongIso2File();
+			finalisation.setWrongIso2(wrongIso2);
+			finalisation.setPathWrongIso2(wrongIso2.getAbsolutePath().replace(BloomConfig.getDirectoryPath(), "output/"));
+			step7.setNbFoundIso2(geoTreatment.getNbWrongIso2());
+			step7.setPathWrongIso2(finalisation.getPathWrongIso2());
+
+			File wrongPolygon = geoTreatment.getWrongPolygonFile();
+			finalisation.setWrongPolygon(wrongPolygon);
+			finalisation.setPathWrongPolygon(wrongPolygon.getAbsolutePath().replace(BloomConfig.getDirectoryPath(), "output/"));
+			step7.setNbFoundPolygon(geoTreatment.getNbWrongPolygon());
+			step7.setPathWrongPolygon(finalisation.getPathWrongPolygon());
+
+			workflowSuccess = true;
+		}
+		else{
+			workflowSuccess = false;
+		}
+
+		return workflowSuccess;
 	}
 
 	/**
@@ -419,14 +474,23 @@ public class LaunchWorkflow {
 		else{
 			System.err.println("You have to put a raster file AND its header file (format : hdr).");
 			isValid = false;
+			for(int i = 0; i < this.inputParameters.getInputRastersList().size() ; i++) {
+				File raster = this.inputParameters.getInputRastersList().get(i);
+				String extensionRaster = raster.getName().substring(raster.getName().lastIndexOf("."));
+				System.err.println("extensionRaster : " + extensionRaster);
+				if(".tif".equals(extensionRaster)){
+					isValid = true;
+				}
+			}
+
 		}
 
 		for(int i = 0; i < this.inputParameters.getInputRastersList().size() ; i++){
 			File raster = this.inputParameters.getInputRastersList().get(i);
 			String extensionRaster = raster.getName().substring(raster.getName().lastIndexOf("."));
-			String [] extensionsRaster = {".bil", ".grd", ".asc", ".sdat", ".rsc", ".nc", ".cdf", ".bsq", ".bip", ".adf"};
+			String [] extensionsRaster = {".bil", ".grd", ".asc", ".sdat", ".rsc", ".nc", ".cdf", ".bsq", ".bip", ".adf", ".tif"};
 			List<String> extensionsRasterList = new ArrayList(Arrays.asList(extensionsRaster));
-
+			System.err.println("extensionRaster : " + extensionRaster);
 			if(!extensionsRasterList.contains(extensionRaster)){
 				isValid = false;
 			}
@@ -450,7 +514,7 @@ public class LaunchWorkflow {
 
 		}
 
-		//System.out.println("raster valid : " + isValid);
+		System.out.println("raster valid : " + isValid);
 		return isValid;
 	}
 
@@ -562,7 +626,7 @@ public class LaunchWorkflow {
 			}
 			DatabaseTreatment newConnection = new DatabaseTreatment(statement);
 
-			List<String > resultCleanTable = newConnection.getCleanTableFromIdFile(idFile, inputParameters.getUuid());
+			List<String> resultCleanTable = newConnection.getCleanTableFromIdFile(idFile, inputParameters.getUuid());
 			String nameFile = originalName.replace("." + originalExtension, "") + "_" + idFile + "_" + inputParameters.getUuid() + "_clean.csv";
 			File cleanOutput = this.dataTreatment.createFileCsv(resultCleanTable, nameFile, "final_results");
 

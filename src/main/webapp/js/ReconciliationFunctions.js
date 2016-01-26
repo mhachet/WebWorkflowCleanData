@@ -262,6 +262,7 @@ function doPreparationReconciliation(uuid, nb_input, separator){
 					//noteReconcile.setAttribute('class', "col s12 m7");
 					var refDocReconcile = document.createElement('a');
 					refDocReconcile.setAttribute('href', "DocumentationPage.html#help-reconcile-div");
+					refDocReconcile.setAttribute('target', "_blank");
 					refDocReconcile.innerHTML = "taxonomic reconciliation";
 
 					noteReconcile.appendChild(refDocReconcile);
@@ -661,37 +662,90 @@ function doReconciliation(nbInput, contentFile, separator){
 
 	// Add event listener for opening and closing detailsfunctions.js
 	$('#tableReconcile_' + nbInput + ' tbody').on('click', 'td.details-control', function () {
+
+
 		var tr = $(this).closest('tr');
 		var td = $(this).closest('td');
 		var row = table.row(tr);
-		rowIndex = row.index();
+		var rowIndex = row.index();
 
-		var id = "tableInput_" + nbInput + "_row_" + rowIndex;
+		var id = "tableReconcileResult_" + nbInput + "_row_" + rowIndex;
 		var child = row.child();
+		var tableReconcileResult = document.getElementById("tableReconcileResult_" + nbInput + "_row_" + rowIndex);
+		if(tableReconcileResult){
+			var tableReconcileResult = $("#tableReconcileResult_" + nbInput + "_row_" + rowIndex);
+			var tdParent = $("#tableReconcileResult_" + nbInput + "_row_" + rowIndex).parent();
+			var trParent = $("#tableReconcileResult_" + nbInput + "_row_" + rowIndex).parent().parent();
 
-		if(child){
-			var tableDetailsControl = document.getElementById(id);
+			//console.log(child);
+			tableReconcileResult.remove();
+			tdParent.remove();
+			trParent.remove();
+			//$('#tableReconcile_' + nbInput).remove(rowReconciled);
+
 			// This row is already open - close it
-			if($('#' + id).css('display') == 'none'){ 
-				$('#' + id).css("display", "block"); 
+			/*if($('#' + id).css('display') == 'none'){
+				//$('#' + id).css("display", "block");
 				tr.addClass('shown');
-			} else { 
-				$('#' + id).css("display", "none");
-				tr.removeClass('shown');
-			}
+			} else { */
+				//$('#' + id).css("display", "none");
+			tr.removeClass('shown');
+			//row.removeChild(child);
+			//}
+
 		}
 		else {
 
 			// Open this row
 			//console.log("create child");
+			//row.class = "reconcileRow_" + nbInput + "_" + rowIndex;
+			//console.log(row.id);
+			createLoadIcon("loadIcon_reconcile_" + nbInput + "_" + rowIndex,td);
 			addTableForReconcile(nbInput, columnCheck, row);
+			//console.log(newRow);
 			tr.addClass('shown');
-		}
 
+		}
+		var divLoadIcon = $("#loadIcon_reconcile_" + nbInput + "_" + rowIndex);
+		//var parentIconLoad = $("#loadIcon_reconcile_" + nbInput + "_" + rowIndex).parent();
+		divLoadIcon.remove();
 
 	} );
+
+
 }
 
+
+
+function createLoadIcon(idIcon, parent){
+	var divLoadingIcon = document.createElement("div");
+	divLoadingIcon.setAttribute('class', "preloader-wrapper small active");
+	divLoadingIcon.setAttribute('id', idIcon);
+	var divSpinnerIcon = document.createElement('div');
+	divSpinnerIcon.setAttribute('class', "spinner-layer spinner-red-only");
+	var divCircleLeft = document.createElement("div");
+	divCircleLeft.setAttribute('class', "circle-clipper left");
+	var divCircleOne = document.createElement("div");
+	divCircleOne.setAttribute('class', "circle");
+	var divGapPatch = document.createElement("div");
+	divGapPatch.setAttribute('class', "gap-patch");
+	var divCircleTwo = document.createElement("div");
+	divCircleTwo.setAttribute('class', "circle");
+	var divCircleThree = document.createElement("div");
+	divCircleThree.setAttribute('class', "circle");
+	var divClipperRight = document.createElement("div");
+	divClipperRight.setAttribute('class',"circle-clipper right");
+
+	divCircleLeft.appendChild(divCircleOne);
+	divGapPatch.appendChild(divCircleTwo);
+	divClipperRight.appendChild(divCircleThree);
+	divSpinnerIcon.appendChild(divCircleLeft);
+	divSpinnerIcon.appendChild(divGapPatch);
+	divSpinnerIcon.appendChild(divClipperRight);
+	divLoadingIcon.appendChild(divSpinnerIcon);
+
+	parent.append(divLoadingIcon);
+}
 function createDataJSON(headers, lines, separator){
 	var rows = [];
 	for(var i = 0 ; i < lines.length ; i++){
@@ -747,30 +801,36 @@ function adjustJSON(nbInput){
 
 function createTableReconciliationService(resultsReconcile, nbInput, row){
 	var indexRow = row.index();
-	var subTableReconcile = '<table id=tableInput_' + nbInput + '_row_' + indexRow + ' cellpadding="5" cellspacing="0" border="0" style="display:block; padding-left:50px;" >';
+	var subTableReconcile = '<table id=tableReconcileResult_' + nbInput + '_row_' + indexRow + ' cellpadding="5" cellspacing="0" border="0" style="display:block; padding-left:50px;" >';
 	var size = 0;
 	for(i in resultsReconcile){
 		size ++;
 	}
 	if(size > 0){
-		subTableReconcile +=
-			'<tr>'+
-			//'<td style="font-weight : bold">check</td>'+
-			'<td style="font-weight : bold">name</td>' +
-			'<td style="font-weight : bold">score</td>' +
-			'</tr>';
-		for(i in resultsReconcile){
-			var result = resultsReconcile[i];
-			var name = result[0];
-			var score = result[1];
-			var nameRadio = "radio_" + nbInput + "_" + indexRow;
-			var idRadio = "radio_" + nbInput + "_" + indexRow + "_" + i;
-			subTableReconcile += 
-				'<tr>'+
-				'<td><input type="radio" name="' + 'group_' + nbInput + "_" + indexRow + '" value="' + name + '" id="' + idRadio + '"/>' +
-				'<label for="' + idRadio + '">' + name +'</label></td>' +
-				'<td>' + score +'</td>' +
+		var result = resultsReconcile[0];
+		if(result[0] == "error"){
+			subTableReconcile += '<tr><td>Error : ' + result[1] + '</td></tr>';
+		}
+		else {
+			subTableReconcile +=
+				'<tr>' +
+					//'<td style="font-weight : bold">check</td>'+
+				'<td style="font-weight : bold">name</td>' +
+				'<td style="font-weight : bold">score</td>' +
 				'</tr>';
+			for (i in resultsReconcile) {
+				var result = resultsReconcile[i];
+				var name = result[0];
+				var score = result[1];
+				var nameRadio = "radio_" + nbInput + "_" + indexRow;
+				var idRadio = "radio_" + nbInput + "_" + indexRow + "_" + i;
+				subTableReconcile +=
+					'<tr>' +
+					'<td><input type="radio" name="' + 'group_' + nbInput + "_" + indexRow + '" value="' + name + '" id="' + idRadio + '"/>' +
+					'<label for="' + idRadio + '">' + name + '</label></td>' +
+					'<td>' + score + '</td>' +
+					'</tr>';
+			}
 		}
 
 	}
@@ -803,32 +863,58 @@ function addTableForReconcile(nbInput, columnCheck, row){
 	//http://refine.taxonomics.org/gbifchecklists/reconcile
 	var scientificName = rows[indexRow][idColumnCheck];
 	callRestService(urlTaxo, scientificName, nbInput, row);
-
+	//console.log("822 : " + newRow)
 }
 
 function callRestService(urlAPI, scientificName, nbInput, row){
 	//xhr.open('GET', 'http://data1.kew.org/reconciliation/reconcile/IpniName?query={"query":"Lamiaceae+Congea+chinensis+Moldenke"}');
-	var url = urlAPI + '?query={"query":"' + scientificName.replace(" ", "+") + '"}';
+	var url = urlAPI + '?query={"query":"' + scientificName.replace(/ /g, "+") + '"}'; //
 	var htmlResult = "";
 	$.ajax({
 		url : url,
 		type: 'GET',
 		dataType: 'jsonp',
+		contentType:"application/json;charset=utf-8",
 		data : {symbol : "AAPL"},
 		success: function(data) {
 			var result = {};
+			console.log("Success : " + url);
 			for (var i = 0; i < data.result.length; i++) {
 				result[i] = [data.result[i].name, data.result[i].score];
 			}
 			htmlResult = createTableReconciliationService(result, nbInput, row);
+			//console.log(row.id)
 			row.child(htmlResult).show();
+
 		},
-		error: function(xhr, sts, err) {
-			console.log('Erreur !!');
+		error: function(request, status, error) {
+			var result = {};
+			result[0] = ['error', request.status]
+			console.log(error);
+			console.log(request.status);
+			console.log(request.responseText);
+			console.log('Error !! url : ' + url);
+			htmlResult = createTableReconciliationService(result, nbInput, row);
+			row.child(htmlResult).show();
+
+		},
+		ajaxError : function(event, jqxhr, settings, thrownError){
+			console.log(thrownError);
+			console.log(event);
+			console.log(jqxhr);
+			console.log(settings);
+
+		},
+		ajaxStart : function(request){
+			request.show();
+		},
+		ajaxComplete : function(event, xhr, settings ){
+			console.log(event);
+			console.log(xhr);
+			console.log(settings);
 		}
 	});
 
-	return htmlResult;
 }
 
 

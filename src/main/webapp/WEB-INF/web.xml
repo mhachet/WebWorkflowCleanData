@@ -40,27 +40,31 @@
         <servlet-class>fr.bird.bloom.servlets.Download</servlet-class>
         <init-param>
             <param-name>downloadpath</param-name>
-            <param-value>/home/mhachet/workspace/bloom/output/</param-value>
-            <!--<param-value>/mnt/sdb1/bloom/output/</param-value>-->
+            <!-- for local -->
+            <!--<param-value>/home/mhachet/workspace/bloom/output/</param-value>-->
+            <!-- for server -->
+            <param-value>/mnt/sdb1/bloom/output/</param-value>
         <!--<param-value>/var/lib/tomcat7/WebWorkflowCleanData/output/</param-value>-->
      </init-param>
     </servlet>
     <servlet-mapping>
         <servlet-name>Download</servlet-name>
-        <url-pattern>/temp/*</url-pattern>
-        <!--<url-pattern>/output/*</url-pattern>-->
-    </servlet-mapping>
+        <!-- for local -->
+        <!--<url-pattern>/temp/*</url-pattern>-->
+        <!-- for server -->
+        <url-pattern>/output/*</url-pattern>
+     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>Jersey REST Service</servlet-name>
-        <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Jersey REST Service</servlet-name>
-        <url-pattern>/service/*</url-pattern>
-    </servlet-mapping>
-    <session-config>
-        <session-timeout>-1</session-timeout>
-    </session-config>
-</web-app>
+     <servlet>
+         <servlet-name>Jersey REST Service</servlet-name>
+         <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+         <load-on-startup>1</load-on-startup>
+     </servlet>
+     <servlet-mapping>
+         <servlet-name>Jersey REST Service</servlet-name>
+         <url-pattern>/service/*</url-pattern>
+     </servlet-mapping>
+     <session-config>
+         <session-timeout>-1</session-timeout>
+     </session-config>
+ </web-app>

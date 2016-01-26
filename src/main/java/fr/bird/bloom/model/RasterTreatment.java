@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
+import java.util.logging.*;
 /**
  * model
  * 
@@ -272,8 +272,11 @@ public class RasterTreatment {
 	 * @return boolean
 	 */
 	public boolean errorDuringProcess(File errorRaster){
-		String errorInfo = "aucun package nommé";
-		String errorInfoBis = "Exécution arrêtée";
+		String error_1 = "aucun package nommé";
+		String error_2 = "Exécution arrêtée";
+		String error_3 = "not recognised as a supported file format";
+		String error_4 = "Execution halted";
+
 		boolean error = false;
 		InputStream ips = null;
 		try {
@@ -288,10 +291,10 @@ public class RasterTreatment {
 		String [] arraySplit;
 		try {
 			while ((line = br.readLine()) != null){
-				if(line.contains(errorInfo)){
+				if(line.contains(error_1)){
 					error = true;
 				}
-				else if(line.contains(errorInfoBis)){
+				else if(line.contains(error_2)){
 					error = true;
 				}
 			}

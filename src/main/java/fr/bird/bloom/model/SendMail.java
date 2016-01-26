@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
-
+import java.util.logging.*;
 public class SendMail {
 
 	private Step1_MappingDwc step1;

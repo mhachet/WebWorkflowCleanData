@@ -34,8 +34,10 @@ public class BloomConfig {
         if (value == null || value.trim().length() == 0) {
             throw new IllegalArgumentException("directoryPath cannot be initialized with a null/empty value !");
         }
-        directoryPath = value + getProperty("directory.folder.name");
-        //directoryPath = getProperty("directory.folder.name");
+        // for local
+        //directoryPath = value + getProperty("directory.folder.name");
+        // for server
+        directoryPath = getProperty("directory.folder.name");
         directoryPathInitialized = true;
     }
 

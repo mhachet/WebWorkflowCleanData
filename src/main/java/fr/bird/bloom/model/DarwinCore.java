@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import java.util.logging.*;
 /**
  * 
  * package model
@@ -207,7 +207,6 @@ public class DarwinCore extends CSVFile{
 				else{
 					String newLine = "";
 					for(int j = 0 ; j < contentLine.length ; j++){
-						//System.out.println(lineSplit.get(j));
 						if(j == decimalLatitudeID || j == decimalLongitudeID){
 							String checkedLatLong = "";
 							String noCheckedLatLong = contentLine[j];
@@ -215,10 +214,11 @@ public class DarwinCore extends CSVFile{
 							newLine += "\"" + checkedLatLong + "\",";
 						}
 						else {
+							//System.out.println("------\n" + contentLine[j]);
 							if(contentLine[j].contains("\"")){
 
-								String newContent = "\"" + contentLine[j].replaceAll("\"", "\\\\\"") + "\",";
-								//System.out.println(contentLine[j] + "     " + newContent);
+								String newContent = "\"" + contentLine[j].replaceAll("\"", "\\\\\"\\\\\"") + "\",";
+								//System.out.println("------\n" + contentLine[j] + "     " + newContent);
 								newLine += newContent;
 							}
 							else{

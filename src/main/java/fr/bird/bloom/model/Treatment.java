@@ -24,7 +24,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.logging.*;
 
 /**
  * 
@@ -117,9 +119,9 @@ public class Treatment {
 	 * @throws IOException
 	 * @return void
 	 */
-	public void mappingDwC(MappingDwC mappingDWC, int idFile) throws IOException{
+	public void mappingDwC(MappingDwC mappingDWC, int idFile, String uuid) throws IOException{
 
-		mappingDWC.setConnectionValuesTags(mappingDWC.doConnectionValuesTags());
+		mappingDWC.setConnectionValuesTags(mappingDWC.doConnectionValuesTags(uuid));
 		mappingDWC.findInvalidColumns();
 		File mappedFile = mappingDWC.createNewDwcFile(this.getUuid(), idFile);
 
@@ -449,6 +451,9 @@ public class Treatment {
 		File wrongCoord = this.createFileCsv(geoTreatment.getWrongCoordinatesList(), "wrong_coordinates_" + this.getUuid() + ".csv", "wrong");
 		geoTreatment.setWrongCoordinatesFile(wrongCoord);
 
+		File wrongIso2 = this.createFileCsv(geoTreatment.getWrongIso2List(), "wrong_iso2_" + this.getUuid() + ".csv", "wrong");
+		geoTreatment.setWrongIso2File(wrongIso2);
+
 		File wrongPolygon = this.createFileCsv(geoTreatment.getWrongPolygonList(), "wrong_polygon_" + this.getUuid() + ".csv", "wrong");
 		geoTreatment.setWrongPolygonFile(wrongPolygon);
 
@@ -518,13 +523,13 @@ public class Treatment {
 			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/final_results/");
 		}
 
-		//String fileRename = fileName + "_" + nbFileRandom + ".csv";
 		File newFile = new File(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/" + category +"/" + fileName);
 		FileWriter writer = null;
 		try {
 			writer = new FileWriter(newFile);
 			for(int i = 0 ; i < linesFile.size() ; i++){
-				//System.out.println(linesFile.get(i));
+				//System.out.println("before : " + linesFile.get(i));
+				this.getSplitedLine(",", linesFile.get(i));
 				writer.write(linesFile.get(i).replaceAll("\\\\\"", "\\\\\\\"") + "\n");
 			}
 		} catch (IOException e) {
@@ -540,6 +545,25 @@ public class Treatment {
 		}
 		System.out.println(fileName + " written !!!");
 		return newFile;
+	}
+
+	public List<String> getSplitedLine(String separator, String line){
+
+		List<String> splitedLine = new ArrayList<>();
+		String regex = "(^|(?<=" + separator + "))([^\"" + separator + "])*((?=" + separator + ")|$)|((?<=^\")|(?<=" + separator + "\"))([^\"]|\"\")*((?=\"" + separator + ")|(?=\"$))";
+		Pattern p = Pattern.compile(regex);
+
+		Matcher m = p.matcher(line);
+		//System.out.println("******");
+		//System.out.println(line);
+
+		while (m.find()){
+			splitedLine.add(m.group());
+			//System.out.println(m.group());
+		}
+
+		//System.out.println("******");
+		return splitedLine;
 	}
 
 	/**

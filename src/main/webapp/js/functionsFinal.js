@@ -12,12 +12,18 @@ function initialiseFinalPage() {
 		
 	}
 	var nbOutputClean = document.getElementById("nbOutputClean").value;
+	var noCleanData = document.getElementById("noCleanData");
+	document.getElementById("divStepFinal").setAttribute('style', "margin-left: 40px; visibility: visible");
 	if(nbOutputClean == 0){
-		document.getElementById("downloadFinalFiles").style.display = "none";
+
+		noCleanData.style.display = "block";
+	}
+	else{
+		noCleanData.style.display = "none";
 	}
 }
 
-function checkErrorOk(step_ok, p_ok, nbStep){
+function checkErrorOk(step_ok, p_ok){
 	//console.log(nbStep + " : " + step_ok);
 	if(step_ok == "true"){
 		//console.log("true : " + "p_ok" + nbStep);
@@ -76,7 +82,26 @@ function formatResult(involved, nbStep, step_ok, p_ok_step_inp){
 		var divStepInvolved = document.getElementById("headerStep" + nbStep + "_involved");
         headerStep_involved.show();
         headerStep_notInvolved.hide();
-        this.checkErrorOk(step_ok, p_ok_step_inp, nbStep);
+
+       	if((nbStep == 0 && step_ok == "false") || (nbStep == 1 && step_ok == "false")){
+			//this.checkErrorOk(step_ok, p_ok_step_inp);
+			var id_p_ok_step_inp = p_ok_step_inp.id;
+			var length_id_p_ok_step_inp = id_p_ok_step_inp.length;
+			var input = id_p_ok_step_inp.substring(length_id_p_ok_step_inp - 1, length_id_p_ok_step_inp);
+			console.log("input : " + input);
+			var spanTitleErrorMapping = document.getElementById("span_" + nbStep +"_success_inp" + input);
+			var spanValueErrorMapping = document.getElementById("p_ok_step" + nbStep + "_inp" + input);
+			spanValueErrorMapping.innerHTML = "File couldn't be involved in the process";
+
+			//p_ok_step_inp.appendChild(spanTitleErrorMapping);
+			//p_ok_step_inp.appendChild(spanValueErrorMapping);
+
+			p_ok_step_inp.setAttribute("style", "color:#FF0000");
+
+		}
+		else{
+			this.checkErrorOk(step_ok, p_ok_step_inp);
+		}
 		if(nbStep == 3 || nbStep == 4 || nbStep == 7 || nbStep == 9) {
 			console.log(nbStep + " formatDownloadLink");
 			this.formatDownloadLink(nbStep);
@@ -105,10 +130,25 @@ function formatResult(involved, nbStep, step_ok, p_ok_step_inp){
 }
 
 function formatDownloadLink(nbStep){
-	var nbOccurrencesStep = document.getElementById("nbOccurrencesStep" + nbStep).innerHTML;
-	var cardDownloadLink_step = document.getElementById("cardDownloadLink_step" + nbStep);
-	if(nbOccurrencesStep == 0){
-		cardDownloadLink_step.style.display = 'none';
+	if(nbStep != 7) {
+		var nbOccurrencesStep = document.getElementById("nbOccurrencesStep" + nbStep).innerHTML;
+		var cardDownloadLink_step = document.getElementById("cardDownloadLink_step" + nbStep);
+		if (nbOccurrencesStep == 0) {
+			cardDownloadLink_step.style.display = 'none';
+		}
+	}
+	else{
+		var step7_path_polygon = document.getElementById("step7_path_polygon").value;
+		var step7_path_iso2 = document.getElementById("step7_path_iso2").value;
+		var cardDownloadLinkIso2_step7 = document.getElementById("cardDownloadLinkIso2_step7");
+		var cardDownloadLinkPolygon_step7 = document.getElementById("cardDownloadLinkPolygon_step7");
+
+		if(step7_path_iso2 == ""){
+			cardDownloadLinkIso2_step7.style.display = "none";
+		}
+		if(step7_path_polygon == ""){
+			cardDownloadLinkPolygon_step7.style.display = "none";
+		}
 	}
 
 }

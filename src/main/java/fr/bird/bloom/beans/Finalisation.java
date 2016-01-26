@@ -16,9 +16,11 @@ import java.util.List;
  */
 public class Finalisation {
 
+    private String successWorkflow = "";
     private List<File> finalOutputFiles = new ArrayList<>();
     private File wrongCoordinatesFile = new File("");
     private File wrongGeospatial = new File("");
+    private File wrongIso2 = new File("");
     private File wrongPolygon = new File("");
     private File matrixFileValidCells = new File("");
     private File wrongEstablishmentMeans = new File("");
@@ -26,6 +28,7 @@ public class Finalisation {
     private String pathMatrixFile = "";
     private String pathWrongCoordinatesFile = "";
     private String pathWrongGeospatial = "";
+    private String pathWrongIso2 ="";
     private String pathWrongPolygon = "";
     private String pathWrongEstablishmentMeans = "";
     private List<String> listPathsOutputFiles = new ArrayList<>();
@@ -43,7 +46,15 @@ public class Finalisation {
     public Finalisation(){
 	
     }
-    
+
+    public String getSuccessWorkflow() {
+        return successWorkflow;
+    }
+
+    public void setSuccessWorkflow(String successWorkflow) {
+        this.successWorkflow = successWorkflow;
+    }
+
     public String getStep1_resultMappingDwC() {
         return step1_resultMappingDwC;
     }
@@ -211,5 +222,20 @@ public class Finalisation {
     public void setWrongEstablishmentMeans(File wrongEstablishmentMeans) {
         this.wrongEstablishmentMeans = wrongEstablishmentMeans;
     }
-    
+
+    public File getWrongIso2() {
+        return wrongIso2;
+    }
+
+    public void setWrongIso2(File wrongIso2) {
+        this.wrongIso2 = wrongIso2;
+    }
+
+    public String getPathWrongIso2() {
+        return pathWrongIso2;
+    }
+
+    public void setPathWrongIso2(String pathWrongIso2) {
+        this.pathWrongIso2 = pathWrongIso2;
+    }
 }

@@ -8,7 +8,7 @@ import fr.bird.bloom.utils.BloomConfig;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
+import java.util.logging.*;
 
 /**
  * src.model
@@ -32,7 +32,7 @@ public class ConnectionDatabase {
      * @return Connection
      */
     public static Connection getConnection() throws SQLException {
-        if (connexion == null) {
+        if (connexion == null || connexion.isClosed()) {
             try {
                 //System.out.println(getUrl() + "  " + getUser() + "  " + getPassword());
                 try {
