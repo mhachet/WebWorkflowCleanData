@@ -191,7 +191,7 @@ public class LaunchWorkflow {
 		}
 		else{
 			workflowSuccess = false;
-			System.out.println("no valid : ");
+			System.out.println("no valid files");
 			//if(!step1.isInvolved()){
 			List<MappingReconcilePreparation> listMappingReconcileFiles =  inputParameters.getListMappingReconcileFiles();
 			Map<Integer, MappingDwC> infos_mapping = step1.getInfos_mapping();
@@ -411,16 +411,16 @@ public class LaunchWorkflow {
 			CSVFile csvFileNoMapped = mappingFile.getNoMappedFile();
 
 			if(csvFileNoMapped.getSeparator() == CSVFile.Separator.INCONSISTENT || csvFileNoMapped.getSeparator() == CSVFile.Separator.UNKNOWN){
-				System.out.println("separator false : " + csvFileNoMapped.getSeparator());
+				//System.out.println("separator false : " + csvFileNoMapped.getSeparator());
 				mappingFile.setSuccessMapping(Boolean.toString(false));
 				reconciliationService.setSuccessReconcile(Boolean.toString(false));
 				validInputFiles.put(mappingReconcilePrep.getIdFile(), false);
 				//System.out.println(mappingReconcilePrep.getIdFile() + " => false");
 			}
 			else{
-				System.out.println("separator true : " + csvFileNoMapped.getSeparator());
+				//System.out.println("separator true : " + csvFileNoMapped.getSeparator());
 				if(!mappingReconcilePrep.getMappingDWC().getMappingInvolved()){
-					System.out.println("not involved");
+					//System.out.println("not involved");
 					mappingFile.setSuccessMapping(Boolean.toString(true));
 					String [] listTagsInput = csvFileNoMapped.getFirstLine().split(csvFileNoMapped.getSeparator().getSymbol());
 					List<String> tagsDwcOfficial = mappingFile.getTagsListDwC();
@@ -437,18 +437,12 @@ public class LaunchWorkflow {
 					validInputFiles.put(mappingReconcilePrep.getIdFile(), validFile);
 				}
 				else{
-					System.out.println("separator true true : " + csvFileNoMapped.getSeparator());
+					//System.out.println("separator true true : " + csvFileNoMapped.getSeparator());
 					mappingFile.setSuccessMapping(Boolean.toString(true));
 					validInputFiles.put(mappingReconcilePrep.getIdFile(), true);
-					System.out.println(mappingReconcilePrep.getIdFile() + " => true");
+					//System.out.println(mappingReconcilePrep.getIdFile() + " => true");
 				}
 			}
-
-			for (Entry<Integer, Boolean> entry : validInputFiles.entrySet()) {
-				System.out.println(entry.getKey() + "\t" + entry.getValue());
-			}
-
-
 		}
 
 
@@ -588,7 +582,7 @@ public class LaunchWorkflow {
 		if(this.inputParameters.getEstablishmentList().size() != 0){
 			EstablishmentTreatment establishTreatment = this.dataTreatment.establishmentMeansOption(this.inputParameters.getEstablishmentList());
 			List<String> noEstablishment = establishTreatment.getNoEstablishmentList();
-			step9.setNbFound(noEstablishment.size());
+			step9.setNbFound(establishTreatment.getNbWrongOccurrences());
 			File wrongEstablishmentMeans = establishTreatment.getWrongEstablishmentMeansFile();
 			finalisation.setWrongEstablishmentMeans(wrongEstablishmentMeans);
 			finalisation.setPathWrongEstablishmentMeans(wrongEstablishmentMeans.getAbsolutePath().replace(BloomConfig.getDirectoryPath(), "output/")); //change to 'output/'

@@ -267,10 +267,10 @@ public class MappingDwC {
 
         String[] firstLine = firstLineString.split(separatorRegex);
         //System.out.print("separatorregex : " + separatorRegex);
-
+        /*
         for(int i = 0; i < firstLine.length ; i++){
             System.out.print(firstLine[i] + ",");
-        }
+        }*/
         List<String> tagsListNoMappedInit = new ArrayList(Arrays.asList(firstLine));
         return tagsListNoMappedInit;
     }

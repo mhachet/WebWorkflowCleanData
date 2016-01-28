@@ -53,7 +53,7 @@ public class TdwgTreatment {
 		//for (String id_ : idAssoData.keySet()) {
 		for(int i = 0 ; i< idListClean.size() ; i++){
 			String id_ = idListClean.get(i);
-			System.out.println(id_);
+			//System.out.println(id_);
 			if(!"id_".equals(id_ )){
 				//List<String> listInfos = idAssoData.get(id_);
 
@@ -84,8 +84,7 @@ public class TdwgTreatment {
 					Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
 					System.out.println("--------------------------------------------------------------");
 					System.out.println("---------------- Check point in TDWG4 code -------------------");
-					System.out.println("id : " + id_ + "\tLat : " + latitude + "\tLong : " + longitude);
-					System.out.print("iso2 : " + iso2);
+					System.out.print("id : " + id_ + "\tLat : " + latitude + "\tLong : " + longitude + "\tiso2 : " + iso2);
 					String tdwg4Code = "";
 					try {
 						tdwg4Code = this.tdwg4ContainedPoint(point, iso2.replaceAll("\"", ""));
