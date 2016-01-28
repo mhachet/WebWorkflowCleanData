@@ -41,18 +41,18 @@
         <init-param>
             <param-name>downloadpath</param-name>
             <!-- for local -->
-            <!--<param-value>/home/mhachet/workspace/bloom/output/</param-value>-->
+            <param-value>/home/mhachet/workspace/bloom/output/</param-value>
             <!-- for server -->
-            <param-value>/mnt/sdb1/bloom/output/</param-value>
+            <!--<param-value>/mnt/sdb1/bloom/output/</param-value>-->
         <!--<param-value>/var/lib/tomcat7/WebWorkflowCleanData/output/</param-value>-->
      </init-param>
     </servlet>
     <servlet-mapping>
         <servlet-name>Download</servlet-name>
         <!-- for local -->
-        <!--<url-pattern>/temp/*</url-pattern>-->
+        <url-pattern>/temp/*</url-pattern>
         <!-- for server -->
-        <url-pattern>/output/*</url-pattern>
+        <!--<url-pattern>/output/*</url-pattern>-->
      </servlet-mapping>
 
      <servlet>

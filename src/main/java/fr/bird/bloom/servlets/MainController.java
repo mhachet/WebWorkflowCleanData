@@ -78,7 +78,15 @@ public class MainController extends HttpServlet {
 
         LaunchWorkflow workflow = new LaunchWorkflow(inputParameters);
 
-        workflow.executeWorkflow();
+        try {
+            workflow.executeWorkflow();
+        }
+        catch (Exception e){
+            System.err.println("***************************************************");
+            System.err.println("An error occurred during - Delete temporary tables");
+            workflow.getDataTreatment().deleteTables();
+            System.err.println("***************************************************");
+        }
 
         Finalisation finalisation = workflow.getFinalisation();
         request.setAttribute("finalisation", finalisation);

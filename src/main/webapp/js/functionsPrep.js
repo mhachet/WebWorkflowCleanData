@@ -482,6 +482,8 @@ function cancelInputFile(nb_input, action){
 	console.log("text_inp_" + nb_input);
 	var sampleText = textinput.value;
 
+	var okButtonUpload = document.getElementById("okButtonUpload_" + nb_input);
+
 	var inputFile = document.getElementById("inp_" + nb_input);
 	var sampleFile = inputFile.files[0];
 	
@@ -514,7 +516,6 @@ function cancelInputFile(nb_input, action){
 				//readInputFile(this.responseText, nbInput);
 
 			}
-
 		}
 
 		var divLoadingIcon = document.getElementById("loadIcon_" + nb_input);
@@ -522,6 +523,7 @@ function cancelInputFile(nb_input, action){
 			var divAddLoad = document.getElementById("divAddLoad_" + nb_input);
 			divAddLoad.removeChild(divLoadingIcon);
 		}
+		//okButtonUpload.disabled = false;
 	}
 	
 	var tableMapping = document.getElementById("mappingTable_" + nb_input);
@@ -617,6 +619,9 @@ function uploadInputFile(nb_input){
 	var filesize = sampleFile.size;
 	var uuid = this.getUUID();
 	if(sampleText != ""){
+
+		var okButtonUpload = document.getElementById("okButtonUpload_" + nb_input);
+
 		var divLoadingIcon = document.createElement("div");
 		divLoadingIcon.setAttribute('class', "preloader-wrapper small active");
 		divLoadingIcon.setAttribute('id', "loadIcon_" + nb_input);
@@ -675,8 +680,10 @@ function uploadInputFile(nb_input){
 
 			xhrPOST.send(formdata);
 
-			xhrPOST.onload = function (e) {
+			okButtonUpload.disabled = true;
 
+			xhrPOST.onload = function (e) {
+				okButtonUpload.disabled = false;
 				if (this.status == 200) {
 					if (this.responseText == "formatError") {
 						alert("Format not supported.\nPlease give us csv format");
@@ -879,15 +886,22 @@ function checkingInputs(){
 	var nbInputValue = nbInput.value;
 	var bloc_inputs = document.getElementById("bloc-inputs");
 
-	for(var i = nbInputValue ; i > 1 ; i--){
+	for(var i = nbInputValue ; i >= 1 ; i--){
 		var input = document.getElementById("inp_" + (i - 1));
 		var upload = input.getAttribute('value');
 		var globalInput = document.getElementById('globalInput_' + (i - 1));
-		if(upload == 'false') {
-			bloc_inputs.removeChild(globalInput);
-			var newNbInput = (i - 1);
-			nbInput.setAttribute('value', newNbInput);
+		if(i != 1) {
+			if (upload == 'false') {
+				bloc_inputs.removeChild(globalInput);
+				var newNbInput = (i - 1);
+				nbInput.setAttribute('value', newNbInput);
 
+			}
+		}
+		else{
+			if(upload == 'false') {
+				all_ok = false;
+			}
 		}
 
 	}

@@ -11,7 +11,6 @@
     <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'	rel='stylesheet' type='text/css'>
     <link href="css/clean-blog.css" rel="stylesheet">
-    <link href="css/bootstrap-select.min.css" rel="stylesheet">
     <link href="http://cdn.datatables.net/1.10.7/css/jquery.dataTables.css" rel="stylesheet" type="text/css" >
     <link href="css/materialize.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -27,6 +26,7 @@
             <li><a href="LaunchPage.html">Start</a></li>
             <li><a href="AboutPage.html">About</a></li>
             <li><a href="DocumentationPage.html">Documentation</a></li>
+            <li><a href="WebServiceDownload.html">Download</a></li>
             <li><a href="Contact.html">Contact</a></li>
         </ul>
     </div>
@@ -34,7 +34,7 @@
 <header>
     <div class="container section no-pad-bot">
         <div class="row">
-            <div class="col-lg-12 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="col-lg-12 col-md-10">
                 <div class="post-heading">
                     <h1>BLOOM</h1>
                     <h2 class="subheading">Workflow for open data curation</h2>
@@ -53,6 +53,23 @@
             </div>
                 <div class="col-lg-9 col-lg-offset-1 col-md-10 col-md-offset-1 paragraphe">
                     <div class="post-preview">
+                        <div class="row" id="help-input-div">
+                            <h3 class="post-subtitle">Specifications</h3>
+                            <hr class="col-lg-12 hr-result"/>
+                            <div class="docu-margin">
+                                <p>
+                                    An easier workflow use involves to know some inputs specifications.
+                                </p>
+                                <blockquote>
+                                    <h4 class="post-meta">What are the specifications?</h4>
+                                    <div class="li-docu">
+                                        <li style="list-style-type: none;"><i class="material-icons dp48 link-launch-page">done</i> a valid iso code (Alpha-2 code) <a href="https://www.iso.org/obp/ui/#search" target="_blank">iso.org</a></li>
+                                        <li style="list-style-type: none;"><i class="material-icons dp48 link-launch-page">done</i> a scientific name</li>
+                                        <li style="list-style-type: none;"><i class="material-icons dp48 link-launch-page">done</i> latitude and longitude coordinates (decimal degrees)</li>
+                                    </div>
+                                </blockquote>
+                            </div>
+                        </div>
                         <div class="row" id="help-mapping-div">
                             <h3 class="post-subtitle">Mapping to DarwinCore tool</h3>
                             <hr class="col-lg-12 hr-result"/>
@@ -105,20 +122,20 @@
                                         </p>
                                 </blockquote>
                                 <p>
-                                  To explain the mask validation tool, I'll take an example (<a href="#img_raster_1">figure 1</a>).
+                                  To explain the mask validation tool, I'll take an example (<a href="#img_raster_1">figure 2</a>).
                                 </p>
                                 <div class="divImg img-responsive" id="img_raster_1">
                                     <img src="images/rasterTuto.png" alt="">
                                     <span class="caption text-muted">Figure 2 : example for mask validation tool</span>
                                 </div>
                                 <p>
-                                    For this example (<a href="#img_raster_1">figure 1</a>), an occurence is georeferenced and marked by red cross. The geolocalisation is correct : the red cross is inside a land (green). There are three differents raster from the smallest (left grid) to the largest (right grid). Consequently, for the first raster, occurence is included in a valid cell, but not for the other.
+                                    For this example (<a href="#img_raster_1">figure 2</a>), an occurrence is georeferenced and marked by red cross. The geolocalisation is correct : the red cross is inside a land (green). There are three differents raster from the smallest (left grid) to the largest (right grid). Consequently, for the first raster, occurence is included in a valid cell, but not for the other.
                                 </p>
 
                                 <blockquote>
                                      <h4 class="post-meta">Where is the problem ?</h4>
                                      <p>
-                                        Tools for raster treatment like (?????) use informations contained in cells. Sometimes, cells have informations for land cells and not for water cells. For the last, these programs don't suport these occurences. Often, a filtering is necessary before.
+                                        Tools for raster treatment use information contained in cells. Sometimes, cells have informations for land cells and not for water cells. For the last, these programs don't suport these occurences. Often, a filtering is necessary before.
                                     </p>
                                 </blockquote>
 
@@ -156,6 +173,31 @@
                                 </p>
                             </div>
                         </div>
+
+                        <div class="row" id="help-status-div">
+                            <h3 class="post-subtitle">Status of the occurrences</h3>
+                            <hr class="col-lg-12 hr-result"/>
+                            <div class="docu-margin">
+                                <p>
+                                    The status of occurrences is determined by the "establishmentMeans" term. This term is included in the DarwinCore standard.
+                                    All selected process will be included in the final file.
+                                </p>
+                                <blockquote>
+                                    <h4 class="post-meta">What's the "establishmentMeans" term ?</h4>
+                                    <p>
+                                        The process by which the biological individual(s) represented in the occurrence became established at the location. Recommended best practice is to use a controlled vocabulary.
+                                        Examples: "native", "introduced", "naturalised", "invasive", "managed", "uncertain".
+                                    </p>
+                                    <p>
+                                        source : <a href="http://rs.tdwg.org/dwc/terms/history/index.htm#establishmentMeans-2009-04-24" target="_blank">http://rs.tdwg.org/dwc/terms/history/index.htm#establishmentMeans-2009-04-24</a>
+                                    </p>
+                                </blockquote>
+                                <p>
+                                    The "others" status is defined by all others words or without status information.
+                                </p>
+                            </div>
+                        </div>
+
                         <div class="row" id="help-geo-div">
                             <h3 class="post-subtitle">Georeferencement validation tool</h3>
                             <hr class="col-lg-12 hr-result"/>
@@ -193,7 +235,7 @@
                                 </blockquote>
                                 <div>
                                     <p>
-                                        These references are available and you can contact us to add a new reference.
+                                        These references are available and you can <a href="Contact.html" target="_blank">contact us</a> to add a new reference.
                                     </p>
 
                                     <div>
@@ -201,8 +243,8 @@
                                         <p>
                                             The data exposed by this service is from the International Plant Names Index (IPNI - available online at http://www.ipni.org).
                                             IPNI is a database of the names and associated basic bibliographical details of seed plants, ferns and lycophytes.
-                                            </p>
-                                        source : <a href="https://www.biodiversitycatalogue.org/services/84" target="_blank">Biodiversity Catalogue Service</a>
+                                            Source : <a href="https://www.biodiversitycatalogue.org/services/84" target="_blank">Biodiversity Catalogue Service</a>
+                                        </p>
                                     </div>
                                     <div>
                                         <li><a href="http://refine.taxonomics.org/gbifchecklists/reconcile" target="_blank">http://refine.taxonomics.org/gbifchecklists/reconcile</a></li>

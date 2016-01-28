@@ -77,7 +77,7 @@ public class UploadController extends HttpServlet{
 			}
 			else if(count == 1 ){
 				nbInput = itemFile.getString();
-				System.out.println(nbInput);
+				//System.out.println(nbInput);
 			}
 			else if(count == 2){
 				action = itemFile.getString();
