@@ -7,6 +7,7 @@ package fr.bird.bloom.servlets;
 
 import fr.bird.bloom.beans.Finalisation;
 import fr.bird.bloom.beans.InputParameters;
+import fr.bird.bloom.model.*;
 import fr.bird.bloom.stepresults.Step1_MappingDwc;
 import fr.bird.bloom.stepresults.Step2_ReconciliationService;
 import fr.bird.bloom.stepresults.Step3_CheckCoordinates;
@@ -16,11 +17,7 @@ import fr.bird.bloom.stepresults.Step6_CheckTDWG;
 import fr.bird.bloom.stepresults.Step7_CheckISo2Coordinates;
 import fr.bird.bloom.stepresults.Step8_CheckCoordinatesRaster;
 import fr.bird.bloom.stepresults.Step9_EstablishmentMeans;
-import fr.bird.bloom.model.CSVFile;
 import fr.bird.bloom.services.LaunchWorkflow;
-import fr.bird.bloom.model.MappingDwC;
-import fr.bird.bloom.model.MappingReconcilePreparation;
-import fr.bird.bloom.model.ReconciliationService;
 import fr.bird.bloom.utils.BloomConfig;
 import fr.bird.bloom.utils.BloomUtils;
 import org.apache.commons.fileupload.FileItem;
@@ -30,6 +27,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
 
+import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -59,10 +57,8 @@ public class MainController extends HttpServlet {
      * @param request
      * @param response
      * @return void
-     * @throws IOException
-     * @throws ServletException
      */
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response){
         response.setContentType("text/plain");
 
         //this.setUuid(this.generateUUID());
@@ -77,15 +73,29 @@ public class MainController extends HttpServlet {
         request.setAttribute("initialise", inputParameters);
 
         LaunchWorkflow workflow = new LaunchWorkflow(inputParameters);
-
         try {
             workflow.executeWorkflow();
         }
         catch (Exception e){
-            System.err.println("***************************************************");
-            System.err.println("An error occurred during - Delete temporary tables");
-            workflow.getDataTreatment().deleteTables();
-            System.err.println("***************************************************");
+            e.printStackTrace();
+            if(e.getCause() != null){
+                if (inputParameters.isSendEmail()) {
+                    System.out.println("error workflow + email option : " + inputParameters.isSendEmail());
+                    SendMail mail = new SendMail("errorMessage");
+                    mail.setInputParameters(inputParameters);
+                    mail.sendMessage(inputParameters.getEmailUser());
+
+
+                }
+                System.err.println("***************************************************");
+                System.err.println("An error occurred during workflow - Delete temporary tables");
+                System.err.println(e);
+                System.err.println(e.getCause());
+                System.err.println(e.getLocalizedMessage());
+                //workflow.getDataTreatment().deleteTables();
+                System.err.println("***************************************************");
+            }
+
         }
 
         Finalisation finalisation = workflow.getFinalisation();
@@ -110,7 +120,13 @@ public class MainController extends HttpServlet {
         Step9_EstablishmentMeans step9 = workflow.getStep9();
         request.setAttribute("step9", step9);
 
-        this.getServletContext().getRequestDispatcher("/finalWorkflow.jsp").forward(request, response);
+        try {
+            this.getServletContext().getRequestDispatcher("/finalWorkflow.jsp").forward(request, response);
+        } catch (ServletException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private String getDirectoryPath() {
@@ -148,9 +164,8 @@ public class MainController extends HttpServlet {
      * @param fileItems
      * @param response
      * @return void
-     * @throws IOException
      */
-    private InputParameters initialiseParameters(List<FileItem> fileItems, HttpServletResponse response) throws IOException {
+    private InputParameters initialiseParameters(List<FileItem> fileItems, HttpServletResponse response) {
         InputParameters inputParameters = new InputParameters();
         response.setContentType("text/html");
         response.addHeader("Access-Control-Allow-Origin", "*");
@@ -185,7 +200,7 @@ public class MainController extends HttpServlet {
             if (fieldName.contains("formulaire")) {
                 uuid = item.getString();
 
-                this.createOutputLogsFile(uuid);
+                //this.createOutputLogsFile(uuid);
                 this.createOutputDirectories(uuid);
 
                 inputParameters.setUuid(uuid);

@@ -136,6 +136,7 @@ public class ReconcileController extends HttpServlet {
 			}
 			
 			List<Integer> idColumnsCheck = this.getColumnsIdReconcile(firstLine, separator, checkingColumns);
+			System.out.println(idColumnsCheck);
 			String selectedLines = this.getSelectedLines(idColumnsCheck, lines, separator);
 			/*
 			JSONArray array = null;
@@ -244,6 +245,7 @@ public class ReconcileController extends HttpServlet {
 		for(int i = 0; i < columns.size(); i++){
 			String column = columns.get(i);
 			if(arrayColumnsCheck.contains(column)){
+				System.out.println(i + " -- " + column);
 				columnsReconcile.add(i);
 			}
 		}
@@ -264,13 +266,16 @@ public class ReconcileController extends HttpServlet {
 		String newContentFile = "";
 		
 		for(int i = 0; i < contentFile.size(); i++){
+			List<String> lineSplited = this.getSplitedLine(separator, contentFile.get(i));
+			System.out.println(lineSplited.size() + " __ " + lineSplited);
 			String line [] = contentFile.get(i).split(separator);
 			String newLine = "";
 			
 			for(int j = 0 ; j < idColumns.size(); j++){
 				
 				int idColumn = idColumns.get(j);
-				newLine += line[idColumn] + separator;
+				System.out.println("idColumn : " + idColumn);
+				newLine += lineSplited.get(idColumn) + separator;
 			}
 			
 			newLine = newLine.substring(0, newLine.length() - 1);
@@ -278,5 +283,23 @@ public class ReconcileController extends HttpServlet {
 		}
 		return newContentFile;
 		
+	}
+
+	public List<String> getSplitedLine(String separator, String line){
+		List<String> splitedLine = new ArrayList<>();
+		//String regex = "(^|(?<=,))([^\",])*((?=,)|$)|((?<=^\")|(?<=,\"))([^\"]|\"\")*((?=\",)|(?=\"$))";
+		String regex= "(^|(?<=" + separator + "))([^\"" + separator + "])*((?=" + separator + ")|$)|((?<=^\")|(?<=" + separator + "\"))([^\"]|\"\")*((?=\"" + separator + ")|(?=\"$))";
+		Pattern p = Pattern.compile(regex);
+		Matcher m = p.matcher(line);
+		// System.out.println("******");
+		if(m.find()) {
+			splitedLine.add("\"" + m.group() + "\"");
+		}
+		else{
+			System.out.println(line);
+		}
+
+		// System.out.println("******");
+		return splitedLine;
 	}
 }

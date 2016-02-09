@@ -100,8 +100,8 @@ function addField(compteur, idAdd, typeInput) {
 				divTableReconcile.setAttribute('class', "col-lg-12 dataTable");
 				divTableReconcile.style.display = "inline-block";
 
-				
-				divAddLoad.appendChild(divUpload)
+
+				divAddLoad.appendChild(divUpload);
 				divAddLoad.appendChild(divCSV);
 				
 				divAddLoad.appendChild(divLoad);
@@ -562,7 +562,9 @@ function cancelInputFile(nb_input, action){
 	var divCancelUpload = document.getElementById("divCancelUpload_" + nb_input);
 	var okUploadButton = document.getElementById("okButtonUpload_" + nb_input);
 	var cancelUploadButton = document.getElementById("cancelButtonUpload_" + nb_input);
-	
+
+	var divLoadIconReconcile = document.getElementById("divLoadIconReconcile_" + nb_input);
+
 	if(action == "cancel"){
 		var inputText = document.getElementById("text_inp_" + nb_input);
 		inputText.value = "";
@@ -608,6 +610,10 @@ function cancelInputFile(nb_input, action){
 
 	if(tableReconcile){
 		divTableReconcile.removeChild(tableReconcile);
+	}
+
+	if(divLoadIconReconcile) {
+		divSubmitReconcile.removeChild(divLoadIconReconcile);
 	}
 }
 
@@ -681,9 +687,14 @@ function uploadInputFile(nb_input){
 			xhrPOST.send(formdata);
 
 			okButtonUpload.disabled = true;
+			var startButton = document.getElementById("workflowLaunch");
+			startButton.disabled = true;
 
 			xhrPOST.onload = function (e) {
+
 				okButtonUpload.disabled = false;
+
+
 				if (this.status == 200) {
 					if (this.responseText == "formatError") {
 						alert("Format not supported.\nPlease give us csv format");
@@ -704,6 +715,9 @@ function uploadInputFile(nb_input){
 					}
 					divAddLoad.removeChild(divLoadingIcon);
 				}
+
+				var startButton = document.getElementById("workflowLaunch");
+				startButton.disabled = false;
 			}
 		}
 		else{
@@ -715,11 +729,22 @@ function uploadInputFile(nb_input){
 }
 
 function transferFailed(){
-	alert("Transfert error ");
+
+	var errorTransfert = document.getElementById("errorTransfert");
+	errorTransfert.setAttribute('value', new Boolean(true));
+
+	alert("Transfert error - Reconciliation failed");
+
+	errorTransfert.setAttribute('value', new Boolean(false));
 }
 
 function transferCanceled(){
-	alert("Transfert cancelled");
+	var errorTransfert = document.getElementById("errorTransfert");
+	errorTransfert.setAttribute('value', new Boolean(true));
+
+	alert("Transfert cancelled - Reconciliation cancelled");
+
+	errorTransfert.setAttribute('value', new Boolean(false));
 }
 
 function actionMappingButton(nb_input, action){
@@ -834,6 +859,8 @@ function actionSeparatorCSV(nb_inp, action){
 function activeRunning(){
 	var launchWorkflow = new Boolean(false);
 
+	var checkErrorTransfert = document.getElementById('errorTransfert').value;
+
 	var checkInputs = checkingInputs();
 	var isEmail = checkEmail();
 
@@ -841,9 +868,11 @@ function activeRunning(){
 
 	var email = document.getElementById("email");
 
-
-
-	if(checkInputs == false){
+	if(checkErrorTransfert == true){
+		alert("Reconciliation tool is running - Please wait");
+		launchWorkflow = false;
+	}
+	else if(checkInputs == false){
 		alert("File(s) aren't uploaded, please upload it/them");
 		launchWorkflow = false;
 	}

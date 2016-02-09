@@ -82,11 +82,24 @@ public class DatabaseTreatment {
 		} catch ( SQLException e ) {
 			messages.add( "Connection error : " + e.getMessage());
 			do {
-				System.out.println("SQLState : " + e.getSQLState());
-				System.out.println("Description :  " + e.getMessage());
-				System.out.println("Error code :   " + e.getErrorCode());
-				System.out.println(sql);
-				System.out.println();
+				System.err.println("SQLState : " + e.getSQLState());
+				System.err.println("Description :  " + e.getMessage());
+				System.err.println("Error code :   " + e.getErrorCode());
+				System.err.println(sql);
+				System.err.println();
+
+				if(e.getMessage().contains("No operations allowed after statement closed")){
+					DatabaseTreatment newConnection = null;
+					messages.add("\n--- New connection ---");
+					Statement statement = null;
+					try {
+						statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+						newConnection = new DatabaseTreatment(statement);
+						messages.addAll(newConnection.executeSQLcommand(choiceStatement, sql));
+					} catch (SQLException sqlE) {
+						sqlE.printStackTrace();
+					}
+				}
 				e = e.getNextException();
 			}while (e != null);
 		}
@@ -150,35 +163,39 @@ public class DatabaseTreatment {
 	 * Format request result
 	 * 
 	 * @param resultMeta
-	 * @throws SQLException
 	 * @return void
 	 */
-	public void setResultatSelect(ResultSetMetaData resultMeta) throws SQLException{
+	public void setResultatSelect(ResultSetMetaData resultMeta){
 		resultatSelect = new ArrayList<>();
 
 		String firstLine = "";
-		for(int i = 1; i <= resultMeta.getColumnCount(); i++){
-			firstLine += resultMeta.getColumnName(i) + ",";
-		}
-		firstLine = firstLine.substring(0, firstLine.length()-1);
-		resultatSelect.add(firstLine);
-
-		while(resultSet.next()){
-			String line = "";
+		try {
 			for(int i = 1; i <= resultMeta.getColumnCount(); i++){
+                firstLine += resultMeta.getColumnName(i) + ",";
+            }
 
-				try{
-					//System.out.print(resultSet.getObject(i) + "\t");
-					line += "\"" + resultSet.getObject(i) + "\"" + ",";
-				}
-				catch (Exception e) {
-					line += "\"\",";
-				}
+			firstLine = firstLine.substring(0, firstLine.length()-1);
+			resultatSelect.add(firstLine);
 
+			while(resultSet.next()){
+				String line = "";
+				for(int i = 1; i <= resultMeta.getColumnCount(); i++){
+
+					try{
+						//System.out.print(resultSet.getObject(i) + "\t");
+						line += "\"" + resultSet.getObject(i) + "\"" + ",";
+					}
+					catch (Exception e) {
+						line += "\"\",";
+					}
+
+				}
+				line = line.substring(0, line.length() - 1);
+				//System.out.println(line);
+				resultatSelect.add(line);
 			}
-			line = line.substring(0, line.length() - 1);
-			//System.out.println(line);
-			resultatSelect.add(line);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 	

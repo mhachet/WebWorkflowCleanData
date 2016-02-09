@@ -12,6 +12,7 @@ import fr.bird.bloom.utils.BloomConfig;
 import org.geotools.geojson.geom.GeometryJSON;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -86,13 +87,7 @@ public class TdwgTreatment {
 					System.out.println("---------------- Check point in TDWG4 code -------------------");
 					System.out.print("id : " + id_ + "\tLat : " + latitude + "\tLong : " + longitude + "\tiso2 : " + iso2);
 					String tdwg4Code = "";
-					try {
-						tdwg4Code = this.tdwg4ContainedPoint(point, iso2.replaceAll("\"", ""));
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						this.setSucessTdwgTreatment(false);
-						e.printStackTrace();
-					}
+					tdwg4Code = this.tdwg4ContainedPoint(point, iso2.replaceAll("\"", ""));
 					System.out.println("\ttdwg4 : " + tdwg4Code);
 					System.out.println("--------------------------------------------------------------");
 
@@ -146,14 +141,13 @@ public class TdwgTreatment {
 	 * 
 	 * @param geoPoint
 	 * @param iso2
-	 * @throws IOException
 	 * @return String
 	 */
-	public String tdwg4ContainedPoint(Point geoPoint, String iso2) throws IOException{
+	public String tdwg4ContainedPoint(Point geoPoint, String iso2){
 		GeometryJSON geometryJSON = new GeometryJSON();
-		BufferedReader buff = new BufferedReader(new FileReader(BloomConfig.getResourcePath() + "tdwg4.json"));
-
+		BufferedReader buff = null;
 		try {
+			buff = new BufferedReader(new FileReader(BloomConfig.getResourcePath() + "tdwg4.json"));
 			String line = null;
 			while ((line = buff.readLine()) != null) {
 				if(line.contains("\"ISO_Code\": \"" + iso2 + "\"")){
@@ -170,12 +164,12 @@ public class TdwgTreatment {
 					}
 				}
 			}
+			buff.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {
-			buff.close();
 		}
+
 		return "";
 
 	}

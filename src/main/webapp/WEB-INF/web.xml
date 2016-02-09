@@ -44,7 +44,7 @@
             <param-value>/home/mhachet/workspace/bloom/output/</param-value>
             <!-- for server -->
             <!--<param-value>/mnt/sdb1/bloom/output/</param-value>-->
-        <!--<param-value>/var/lib/tomcat7/WebWorkflowCleanData/output/</param-value>-->
+         <!--<param-value>/var/lib/tomcat7/WebWorkflowCleanData/output/</param-value>-->
      </init-param>
     </servlet>
     <servlet-mapping>

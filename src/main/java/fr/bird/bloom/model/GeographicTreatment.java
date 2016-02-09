@@ -62,7 +62,7 @@ public class GeographicTreatment {
 	 * @return ArrayList<String>
 	 */
 	public void geoGraphicTreatment(){
-
+		/*
 		List<String> wrongIso2 = this.selectWrongIso2();
 		this.setWrongIso2List(wrongIso2);
 
@@ -77,9 +77,30 @@ public class GeographicTreatment {
 
 		List<String> wrongPolygon = this.checkCoordinatesIso2Code();
 		this.setWrongPolygonList(wrongPolygon);
-
+		*/
 	}
 
+	public void geographicIso2Treatment(){
+		List<String> wrongIso2 = this.selectWrongIso2();
+		this.setWrongIso2List(wrongIso2);
+
+		this.deleteWrongIso2();
+	}
+
+	public void geographicCoordinatesTreatment(){
+		List<String> wrongCoordinates = this.deleteWrongCoordinates();
+		this.setWrongCoordinatesList(wrongCoordinates);
+	}
+
+	public void geographicSpatialIssuesTreatment(){
+		List<String> wrongGeoSpatial = this.deleteWrongGeospatial();
+		this.setWrongGeoList(wrongGeoSpatial);
+	}
+
+	public void geographicPolygonTreatment(){
+		List<String> wrongPolygon = this.checkCoordinatesIso2Code();
+		this.setWrongPolygonList(wrongPolygon);
+	}
 	/**
 	 * Check if coordinates (latitude and longitude) are included in the country indicated by the iso2 code
 	 * 
@@ -469,7 +490,7 @@ public class GeographicTreatment {
 		String choiceStatement = "executeUpdate";
 		messages.add("\n--- Create temporary table with correct ISO2 ---");
 		String sqlCreateTemp = "CREATE TABLE Workflow.temp_" + this.getUuid() + " AS SELECT DarwinCoreInput.* FROM Workflow.DarwinCoreInput,Workflow.IsoCode WHERE countryCode_=IsoCode.iso2_ AND UUID_=\"" + this.getUuid() + "\";";
-		System.out.println(sqlCreateTemp);
+		//System.out.println(sqlCreateTemp);
 		messages.addAll(newConnectionTemp.executeSQLcommand(choiceStatement, sqlCreateTemp));
 
 		for(int i = 0 ; i < messages.size() ; i++){
