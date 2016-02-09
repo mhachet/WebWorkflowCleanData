@@ -73,10 +73,9 @@ public class LaunchWorkflow {
 	/**
 	 * Call steps of the workflow
 	 *
-	 * @throws IOException
 	 * @return void
 	 */
-	public void executeWorkflow() throws IOException{
+	public void executeWorkflow(){
 		//System.out.println("repCourant : "  + repCourant);
 		this.dataTreatment = new Treatment();
 		this.dataTreatment.setUuid(inputParameters.getUuid());
@@ -106,12 +105,24 @@ public class LaunchWorkflow {
 					boolean synonymFileIsValid = this.isValidSynonymFile();
 					this.launchSynonymOption(synonymFileIsValid);
 					step5.setInvolved(true);
+					if (inputParameters.isSendEmail()) {
+						SendMail mailSynonym = new SendMail("step5_synonym");
+						mailSynonym.setStep5(step5);
+						mailSynonym.setInputParameters(inputParameters);
+						mailSynonym.sendMessage(inputParameters.getEmailUser());
+					}
 				}
 
 				if (this.inputParameters.isTdwg4Code()) {
 					boolean sucessTdwgTreatment = dataTreatment.tdwgCodeOption();
 					step6.setStep6_ok(sucessTdwgTreatment);
 					step6.setInvolved(true);
+					if (inputParameters.isSendEmail()) {
+						SendMail mailTDWG = new SendMail("step6_tdwgCode");
+						mailTDWG.setStep6(step6);
+						mailTDWG.setInputParameters(inputParameters);
+						mailTDWG.sendMessage(inputParameters.getEmailUser());
+					}
 				}
 				if (this.inputParameters.isRaster()) {
 					step8.setInvolved(true);
@@ -126,12 +137,24 @@ public class LaunchWorkflow {
 						this.inputParameters.getHeaderRasterList().add(defaultHeader);
 						this.launchRasterOption();
 					}
+					if (inputParameters.isSendEmail()) {
+						SendMail mailRaster = new SendMail("step8_raster");
+						mailRaster.setStep8(step8);
+						mailRaster.setInputParameters(inputParameters);
+						mailRaster.sendMessage(inputParameters.getEmailUser());
+					}
 
 				}
 
 				if (this.inputParameters.isEstablishment()) {
 					this.launchEstablishmentMeansOption();
 					step9.setInvolved(true);
+					if (inputParameters.isSendEmail()) {
+						SendMail mailEstablishment = new SendMail("step9_establishment");
+						mailEstablishment.setStep9(step9);
+						mailEstablishment.setInputParameters(inputParameters);
+						mailEstablishment.sendMessage(inputParameters.getEmailUser());
+					}
 				}
 
 				this.writeFinalOutput();
@@ -157,25 +180,27 @@ public class LaunchWorkflow {
 				if(step9.isInvolved()){
 					step9.setStep9_ok(false);
 				}
+				if (inputParameters.isSendEmail()) {
+					SendMail mailError = new SendMail("errorMessage");
+					mailError.setInputParameters(inputParameters);
+					mailError.sendMessage(inputParameters.getEmailUser());
+				}
 			}
 			if (inputParameters.isSendEmail()) {
 				System.out.println("email option : " + inputParameters.isSendEmail());
-				SendMail mail = new SendMail();
-				try {
-					mail.setStep1(step1);
-					mail.setStep2(step2);
-					mail.setStep3(step3);
-					mail.setStep4(step4);
-					mail.setStep5(step5);
-					mail.setStep6(step6);
-					mail.setStep7(step7);
-					mail.setStep8(step8);
-					mail.setStep9(step9);
-					mail.setFinalisation(finalisation);
-					mail.sendMessage(inputParameters.getEmailUser());
-				} catch (MessagingException e) {
-					e.printStackTrace();
-				}
+				SendMail mail = new SendMail("finalMessage");
+				mail.setStep1(step1);
+				mail.setStep2(step2);
+				mail.setStep3(step3);
+				mail.setStep4(step4);
+				mail.setStep5(step5);
+				mail.setStep6(step6);
+				mail.setStep7(step7);
+				mail.setStep8(step8);
+				mail.setStep9(step9);
+				mail.setFinalisation(finalisation);
+				mail.sendMessage(inputParameters.getEmailUser());
+
 
 			}
 
@@ -241,10 +266,9 @@ public class LaunchWorkflow {
 	/**
 	 * Call main steps of the workflow
 	 *
-	 * @throws IOException
 	 * @return void
 	 */
-	private boolean launchWorkflow() throws IOException{
+	private boolean launchWorkflow() {
 
 		boolean workflowSuccess = true;
 
@@ -252,7 +276,7 @@ public class LaunchWorkflow {
 		Map<Integer, ReconciliationService> reconcilePath = step2.getInfos_reconcile();
 		Map<Integer, MappingDwC> hashMapStep1 = step1.getInfos_mapping();
 		step1.setNbInputs(listMappingReconcileDWC.size());
-		//System.out.println("listMappingReconcileDWC size " + listMappingReconcileDWC.size());
+		System.out.println("listMappingReconcileDWC size " + listMappingReconcileDWC.size());
 		/**
 		 * pre-treatment for mapping and reconcile
 		 */
@@ -268,10 +292,9 @@ public class LaunchWorkflow {
 			mappingDwc.setFilename(originalName);
 
 			boolean isMapping = mappingDwc.getMappingInvolved();
-
 			boolean isValid = preparation.isValid();
-			//System.out.println("isMapping : " + isMapping);
-			//System.out.println("isValid : " + isValid);
+			System.out.println("isMapping : " + isMapping);
+			System.out.println("isValid : " + isValid);
 			if(isMapping && isValid){
 				step1.setInvolved(isMapping);
 
@@ -281,8 +304,19 @@ public class LaunchWorkflow {
 				mappingDwc.setFilepath(pathMappedFile);
 
 				preparation.setValid(Boolean.parseBoolean(mappingDwc.getSuccessMapping()));
+
+
+
 			}
 			hashMapStep1.put(idFile, mappingDwc);
+
+			if (isMapping && isValid && inputParameters.isSendEmail()) {
+				SendMail mailMapping = new SendMail("step1_mapping");
+				mailMapping.setStep1(step1);
+				mailMapping.setInputParameters(inputParameters);
+				mailMapping.sendMessage(inputParameters.getEmailUser());
+			}
+
 
 			ReconciliationService reconcileService = listMappingReconcileDWC.get(i).getReconcileDWC();
 			boolean reconcile = reconcileService.isReconcile();
@@ -291,8 +325,10 @@ public class LaunchWorkflow {
 				if(isMapping){
 					//System.out.println("new CSVFile isMapping true line 203 LaunchWorkflow");
 					CSVFile csvMappedFile = new CSVFile(mappingDwc.getMappedFile());
-					csvMappedFile.setSeparator(mappingDwc.getNoMappedFile().getSeparator());
+					//csvMappedFile.setSeparator(mappingDwc.getNoMappedFile().getSeparator());
+					//System.out.println("separator before reconcile : " + csvMappedFile.getSeparator());
 					//System.out.println("reconcileFile ref if mapping : " + csvMappedFile.getCsvFile().getAbsolutePath());
+					//System.out.println("MappedFile : " + mappingDwc.getMappedFile().getAbsolutePath());
 					this.dataTreatment.reconcileService(reconcileService, csvMappedFile, idFile);
 				}
 				else{
@@ -304,9 +340,16 @@ public class LaunchWorkflow {
 				reconcileService.setFilepath(pathReconcileFile);
 
 
+
 			}
 
 			reconcilePath.put(idFile, reconcileService);
+			if (inputParameters.isSendEmail() && reconcile) {
+				SendMail mailReconcile = new SendMail("step2_reconcile");
+				mailReconcile.setStep2(step2);
+				mailReconcile.setInputParameters(inputParameters);
+				mailReconcile.sendMessage(inputParameters.getEmailUser());
+			}
 		}
 		//System.out.println("new CSVFile launchWorkflow line 205 LaunchWorkflow");
 
@@ -321,7 +364,7 @@ public class LaunchWorkflow {
 			ReconciliationService reconcileFile = mappingReconcilePrep.getReconcileDWC();
 			boolean isValid = mappingReconcilePrep.isValid();
 			String separator = mappingFile.getNoMappedFile().getSeparator().getSymbol();
-
+			//System.out.println("is valid : " + isValid);
 			if(isValid){
 				if(reconcileFile.isReconcile()){
 					separator = ",";
@@ -352,7 +395,7 @@ public class LaunchWorkflow {
 			int idPreparation = mappingReconcilePrep.getIdFile();
 			validInputFiles.put(idPreparation, isValid);
 		}
-
+		System.out.println(validInputFiles);
 		if(validInputFiles.containsValue(true)) {
 
 			GeographicTreatment geoTreatment = this.dataTreatment.checkGeographicOption();
@@ -364,11 +407,25 @@ public class LaunchWorkflow {
 			step3.setNbFound(geoTreatment.getNbWrongCoordinates());
 			step3.setPathWrongCoordinates(finalisation.getPathWrongCoordinatesFile());
 
+			if (inputParameters.isSendEmail()) {
+				SendMail mailCoordinates = new SendMail("step3_coordinates");
+				mailCoordinates.setStep3(step3);
+				mailCoordinates.setInputParameters(inputParameters);
+				mailCoordinates.sendMessage(inputParameters.getEmailUser());
+			}
+
 			File wrongGeospatial = geoTreatment.getWrongGeoFile();
 			finalisation.setWrongGeospatial(wrongGeospatial);
 			finalisation.setPathWrongGeospatial(wrongGeospatial.getAbsolutePath().replace(BloomConfig.getDirectoryPath(), "output/"));
 			step4.setNbFound(geoTreatment.getNbWrongGeospatialIssues());
 			step4.setPathWrongGeoIssue(finalisation.getPathWrongGeospatial());
+
+			if (inputParameters.isSendEmail()) {
+				SendMail mailGeospatialIssues = new SendMail("step4_geoSpatialIssues");
+				mailGeospatialIssues.setStep4(step4);
+				mailGeospatialIssues.setInputParameters(inputParameters);
+				mailGeospatialIssues.sendMessage(inputParameters.getEmailUser());
+			}
 
 			File wrongIso2 = geoTreatment.getWrongIso2File();
 			finalisation.setWrongIso2(wrongIso2);
@@ -381,6 +438,13 @@ public class LaunchWorkflow {
 			finalisation.setPathWrongPolygon(wrongPolygon.getAbsolutePath().replace(BloomConfig.getDirectoryPath(), "output/"));
 			step7.setNbFoundPolygon(geoTreatment.getNbWrongPolygon());
 			step7.setPathWrongPolygon(finalisation.getPathWrongPolygon());
+
+			if (inputParameters.isSendEmail()) {
+				SendMail mailPolygon = new SendMail("step7_iso2");
+				mailPolygon.setStep7(step7);
+				mailPolygon.setInputParameters(inputParameters);
+				mailPolygon.sendMessage(inputParameters.getEmailUser());
+			}
 
 			workflowSuccess = true;
 		}
@@ -415,12 +479,12 @@ public class LaunchWorkflow {
 				mappingFile.setSuccessMapping(Boolean.toString(false));
 				reconciliationService.setSuccessReconcile(Boolean.toString(false));
 				validInputFiles.put(mappingReconcilePrep.getIdFile(), false);
-				//System.out.println(mappingReconcilePrep.getIdFile() + " => false");
+				System.out.println(mappingReconcilePrep.getIdFile() + " => false");
 			}
 			else{
-				//System.out.println("separator true : " + csvFileNoMapped.getSeparator());
+				System.out.println("separator true : " + csvFileNoMapped.getSeparator());
 				if(!mappingReconcilePrep.getMappingDWC().getMappingInvolved()){
-					//System.out.println("not involved");
+					System.out.println("not involved");
 					mappingFile.setSuccessMapping(Boolean.toString(true));
 					String [] listTagsInput = csvFileNoMapped.getFirstLine().split(csvFileNoMapped.getSeparator().getSymbol());
 					List<String> tagsDwcOfficial = mappingFile.getTagsListDwC();
@@ -430,6 +494,7 @@ public class LaunchWorkflow {
 						String tagInput = listTagsInput[j];
 
 						if(!tagsDwcOfficial.contains(tagInput)){
+							System.out.println("no DC tag " + tagInput);
 							mappingFile.setSuccessMapping(Boolean.toString(false));
 							validFile = false;
 						}
@@ -437,10 +502,10 @@ public class LaunchWorkflow {
 					validInputFiles.put(mappingReconcilePrep.getIdFile(), validFile);
 				}
 				else{
-					//System.out.println("separator true true : " + csvFileNoMapped.getSeparator());
+					System.out.println("separator true true : " + csvFileNoMapped.getSeparator());
 					mappingFile.setSuccessMapping(Boolean.toString(true));
 					validInputFiles.put(mappingReconcilePrep.getIdFile(), true);
-					//System.out.println(mappingReconcilePrep.getIdFile() + " => true");
+					System.out.println(mappingReconcilePrep.getIdFile() + " => true");
 				}
 			}
 		}

@@ -1,7 +1,7 @@
 function initialiseFinalPage() {
 	for (var i = 0; i <= 9 ; i++) {
 		var step_involved = document.getElementById("step" + i + "_involved").value;
-		console.log(i + " => " + step_involved);
+		//console.log(i + " => " + step_involved);
 		if(step_involved == "true"){
             this.initialiseStep(i, true);
 		}
@@ -24,7 +24,6 @@ function initialiseFinalPage() {
 }
 
 function checkErrorOk(step_ok, p_ok){
-	//console.log(nbStep + " : " + step_ok);
 	if(step_ok == "true"){
 		//console.log("true : " + "p_ok" + nbStep);
 		p_ok.setAttribute("style", "color:#089A4C");
@@ -49,9 +48,8 @@ function initialiseStep(nbStep, involved){
 
     		for(var i = 0; i < nbInput; i++){
         		var step_ok_id = document.getElementById("step" + nbStep + "_ok_inp" + i);
-				console.log(involved + " - " + nbStep+ " - " + step_ok+ " - " + p_ok_step_inp);
         		if(step_ok_id){
-        			var step_ok = step_ok_id.innerHTML;
+        			var step_ok = step_ok_id.innerHTML.replace(" ","");
         			var p_ok_step_inp = document.getElementById("p_ok_step" + nbStep + "_inp" + i);
 
             		formatResult(involved, nbStep, step_ok, p_ok_step_inp);
@@ -88,7 +86,7 @@ function formatResult(involved, nbStep, step_ok, p_ok_step_inp){
 			var id_p_ok_step_inp = p_ok_step_inp.id;
 			var length_id_p_ok_step_inp = id_p_ok_step_inp.length;
 			var input = id_p_ok_step_inp.substring(length_id_p_ok_step_inp - 1, length_id_p_ok_step_inp);
-			console.log("input : " + input);
+			//console.log("input : " + input);
 			var spanTitleErrorMapping = document.getElementById("span_" + nbStep +"_success_inp" + input);
 			var spanValueErrorMapping = document.getElementById("p_ok_step" + nbStep + "_inp" + input);
 			spanValueErrorMapping.innerHTML = "File couldn't be involved in the process";
@@ -103,7 +101,7 @@ function formatResult(involved, nbStep, step_ok, p_ok_step_inp){
 			this.checkErrorOk(step_ok, p_ok_step_inp);
 		}
 		if(nbStep == 3 || nbStep == 4 || nbStep == 7 || nbStep == 9) {
-			console.log(nbStep + " formatDownloadLink");
+			//console.log(nbStep + " formatDownloadLink");
 			this.formatDownloadLink(nbStep);
 		}
 		else if(nbStep == 8){

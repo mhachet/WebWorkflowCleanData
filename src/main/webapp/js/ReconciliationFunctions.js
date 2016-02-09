@@ -265,6 +265,8 @@ function doPreparationReconciliation(uuid, nb_input, separator){
 					refDocReconcile.setAttribute('target', "_blank");
 					refDocReconcile.innerHTML = "taxonomic reconciliation";
 
+
+
 					noteReconcile.appendChild(refDocReconcile);
 					divNoteReconcile.appendChild(noteReconcile);
 					//divUrlTaxo.appendChild(labelUrl);
@@ -274,6 +276,7 @@ function doPreparationReconciliation(uuid, nb_input, separator){
 					divTaxo.appendChild(divNoteReconcile);
 					//divReconciliationCheck.appendChild(noteReconcile);
 					divReconciliationCheck.appendChild(divTaxo);
+
 					divReconciliationCheck.style.display = "block";
 					//$("#labelUrlTaxo_" + nb_input).text("Url reference");
 
@@ -282,7 +285,7 @@ function doPreparationReconciliation(uuid, nb_input, separator){
 
 
 				}
-				createReconciliationPreparation(uuid, firstline.split(separator), nb_input); 
+				createReconciliationPreparation(uuid, firstline.split(separator), nb_input);
 
 
 			}
@@ -297,9 +300,25 @@ function doPreparationReconciliation(uuid, nb_input, separator){
 
 function getContentFile(uuid, nb_input, infosColumns, separator){
 	var sampleText = document.getElementById("text_inp_" + nb_input).value;
+	var fileSize = document.getElementById("inp_" + nb_input).files[0].size;
+	var launchReconcile = new Boolean(true);
+	if(fileSize > 40000000){
+		if (confirm("The reconcile service is recommended for file size under than 40 mb. Are you sure ?")){
+			launchReconcile = true;
+		}
+		else{
+			launchReconcile = false;
+		}
+	}
 	var contentFile = "";
 
-	if(sampleText != ""){
+	if(sampleText != "" && launchReconcile){
+		var divButtonStartReconciliation = document.getElementById("divButtonStartReconciliation_" + nb_input);
+		divButtonStartReconciliation.style.display = "none";
+
+		var divLoadIconReconcile = document.getElementById("divLoadIconReconcile_" + nb_input);
+		divLoadIconReconcile.style.display = "block";
+
 		var formdata = new FormData();
 		formdata.append("action", "reconciliation");
 		formdata.append("uuid", uuid);
@@ -311,7 +330,8 @@ function getContentFile(uuid, nb_input, infosColumns, separator){
 
 		xhrPOST.open("POST","reconcileController", true);
 		//xhrPOST.setRequestHeader("Content-Length", filesize);
-		//xhrPOST.addEventListener("progress", updateProgress, false);
+
+		//xhrPOST.addEventListener("uninitialized", updateProgress(nb_input), false);
 		xhrPOST.addEventListener("error", transferFailed, false);
 		xhrPOST.addEventListener("abort", transferCanceled, false);
 
@@ -329,7 +349,9 @@ function getContentFile(uuid, nb_input, infosColumns, separator){
 
 			}
 			else{
-				console.log("error")
+				console.log("error");
+				alert("Error during reconciliation");
+				cancelReconciliation(nb_input);
 			}
 		}
 	}
@@ -426,6 +448,40 @@ function createReconciliationPreparation(uuid, presentTags, nbInput){
 
 		divSubmitReconcile.appendChild(divButtonStartReconciliation);
 
+		var divLoadIconReconcile = document.createElement('div');
+		divLoadIconReconcile.setAttribute('id', "divLoadIconReconcile_" + nbInput);
+		divLoadIconReconcile.setAttribute('class', "col-lg-6");
+
+		var divLoadingIcon = document.createElement("div");
+		divLoadingIcon.setAttribute('class', "preloader-wrapper small active");
+		divLoadingIcon.setAttribute('id', "loadIconReconcile_" + nbInput);
+		var divSpinnerIcon = document.createElement('div');
+		divSpinnerIcon.setAttribute('class', "spinner-layer spinner-red-only");
+		var divCircleLeft = document.createElement("div");
+		divCircleLeft.setAttribute('class', "circle-clipper left");
+		var divCircleOne = document.createElement("div");
+		divCircleOne.setAttribute('class', "circle");
+		var divGapPatch = document.createElement("div");
+		divGapPatch.setAttribute('class', "gap-patch");
+		var divCircleTwo = document.createElement("div");
+		divCircleTwo.setAttribute('class', "circle");
+		var divCircleThree = document.createElement("div");
+		divCircleThree.setAttribute('class', "circle");
+		var divClipperRight = document.createElement("div");
+		divClipperRight.setAttribute('class',"circle-clipper right");
+
+		divCircleLeft.appendChild(divCircleOne);
+		divGapPatch.appendChild(divCircleTwo);
+		divClipperRight.appendChild(divCircleThree);
+		divSpinnerIcon.appendChild(divCircleLeft);
+		divSpinnerIcon.appendChild(divGapPatch);
+		divSpinnerIcon.appendChild(divClipperRight);
+		divLoadingIcon.appendChild(divSpinnerIcon);
+
+		divLoadIconReconcile.appendChild(divLoadingIcon);
+		divSubmitReconcile.appendChild(divLoadIconReconcile);
+
+		divLoadIconReconcile.style.display = "none";
 
 		var buttonCancelReconciliation = document.createElement('button');
 		buttonCancelReconciliation.id = "buttonCancelReconciliation_" + nbInput;
@@ -515,6 +571,9 @@ function startReconciliation(nbInput, uuid){
 	//var urlTaxo = document.getElementById("urlAPItaxo_" + nbInput).value;
 	console.log("url : " + urlTaxo);
 	if(urlTaxo != ""){
+		var startButton = document.getElementById("workflowLaunch");
+		startButton.disabled = true;
+
 		//console.log("start reconcile");
 		var separator = "";
 		var texte =  document.getElementById("csvDropdown_" + nbInput).options[document.getElementById("csvDropdown_" + nbInput).selectedIndex].value; 
@@ -531,7 +590,10 @@ function startReconciliation(nbInput, uuid){
 		var columnCheck = this.foundColumnCheck(nbInput);
 		columnsInfo.push(columnCheck);
 
-		this.getContentFile(uuid, nbInput, columnsInfo, separator);
+		getContentFile(uuid, nbInput, columnsInfo, separator);
+
+		var startButton = document.getElementById("workflowLaunch");
+		startButton.disabled = false;
 	}
 	else{
 		alert("Missing url");
@@ -539,6 +601,12 @@ function startReconciliation(nbInput, uuid){
 }
 
 function doReconciliation(nbInput, contentFile, separator){
+
+	var divLoadIconReconcile = document.getElementById("divLoadIconReconcile_" + nbInput);
+	divLoadIconReconcile.style.display = "none";
+
+	var errorTransfert = document.getElementById("errorTransfert")
+	errorTransfert.setAttribute('value', new Boolean(false));
 
 	var lines = contentFile.split("\n");
 	//console.log(contentFile);
@@ -706,6 +774,8 @@ function doReconciliation(nbInput, contentFile, separator){
 			tr.addClass('shown');
 
 		}
+		var divLoadIconReconcile = document.getElementById("divLoadIconReconcile_" + nbInput);
+		//divLoadIconReconcile.style.display = "none";
 		var divLoadIcon = $("#loadIcon_reconcile_" + nbInput + "_" + rowIndex);
 		//var parentIconLoad = $("#loadIcon_reconcile_" + nbInput + "_" + rowIndex).parent();
 		divLoadIcon.remove();
@@ -930,6 +1000,9 @@ function cancelReconciliation(nbInput){
 
 	var divButtonValidReconciliation = document.getElementById("divButtonValidReconciliation_" + nbInput);
 	divButtonValidReconciliation.style.display = "none";
+
+	var divLoadIconReconcile = document.getElementById("divLoadIconReconcile_" + nbInput);
+	divLoadIconReconcile.style.display = "none";
 
 	var divTableReconcile = document.getElementById("divTableReconcile_" + nbInput);
 	divTableReconcile.style.display = "none";

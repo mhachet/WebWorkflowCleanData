@@ -31,25 +31,29 @@ public class ConnectionDatabase {
      *
      * @return Connection
      */
-    public static Connection getConnection() throws SQLException {
-        if (connexion == null || connexion.isClosed()) {
-            try {
-                //System.out.println(getUrl() + "  " + getUser() + "  " + getPassword());
+    public static Connection getConnection() {
+        try {
+            if (connexion == null || connexion.isClosed()) {
                 try {
-                    Class.forName("com.mysql.jdbc.Driver");
-                } catch (ClassNotFoundException e) {
-                    System.err.println("Erreur lors du chargement : le driver n'a pas été trouvé dans le classpath ! <br/>"
-                            + e.getMessage());
+                    //System.out.println(getUrl() + "  " + getUser() + "  " + getPassword());
+                    try {
+                        Class.forName("com.mysql.jdbc.Driver");
+                    } catch (ClassNotFoundException e) {
+                        System.err.println("Erreur lors du chargement : le driver n'a pas été trouvé dans le classpath ! <br/>"
+                                + e.getMessage());
+                    }
+
+                    String url = BloomConfig.getProperty("db.url");
+                    String user = BloomConfig.getProperty("db.user");
+                    String password = BloomConfig.getProperty("db.password");
+
+                    connexion = DriverManager.getConnection(url, user, password);
+                } catch (SQLException e) {
+                    System.err.println("ERREUR DE CONNEXION : " + e.getMessage());
                 }
-
-                String url = BloomConfig.getProperty("db.url");
-                String user = BloomConfig.getProperty("db.user");
-                String password = BloomConfig.getProperty("db.password");
-
-                connexion = DriverManager.getConnection(url, user, password);
-            } catch (SQLException e) {
-                System.err.println("ERREUR DE CONNEXION : " + e.getMessage());
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
         //executeSQLcommand(choiceStatement, sqlCommand);

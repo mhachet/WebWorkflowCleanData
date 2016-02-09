@@ -116,10 +116,9 @@ public class Treatment {
 	 * Convert input file (not DwC) to DwC format
 	 * 
 	 * @param mappingDWC
-	 * @throws IOException
 	 * @return void
 	 */
-	public void mappingDwC(MappingDwC mappingDWC, int idFile, String uuid) throws IOException{
+	public void mappingDwC(MappingDwC mappingDWC, int idFile, String uuid){
 
 		mappingDWC.setConnectionValuesTags(mappingDWC.doConnectionValuesTags(uuid));
 		mappingDWC.findInvalidColumns();
@@ -151,40 +150,70 @@ public class Treatment {
 			readerReference = new BufferedReader(inputStreamReaderReference);
 			String line = "";
 			int countLine = 0;
+			int idLatitudeDwcTag = 0;
+			int idLongitudeDwcTag = 0;
 			while ((line = readerReference.readLine()) != null){
-				//System.out.println("separator : " + referenceFileReconcile.getSeparator());
-				String [] lineSplit = line.split(referenceFileReconcile.getSeparator().getSymbol(), -1);
+				System.out.println("old line : " + line);
+				String [] lineSplit2 = line.split(referenceFileReconcile.getSeparator().getSymbol(), -1);
+				System.out.println("separator : " + referenceFileReconcile.getSeparator().getSymbol());
+				for(int i = 0 ; i< lineSplit2.length ; i++){
+					System.out.println(lineSplit2[i]);
+				}
+
+				List <String> lineSplit = this.getSplitedLine(referenceFileReconcile.getSeparator().getSymbol(), line);
+				//String [] lineSplit = line.split(referenceFileReconcile.getSeparator().getSymbol(), -1);
 				//System.out.println(line);
 				if(countLine == 0){
-					for(int i = 0; i < lineSplit.length; i++){
-						if(lineSplit[i].equals(tagReconcile)){
+					for(int i = 0; i < lineSplit.size(); i++){
+						if(lineSplit.get(i).equals(tagReconcile)){
 							tagReconcileColumn = i;
+						}
+						if(lineSplit.get(i).equals("decimalLatitude")){
+							idLatitudeDwcTag = i;
+							//System.out.println("decimalLatitude " + idLatitudeDwcTag);
+						}
+						else if(lineSplit.get(i).equals("decimalLongitude")){
+							idLongitudeDwcTag = i;
+							//System.out.println("decimalLongitude " + idLongitudeDwcTag);
 						}
 					}
 
 				}
 				else{
 					for(Entry<Integer, String> entry : linesConnectedNewName.entrySet()){
-						//System.out.println(entry.getKey() + " - " + entry.getValue());
+						System.out.println(entry.getKey() + " - " + entry.getValue());
 						if(entry.getKey() + 1 == countLine){
-							lineSplit[tagReconcileColumn] = entry.getValue();
-							//System.out.println(tagReconcileColumn + "  " + lineSplit[tagReconcileColumn] + "  " + "\"" + entry.getValue() +"\"");
+							lineSplit.set(tagReconcileColumn, entry.getValue());
+							//System.out.println(tagReconcileColumn + "  " + lineSplit.get(tagReconcileColumn) + "  " + "\"" + entry.getValue() +"\"");
 						}
 
 					}
 				}
 
-				String [] newLineSplit = new String[lineSplit.length];
-				for(int j = 0 ; j < lineSplit.length ; j++){
-					String oldItem = lineSplit[j];
-					String newItem = "\"" + oldItem.replaceAll("\"", "\\\\\"") + "\"";
+				String [] newLineSplit = new String[lineSplit.size()];
+				for(int j = 0 ; j < lineSplit.size() ; j++){
+					String oldItem = lineSplit.get(j);
+					String newItem = "";
+					//System.out.println("oldItem : " + j  + " : " + oldItem);
+					if(j == idLatitudeDwcTag || j == idLongitudeDwcTag){
+						System.out.println("decimal : " + oldItem);
+						String coordinate = oldItem.replace(",", ".");
+						newItem = coordinate;
+					}
+					/*else if (lineSplit.get(j).contains(referenceFileReconcile.getSeparator().getSymbol())) {
+						newItem = "\"" + lineSplit.get(j) + "\"";
+					}*/
+					else{
+						newItem = "\"" + oldItem + "\"";
+						//System.out.println(oldItem + " \t" + newItem);
+					}
 					newLineSplit[j] = newItem;
-					//System.out.println(oldItem + " \t" + newItem);
+					System.out.println("newItem : " + j + " - " + newItem);
 				}
 
 
 				String newLine = StringUtils.join(newLineSplit, ",");
-				//System.out.println(newLine);
+				System.out.println("newLine " + newLine);
 				listLinesReconciled.add(newLine);
 				countLine++;
 			}
@@ -220,10 +249,9 @@ public class Treatment {
 	 * 
 	 * @param inputFile
 	 * @param nbFile
-	 * @throws IOException
 	 * @return List<String>
 	 */
-	public DarwinCore initialiseFile(File inputFile, int nbFile, String separator) throws IOException{
+	public DarwinCore initialiseFile(File inputFile, int nbFile, String separator){
 		//System.out.println("dwc filename : " + inputFile.getAbsolutePath());
 		fileDarwinCore = new DarwinCore(inputFile, nbFile, this.getUuid());
 		File darwinCoreFileTemp = fileDarwinCore.readDarwinCoreFile(separator);
@@ -443,19 +471,26 @@ public class Treatment {
 
 		geoTreatment.setUuid(this.getUuid());
 
-		geoTreatment.geoGraphicTreatment();
-
-		File wrongGeo = this.createFileCsv(geoTreatment.getWrongGeoList(), "wrong_geospatialIssues_" + this.getUuid() + ".csv", "wrong");
-		geoTreatment.setWrongGeoFile(wrongGeo);
-
-		File wrongCoord = this.createFileCsv(geoTreatment.getWrongCoordinatesList(), "wrong_coordinates_" + this.getUuid() + ".csv", "wrong");
-		geoTreatment.setWrongCoordinatesFile(wrongCoord);
-
+		geoTreatment.geographicIso2Treatment();
 		File wrongIso2 = this.createFileCsv(geoTreatment.getWrongIso2List(), "wrong_iso2_" + this.getUuid() + ".csv", "wrong");
 		geoTreatment.setWrongIso2File(wrongIso2);
 
+		geoTreatment.createTableClean();
+
+		geoTreatment.geographicCoordinatesTreatment();
+		File wrongCoord = this.createFileCsv(geoTreatment.getWrongCoordinatesList(), "wrong_coordinates_" + this.getUuid() + ".csv", "wrong");
+		geoTreatment.setWrongCoordinatesFile(wrongCoord);
+
+		geoTreatment.geographicSpatialIssuesTreatment();
+		File wrongGeo = this.createFileCsv(geoTreatment.getWrongGeoList(), "wrong_geospatialIssues_" + this.getUuid() + ".csv", "wrong");
+		geoTreatment.setWrongGeoFile(wrongGeo);
+
+		geoTreatment.geographicPolygonTreatment();
 		File wrongPolygon = this.createFileCsv(geoTreatment.getWrongPolygonList(), "wrong_polygon_" + this.getUuid() + ".csv", "wrong");
 		geoTreatment.setWrongPolygonFile(wrongPolygon);
+
+
+		//geoTreatment.geoGraphicTreatment();
 
 		return geoTreatment;
 	}
@@ -528,9 +563,11 @@ public class Treatment {
 		try {
 			writer = new FileWriter(newFile);
 			for(int i = 0 ; i < linesFile.size() ; i++){
+				//System.out.println(fileName);
 				//System.out.println("before : " + linesFile.get(i));
 				this.getSplitedLine(",", linesFile.get(i));
 				writer.write(linesFile.get(i).replaceAll("\\\\\"", "\\\\\\\"") + "\n");
+				//System.out.println("after : " + linesFile.get(i).replaceAll("\\\\\"", "\\\\\\\"") + "\n");
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

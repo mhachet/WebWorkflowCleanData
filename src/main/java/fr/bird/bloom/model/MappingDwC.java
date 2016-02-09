@@ -75,122 +75,128 @@ public class MappingDwC {
      *
      * @param nbFileRandom
      * @return File
-     * @throws IOException
      */
-    public File createNewDwcFile(String nbFileRandom, int idFile) throws IOException {
+    public File createNewDwcFile(String nbFileRandom, int idFile) {
         String mappedFilename = noMappedFile.getCsvFile().getParent() + "/mappedDWC_" + nbFileRandom + "_" + idFile + ".csv";
         File mappedFile = new File(mappedFilename);
 
         //File logFile = new File(BloomConfig.getDirectoryPath() + "logs/" + nbFileRandom + ".log");
         //FileWriter writerLog = new FileWriter(logFile);
 
-        FileWriter writerMappedFile = new FileWriter(mappedFile);
-        Map<String, String> connectionTags = this.getConnectionTags();
-        Map<String, List<String>> connectionValuesTags = this.getConnectionValuesTags();
-        List<Integer> listInvalidColumns = this.getListInvalidColumns();
+        FileWriter writerMappedFile = null;
+        try {
+            writerMappedFile = new FileWriter(mappedFile);
 
-        String firstNewLine = "";
-        int nbCol = connectionTags.size();
-        int countTags = 0;
-        //System.out.println("value " + connectionTags);
-        //System.out.println("valuesTags : " + connectionValuesTags);
+            Map<String, String> connectionTags = this.getConnectionTags();
+            Map<String, List<String>> connectionValuesTags = this.getConnectionValuesTags();
+            List<Integer> listInvalidColumns = this.getListInvalidColumns();
 
-        int idLatitudeDwcTag = 0;
-        int idLongitudeDwcTag = 0;
-        for (Entry<String, String> entryDwC : connectionTags.entrySet()) {
-            String[] splitKey = entryDwC.getKey().split("_");
-            int idColumn = Integer.parseInt(splitKey[splitKey.length - 1]);
-            //System.out.println(listInvalidColumns);
-            if (!listInvalidColumns.contains(idColumn)) {
-                String valueNoMapped = entryDwC.getValue();
-                if (!" ".equals(valueNoMapped)) {
-                    firstNewLine += valueNoMapped + ",";
+            String firstNewLine = "";
+            int nbCol = connectionTags.size();
+            int countTags = 0;
+            //System.out.println("value " + connectionTags);
+            //System.out.println("valuesTags : " + connectionValuesTags);
+
+            int idLatitudeDwcTag = 0;
+            int idLongitudeDwcTag = 0;
+            for (Entry<String, String> entryDwC : connectionTags.entrySet()) {
+                String[] splitKey = entryDwC.getKey().split("_");
+                int idColumn = Integer.parseInt(splitKey[splitKey.length - 1]);
+                //System.out.println(listInvalidColumns);
+                if (!listInvalidColumns.contains(idColumn)) {
+                    String valueNoMapped = entryDwC.getValue();
+                    String dwcTag = entryDwC.getKey();
+                    if (!" ".equals(valueNoMapped)) {
+                        firstNewLine += valueNoMapped + ",";
+                    }
+                    if(valueNoMapped.equals("decimalLatitude")){
+                        idLatitudeDwcTag = idColumn;
+                    }
+                    if(valueNoMapped.equals("decimalLongitude")){
+                        idLongitudeDwcTag = idColumn;
+                    }
+
                 }
-                if(valueNoMapped.equals("decimalLatitude")){
-                    idLatitudeDwcTag = idColumn;
-                }
-                if(valueNoMapped.equals("decimalLongitude")){
-                    idLongitudeDwcTag = idColumn;
-                }
+                countTags++;
+                /*else{
+                    System.out.println("invalid column : " + idColumn);
+                }*/
 
             }
-            countTags++;
-            /*else{
-                System.out.println("invalid column : " + idColumn);
-            }*/
+            if(!firstNewLine.isEmpty()){
+                firstNewLine = firstNewLine.substring(0, firstNewLine.length() - 1) + "\n";
+                //System.out.println(firstNewLine);
+                writerMappedFile.write(firstNewLine);
+                int countLines = 0;
+                int nbLines = this.getNbLines(noMappedFile.getCsvFile());
+                int countCol = 1;
+                while (countLines < nbLines - 1) {
+                    String lineValues = "";
+                    countCol = 1;
+                    for (Entry<String, List<String>> entryValuesTags : connectionValuesTags.entrySet()) {
+                        List<String> listValues = entryValuesTags.getValue();
+                        //System.out.println("mapping before : " + listValues);
+                        if (listValues.size() > countLines) {
+                            String[] splitKey = entryValuesTags.getKey().split("_");
+                            //System.out.println("key : " + entryValuesTags.getKey());
+                            //System.out.println("size : " + listValues.size() + "\n listValues  : " + listValues);
+                            Integer entryKey = Integer.parseInt(splitKey[splitKey.length - 1]);
+                            if (!this.getListInvalidColumns().contains(entryKey)) {
+                                //System.out.println("valid tag : " + entryValuesTags.getKey() + " ____ " + listValues.get(countLines));
+                                if (entryKey.equals(idLatitudeDwcTag) || entryKey.equals(idLongitudeDwcTag)) {
+                                    String coordinate = listValues.get(countLines);
+                                    coordinate = coordinate.replace(",", ".");
+                                    lineValues += coordinate;
+                                    //System.out.println(entryKey + "  " + coordinate);
+                                } else if (listValues.get(countLines).contains(noMappedFile.getSeparator().getSymbol())) {
+                                    lineValues += "\"" + listValues.get(countLines) + "\"";
+                                } else {
+                                    lineValues += listValues.get(countLines);
+                                }
 
-        }
-        if(!firstNewLine.isEmpty()){
-            firstNewLine = firstNewLine.substring(0, firstNewLine.length() - 1) + "\n";
-            //System.out.println(firstNewLine);
-            writerMappedFile.write(firstNewLine);
-            int countLines = 0;
-            int nbLines = this.getNbLines(noMappedFile.getCsvFile());
-            int countCol = 1;
-            while (countLines < nbLines - 1) {
-                String lineValues = "";
-                countCol = 1;
-                for (Entry<String, List<String>> entryValuesTags : connectionValuesTags.entrySet()) {
-                    List<String> listValues = entryValuesTags.getValue();
-                    //System.out.println(listValues.size() + " - " + countLines);
-                    if (listValues.size() > countLines) {
-                        String[] splitKey = entryValuesTags.getKey().split("_");
-                        //System.out.println("key : " + entryValuesTags.getKey());
-                        //System.out.println("size : " + listValues.size() + "\n listValues  : " + listValues);
-                        Integer entryKey = Integer.parseInt(splitKey[splitKey.length - 1]);
-                        if (!this.getListInvalidColumns().contains(entryKey)) {
-                            //System.out.println("valid tag : " + entryValuesTags.getKey() + " ____ " + listValues.get(countLines));
-                            if (entryKey.equals(idLatitudeDwcTag) || entryKey.equals(idLongitudeDwcTag)) {
-                                String coordinate = listValues.get(countLines);
-                                coordinate = coordinate.replace(",", ".");
-                                lineValues += coordinate;
-                                //System.out.println(entryKey + "  " + coordinate);
-                            } else if (listValues.get(countLines).contains(noMappedFile.getSeparator().getSymbol())) {
-                                lineValues += "\"" + listValues.get(countLines) + "\"";
+                                if (countCol == countTags) {
+                                    lineValues += "\n";
+                                } else {
+                                    lineValues += ",";
+                                }
+
                             } else {
-                                lineValues += listValues.get(countLines);
-                            }
-
-                            if (countCol == countTags) {
-                                lineValues += "\n";
-                            } else {
-                                lineValues += ",";
-                            }
-
-                        } else {
-                            //System.out.println("countCol : " + countCol + " - countTags : " + countTags + " - invalid tag : " + entryValuesTags.getKey() + " ____ " + listValues.get(countLines));
-                            if (countCol == countTags) {
-                                lineValues += "\n";
+                                //System.out.println("countCol : " + countCol + " - countTags : " + countTags + " - invalid tag : " + entryValuesTags.getKey() + " ____ " + listValues.get(countLines));
+                                if (countCol == countTags) {
+                                    lineValues += "\n";
+                                }
                             }
                         }
+                        else{
+                            System.out.println("problem mapping : " + listValues.size() + " < " + countLines);
+                            this.setSuccessMapping("false");
+                            return mappedFile;
+                        }
+                        //System.out.println("before : " + lineValues);
+                        countCol++;
                     }
-                    else{
-                        System.out.println("problem mapping : " + listValues.size() + " < " + countLines);
-                        this.setSuccessMapping("false");
-                        return mappedFile;
+
+                    if((lineValues.substring(lineValues.length() - 2,lineValues.length() - 1)).equals(",")){
+                        lineValues = lineValues.substring(0, lineValues.length() - 2) + "\n";
                     }
-                    //System.out.println("before : " + lineValues);
-                    countCol++;
+                    //System.out.println("last : " + lineValues.substring(lineValues.length() - 2,lineValues.length() - 1));
+                    //System.out.println("last 2 : " + lineValues.substring(0,lineValues.length() - 2));
+                    //System.out.println("last 1 : " + lineValues.substring(0,lineValues.length() - 1));
+                    //System.out.println("mapping after : " + lineValues);
+                    writerMappedFile.write(lineValues);
+                    countLines++;
                 }
-                //System.out.println("before : " + lineValues);
-                if((lineValues.substring(lineValues.length() - 2,lineValues.length() - 1)).equals(",")){
-                    lineValues = lineValues.substring(0, lineValues.length() - 2) + "\n";
-                }
-                //System.out.println("last : " + lineValues.substring(lineValues.length() - 2,lineValues.length() - 1));
-                //System.out.println("last 2 : " + lineValues.substring(0,lineValues.length() - 2));
-                //System.out.println("last 1 : " + lineValues.substring(0,lineValues.length() - 1));
-                //System.out.println("after : " + lineValues);
-                writerMappedFile.write(lineValues);
-                countLines++;
+
+            }
+            else{
+                System.out.println("empty first line");
+                this.setSuccessMapping("false");
             }
 
+            writerMappedFile.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        else{
-            System.out.println("empty first line");
-            this.setSuccessMapping("false");
-        }
-
-        writerMappedFile.close();
         return mappedFile;
     }
 
@@ -253,7 +259,6 @@ public class MappingDwC {
      * Found all tags in input file
      *
      * @return ArrayList<String>
-     * @throws IOException
      */
     public List<String> initialiseNoMappedTags() {
         /*CSVFile csvNoMapped = new CSVFile(this.getNoMappedFile().getCsvFile());
@@ -372,7 +377,7 @@ public class MappingDwC {
                                     listValuesMap = entry.getValue();
                                     id = entry.getKey();
                                     if (!splitedLine.get(i).isEmpty()) {
-                                        listValuesMap.add(splitedLine.get(i));
+                                        listValuesMap.add("\"" + splitedLine.get(i) + "\"");
                                     } else {
                                         listValuesMap.add("\"\"");
                                     }
@@ -398,7 +403,7 @@ public class MappingDwC {
             System.err.println(e);
         }
 
-        System.out.println(connectionValuesTags);
+        //System.out.println(connectionValuesTags);
         return connectionValuesTags;
     }
 
@@ -448,7 +453,7 @@ public class MappingDwC {
                 }
             }
         }
-        System.out.println("nbLines : " + nbLines);
+        //System.out.println("nbLines : " + nbLines);
         return nbLines;
     }
 
