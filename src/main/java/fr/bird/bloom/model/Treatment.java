@@ -237,9 +237,9 @@ public class Treatment {
 		/*for(int j = 0 ; j < listLinesReconciled.size() ; j++){
 			System.out.println(listLinesReconciled.get(j));
 		}*/
+
 		File reconcileFile = this.createFileCsv(listLinesReconciled, "reconcile_" + this.getUuid() + "_" + idFile + ".csv", "data");
 		reconcileService.setReconcileFile(reconcileFile);
-
 
 	}
 
@@ -263,7 +263,9 @@ public class Treatment {
 
 	/**
 	 * Create sql request to insert input file modified (temporary) in DarwinCoreInput table
-	 * 
+	 * unused because the insertion is done block by block (1000 lines)
+	 * see createTableDarwinCoreInput()
+	 *
 	 * @param File inputDarwinCoreModified
 	 * @param List<String> linesInputFile
 	 * @return String sql request
@@ -296,6 +298,7 @@ public class Treatment {
 		}
 		sql = "LOAD DATA LOCAL INFILE '" + inputDarwinCoreModified.getAbsolutePath() + "' INTO TABLE Workflow.DarwinCoreInput FIELDS TERMINATED BY ',' ENCLOSED BY '\"' IGNORE 1 LINES (" + firstLine + ");";
 		System.out.println("mistake : " + sql);
+
 		return sql;
 	}
 
@@ -308,14 +311,7 @@ public class Treatment {
 	public void createTableDarwinCoreInput(DarwinCore darwinCoreModified){
 		File darwinCoreFile = darwinCoreModified.getDarwinCoreFileTemp();
 		BufferedReader buff = null;
-		/*FileWriter writer = null;
 
-		File testCount = new File("/home/mhachet/testCount.txt");
-		try {
-			writer = new FileWriter(testCount.getAbsoluteFile());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
 		try {
 			buff = new BufferedReader(new FileReader(darwinCoreFile));
 		} catch (FileNotFoundException e1) {
@@ -355,21 +351,16 @@ public class Treatment {
 					messages.add("\n--- Insert line " + countLine + " in DarwinCoreInput table ---");
 					messages.add(countLine + " => " + sqlInsert);
 					messages.addAll(newConnection.executeSQLcommand(choiceStatement, sqlInsert));
-					//writer.write("Inside" + sqlInsert + "\n\n");
-					/*for(int i = 0 ; i < messages.size() ; i++){
-						writer.write(messages.get(i));
-					}*/
+
 					lines = "";
 				}
-				//if(countLine % 100000 == 0){
 
-				//}
 				countLine ++;
 			}
 			if(!lines.equals("")){
 				lines = lines.substring(0,lines.length()-1);
 				String sqlInsert = "INSERT INTO Workflow.DarwinCoreInput (" + firstLine + ") VALUES " + lines + ";";
-				//System.out.println("small : " + sqlInsert);
+
 				Statement statement = null;
 				try {
 					statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -383,8 +374,7 @@ public class Treatment {
 				messages.add("\n--- Insert line " + countLine + " in DarwinCoreInput table ---");
 				messages.add(countLine + " => " + sqlInsert);
 				messages.addAll(newConnection.executeSQLcommand(choiceStatement, sqlInsert));
-				//writer.write("AtTheEnd" + sqlInsert + "\n\n");
-				//System.out.println("insertFileSQL : " + sqlInsert);
+
 			}
 
 
@@ -399,24 +389,6 @@ public class Treatment {
 				e.printStackTrace();
 			}
 		}
-
-		/*try {
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
-		/*
-
-		ConnectionDatabase newConnection = new ConnectionDatabase();
-		String choiceStatement = "execute";
-		List<String> messages = new ArrayList<String>();
-		messages.add("\n--- Create DarwinCoreInput table ---");
-		//messages.addAll(newConnection.newConnection(choiceStatement, insertFileSQL));
-
-		for(int i = 0 ; i < messages.size() ; i++){
-			System.out.println(messages.get(i));
-		}*/
-
 	} 
 
 	/**
@@ -451,6 +423,7 @@ public class Treatment {
 	 * @return boolean
 	 */
 	public boolean tdwgCodeOption(){
+
 		TdwgTreatment tdwg4Treatment = new TdwgTreatment();
 		tdwg4Treatment.setUuid(this.getUuid());
 
@@ -467,6 +440,7 @@ public class Treatment {
 	 * @return GeographicTreatment
 	 */
 	public GeographicTreatment checkGeographicOption(){
+
 		GeographicTreatment geoTreatment = new GeographicTreatment(this.getFileDarwinCore());
 
 		geoTreatment.setUuid(this.getUuid());
@@ -488,9 +462,6 @@ public class Treatment {
 		geoTreatment.geographicPolygonTreatment();
 		File wrongPolygon = this.createFileCsv(geoTreatment.getWrongPolygonList(), "wrong_polygon_" + this.getUuid() + ".csv", "wrong");
 		geoTreatment.setWrongPolygonFile(wrongPolygon);
-
-
-		//geoTreatment.geoGraphicTreatment();
 
 		return geoTreatment;
 	}
@@ -563,11 +534,8 @@ public class Treatment {
 		try {
 			writer = new FileWriter(newFile);
 			for(int i = 0 ; i < linesFile.size() ; i++){
-				//System.out.println(fileName);
-				//System.out.println("before : " + linesFile.get(i));
 				this.getSplitedLine(",", linesFile.get(i));
 				writer.write(linesFile.get(i).replaceAll("\\\\\"", "\\\\\\\"") + "\n");
-				//System.out.println("after : " + linesFile.get(i).replaceAll("\\\\\"", "\\\\\\\"") + "\n");
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -580,7 +548,9 @@ public class Treatment {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		System.out.println(fileName + " written !!!");
+
 		return newFile;
 	}
 
@@ -633,6 +603,7 @@ public class Treatment {
 	 * @return DarwinCore
 	 */
 	public DarwinCore getFileDarwinCore() {
+
 		return fileDarwinCore;
 	}
 
@@ -642,6 +613,7 @@ public class Treatment {
 	 * @return void
 	 */
 	public void setFileDarwinCore(DarwinCore fileDarwinCore) {
+
 		this.fileDarwinCore = fileDarwinCore;
 	}
 
@@ -650,6 +622,7 @@ public class Treatment {
 	 * @return ArrayList<File>
 	 */
 	public List<File> getRasterFiles() {
+
 		return rasterFiles;
 	}
 
@@ -659,6 +632,7 @@ public class Treatment {
 	 * @return void
 	 */
 	public void setRasterFiles(ArrayList<File> rasterFiles) {
+
 		this.rasterFiles = rasterFiles;
 	}
 
@@ -667,6 +641,7 @@ public class Treatment {
 	 * @return HashMap<Integer,HashMap<String,Boolean>>
 	 */
 	public HashMap<Integer, HashMap<String, Boolean>> getHashMapValidOrNot() {
+
 		return hashMapValidOrNot;
 	}
 
@@ -675,8 +650,7 @@ public class Treatment {
 	 * @param hashMapValidOrNot
 	 * @return void
 	 */
-	public void setHashMapValidOrNot(
-			HashMap<Integer, HashMap<String, Boolean>> hashMapValidOrNot) {
+	public void setHashMapValidOrNot(HashMap<Integer, HashMap<String, Boolean>> hashMapValidOrNot) {
 		this.hashMapValidOrNot = hashMapValidOrNot;
 	}
 
@@ -685,6 +659,7 @@ public class Treatment {
 	 * @return int
 	 */
 	public String getUuid() {
+
 		return uuid;
 	}
 
@@ -694,14 +669,25 @@ public class Treatment {
 	 * @return void
 	 */
 	public void setUuid(String uuid) {
+
 		this.uuid = uuid;
 	}
 
+	/**
+	 *
+	 * @return int
+	 */
 	public int getNbSynonymInvolved() {
+
 		return nbSynonymInvolved;
 	}
 
+	/**
+	 *
+	 * @param nbSynonymInvolved
+	 */
 	public void setNbSynonymInvolved(int nbSynonymInvolved) {
+
 		this.nbSynonymInvolved = nbSynonymInvolved;
 	}
 

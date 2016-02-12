@@ -8,7 +8,6 @@ import fr.bird.bloom.utils.BloomConfig;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.logging.*;
 
 /**
  * src.model
@@ -35,28 +34,25 @@ public class ConnectionDatabase {
         try {
             if (connexion == null || connexion.isClosed()) {
                 try {
-                    //System.out.println(getUrl() + "  " + getUser() + "  " + getPassword());
                     try {
                         Class.forName("com.mysql.jdbc.Driver");
                     } catch (ClassNotFoundException e) {
-                        System.err.println("Erreur lors du chargement : le driver n'a pas été trouvé dans le classpath ! <br/>"
+                        System.err.println("Error during loading : driver couldn't be found in the classpath ! <br/>"
                                 + e.getMessage());
                     }
-
                     String url = BloomConfig.getProperty("db.url");
                     String user = BloomConfig.getProperty("db.user");
                     String password = BloomConfig.getProperty("db.password");
 
                     connexion = DriverManager.getConnection(url, user, password);
+
                 } catch (SQLException e) {
-                    System.err.println("ERREUR DE CONNEXION : " + e.getMessage());
+                    System.err.println("CONNECTION ERROR : " + e.getMessage());
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        //executeSQLcommand(choiceStatement, sqlCommand);
 
         return connexion;
     }

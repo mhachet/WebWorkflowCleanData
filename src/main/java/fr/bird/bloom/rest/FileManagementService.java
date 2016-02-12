@@ -11,6 +11,12 @@ import java.net.URL;
 
 public class FileManagementService {
 
+    /**
+     * store input file from url (cloud storage)
+     * @param fileUrl
+     * @param uuid
+     * @return static File
+     */
     public static File storeInputFile(String fileUrl, String uuid) {
         try {
             if (BloomConfig.getDirectoryPath() == null) {
