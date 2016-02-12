@@ -5,4 +5,5 @@ target
 !.idea/runConfigurations
 classes
 build
-
+src/main/resources/bloom.properties
+src/main/resources/supportFiles/.properties_mail
