@@ -12,7 +12,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.*;
 
 /**
  * src.model
@@ -27,6 +26,7 @@ public class CSVFile {
     protected File csvFile;
     protected List<String> lines;
 
+
     public enum Separator {
         COMMA(","),
         SEMICOLON(";"),
@@ -37,10 +37,12 @@ public class CSVFile {
         private final String symbol;
 
         Separator(String symbol) {
+
             this.symbol = symbol;
         }
 
         public String getSymbol() {
+
             return symbol;
         }
 
@@ -64,19 +66,12 @@ public class CSVFile {
      */
     public CSVFile(File file) {
         this.csvFile = file;
-        /*
-        try {
-			this.readCsvFile();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		 */
+
         this.csvName = file.getName();
-        //this.findSeparator();
-        //this.setSeparator(",");
     }
 
     public void setSeparator(Separator separator) {
+
         this.separator = separator;
     }
 
@@ -84,6 +79,7 @@ public class CSVFile {
      * @return String
      */
     public Separator getSeparator() {
+
         return this.separator;
     }
 
@@ -92,6 +88,7 @@ public class CSVFile {
      * @return String
      */
     public String getCsvName() {
+
         return csvName;
     }
 
@@ -100,6 +97,7 @@ public class CSVFile {
      * @return void
      */
     public void setCsvName(String csvName) {
+
         this.csvName = csvName;
     }
 
@@ -107,6 +105,7 @@ public class CSVFile {
      * @return File
      */
     public File getCsvFile() {
+
         return csvFile;
     }
 
@@ -115,6 +114,7 @@ public class CSVFile {
      * @return void
      */
     public void setCsvFile(File csvFile) {
+
         this.csvFile = csvFile;
     }
 
@@ -122,6 +122,7 @@ public class CSVFile {
      * @return ArrayList<String>
      */
     public List<String> getLines() {
+
         return lines;
     }
 
@@ -130,11 +131,13 @@ public class CSVFile {
      * @return void
      */
     public void setLines(ArrayList<String> lines) {
+
         this.lines = lines;
     }
 
     /**
      * Find the separator of csv file ("," "\t" or ";")
+     * unused
      *
      * @return void
      */
@@ -180,95 +183,9 @@ public class CSVFile {
         }
     }
 
-    /**
-     * Read csv file and stock lines
-     *
-     * @return void
-     * @throws IOException
-     */
-    public void readCsvFile() throws IOException {
-        lines = new ArrayList<String>();
-        /*byte[] searchString = {'\n'};
-        int count = 0;
-		long position = 1;
-		try (FileInputStream file = new FileInputStream(this.csvFile)) {
-			byte read[] = new byte[1];
-			String line = "";
-			outerLoop: while (-1 < file.read(read, 0, 1)) {
-				position++;
-				if (read[0] == searchString[0]) {
-					int matches = 1;
-					for (int i = 1; i < searchString.length; i++) {
-						if (-1 > file.read(read, 0, 1)) {
-							break outerLoop;
-						}
-						position++;
-						if (read[0] == searchString[i]) {
-							matches++;
-						} else {
-							break;
-						}
-					}
-					count ++;
-					lines.add(line);
-
-					line = "";
-				}
-				else{
-					line += (char)read[0];
-				}
-
-			}
-			System.out.println("nblines : " + count);
-			file.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		 */
-        BufferedReader br = null;
-        InputStream in = new FileInputStream(this.csvFile);
-        int count = 0;
-        try {
-            br = new BufferedReader(new InputStreamReader(in));
-            String line = null;
-            //br.lines().forEachOrdered(line ->System.out.println("Output:"+line));
-            while ((line = br.readLine()) != null) {
-                //lines.add(line);
-                count++;
-				/*if(count > 13450000 ){
-					System.out.println(count + line);
-				}*/
-            }
-        } catch (IOException io) {
-            throw io;
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (Exception e) {
-
-                }
-            }
-        }
-
-        //System.out.println("nbLines : " + count);
-		/*FileReader f = new FileReader(this.csvFile);
-		BufferedReader bf = new BufferedReader(f);
-		Scanner scanner = new Scanner(bf);
-
-		// On boucle sur chaque champ detecté
-		while (scanner.hasNextLine()) {
-			String line = scanner.nextLine();
-			//System.out.println(line);
-			lines.add(line);
-			//faites ici votre traitement
-		}
-
-		scanner.close();*/
-    }
 
     /**
-     * Count number of separators
+     * Count number of separators in a line
      *
      * @param line
      * @param separator
@@ -287,20 +204,23 @@ public class CSVFile {
     }
 
 
+    /**
+     * get the first line of CSV file
+     *
+     * @return String
+     */
     public String getFirstLine() {
         BufferedReader br = null;
         InputStream in = null;
         try {
             in = new FileInputStream(this.csvFile);
         } catch (FileNotFoundException e1) {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
         int countLine = 0;
         String firstLine = "";
         br = new BufferedReader(new InputStreamReader(in));
         String line = null;
-        //br.lines().forEachOrdered(line ->System.out.println("Output:"+line));
         try {
             while ((line = br.readLine()) != null) {
                 if (countLine == 0) {

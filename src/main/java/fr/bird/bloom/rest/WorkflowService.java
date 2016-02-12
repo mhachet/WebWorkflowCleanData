@@ -58,6 +58,13 @@ public class WorkflowService {
                 .build();
     }
 
+    /**
+     * initialise input parameters from json
+     *
+     * @param input
+     * @param uuid
+     * @return
+     */
     private InputParameters initParameters(ServiceInput input, String uuid) {
         // TODO fix this method, still Q&D
 
@@ -95,17 +102,10 @@ public class WorkflowService {
             connectionTags.put(header + "_" + i, headerDWC.getHeaderValue());
             i ++;
         }
-        /*for (int i = 0; i < tagsNoMapped.size(); i++) {
-            System.out.println(tagsNoMapped.get(i));
-            connectionTags.put(tagsNoMapped.get(i) + "_" + i, "");
-        }*/
-
-        //System.out.println("connectionTagsControler : " + connectionTags);
 
         newMappingDWC.setConnectionTags(connectionTags);
         newMappingDWC.getNoMappedFile().setCsvName(file.getName());
-        //inputParameters.getInputFilesList().add(csvFile.getCsvFile());
-        //newMappingDWC.setFilename(itemFile.getName());
+
         ReconciliationService reconciliationService = new ReconciliationService();
 
         MappingReconcilePreparation mappingReconcileDWC = new MappingReconcilePreparation(newMappingDWC, reconciliationService, 1);

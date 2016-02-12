@@ -43,30 +43,19 @@ public class TdwgTreatment {
 	public void checkIsoTdwgCode(DarwinCore fileDarwinCore){
 		//change example : locationID="TDWG:MXS-JA"
 		this.setSucessTdwgTreatment(true);
-		//fileDarwinCore.associateIdData();
-		//Map<String, List<String>> idAssoData = fileDarwinCore.getIdAssoData();
 		List<String> idListClean = fileDarwinCore.getIDClean();
 
-		//int iLatitude = fileDarwinCore.getIndiceFromTag("decimalLatitude_");
-		//int iLongitude = fileDarwinCore.getIndiceFromTag("decimalLongitude_");
-		//int iIso2 = fileDarwinCore.getIndiceFromTag("countryCode_");
 
-		//for (String id_ : idAssoData.keySet()) {
+
 		for(int i = 0 ; i< idListClean.size() ; i++){
 			String id_ = idListClean.get(i);
 			//System.out.println(id_);
 			if(!"id_".equals(id_ )){
-				//List<String> listInfos = idAssoData.get(id_);
 
 				float latitude = -1;
 				float longitude = -1;
 				String iso2 = "error";
 
-				/*
-				latitude = Float.parseFloat(listInfos.get(iLatitude).replace("\"", ""));
-				longitude = Float.parseFloat(listInfos.get(iLongitude).replace("\"", ""));
-				iso2 = listInfos.get(iIso2);
-				*/
 				String valueLatitude = fileDarwinCore.getValueFromColumn("decimalLatitude_", id_.replaceAll("\"", ""));
 				if(!valueLatitude.equals("error")){
 					latitude = Float.parseFloat(valueLatitude.replaceAll("\"", ""));
@@ -78,7 +67,6 @@ public class TdwgTreatment {
 				}
 
 				iso2 = fileDarwinCore.getValueFromColumn("countryCode_", id_.replaceAll("\"", "")).replaceAll("\"", "");
-				//gbifId_ = this.getDarwinCore().getValueFromColumn("gbifID_", id_.replaceAll("\"", "")).replaceAll("\"", "");
 
 				if(!iso2.equals("error") && latitude != -1 && longitude != -1) {
 					GeometryFactory geometryFactory = new GeometryFactory();
@@ -120,7 +108,6 @@ public class TdwgTreatment {
 						e.printStackTrace();
 					}
 					DatabaseTreatment newConnectionUpdateClean = new DatabaseTreatment(statementUpdateClean);
-					//List<String> messages =
 					newConnectionUpdateClean.executeSQLcommand("executeUpdate", sqlUpdateTDWG);
 
 					/*

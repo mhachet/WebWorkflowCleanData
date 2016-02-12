@@ -14,6 +14,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.*;
+
+
 /**
  * model
  * 
@@ -27,7 +29,12 @@ public class SynonymsTreatment {
 	private int nbSynonymInvolved;
 	private String uuid;
 
+	/**
+	 *
+	 * @param fileSynonyms
+	 */
 	public SynonymsTreatment (File fileSynonyms){
+
 		this.synonymsFile = fileSynonyms;
 	}
 
@@ -73,12 +80,14 @@ public class SynonymsTreatment {
 	}
 
 	/**
-	 * 
-	 * @param tableNameReference by default is Taxon. If user has changed, it's SynonymTemp
+	 * Taxon table is concerned to match synonym with Clean table
+	 *
 	 * @return void
 	 */
 	public void updateClean(){
+
 		Statement statement = null;
+
 		try {
 			statement = ConnectionDatabase.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		} catch (SQLException e) {
@@ -141,6 +150,9 @@ public class SynonymsTreatment {
 		}
 	}
 
+	/**
+	 * unused because need an user input file
+	 */
 	public void updateCleanFromSynonymTemp(){
 
 		Statement statement = null;
@@ -170,6 +182,9 @@ public class SynonymsTreatment {
 		}
 	}
 
+	/**
+	 * unused because need an user input file
+	 */
 	public void createSynonymTempTable(){
 		List<String> linesIncludeSynonyms = new ArrayList<>();
 		FileReader fr = null;
@@ -233,34 +248,66 @@ public class SynonymsTreatment {
 		}
 	}
 
+	/**
+	 *
+	 * @return File
+	 */
 	public File getSynonymsFile() {
 		return synonymsFile;
 	}
 
+	/**
+	 *
+	 * @param synonymsFile
+	 */
 	public void setSynonymsFile(File synonymsFile) {
 		this.synonymsFile = synonymsFile;
 	}
 
+	/**
+	 *
+	 * @return List<String>
+	 */
 	public List<String> getTagsList() {
 		return tagsList;
 	}
 
+	/**
+	 *
+	 * @param tagsList
+	 */
 	public void setTagsList(ArrayList<String> tagsList) {
 		this.tagsList = tagsList;
 	}
 
+	/**
+	 *
+	 * @return int
+	 */
 	public int getNbSynonymInvolved() {
 		return nbSynonymInvolved;
 	}
 
+	/**
+	 *
+	 * @param nbSynonymInvolved
+	 */
 	public void setNbSynonymInvolved(int nbSynonymInvolved) {
 		this.nbSynonymInvolved = nbSynonymInvolved;
 	}
 
+	/**
+	 *
+	 * @return String
+	 */
 	public String getUuid() {
 		return uuid;
 	}
 
+	/**
+	 *
+	 * @param uuid
+	 */
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}

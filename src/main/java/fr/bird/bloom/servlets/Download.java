@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.logging.*;
+
 /**
  * Servlet implementation class Download
  */
@@ -22,12 +23,13 @@ public class Download extends HttpServlet {
 
 	public Download() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
 		/* Read 'downloadpath' parameter in Download servlet thanks declaration in web.xml */
 		String downloadpath = this.getServletConfig().getInitParameter("downloadpath");
+
 		/* Get filepath asked inside url request*/
 		String requestFile = request.getPathInfo();
 
@@ -44,7 +46,7 @@ public class Download extends HttpServlet {
 		System.out.println(file.getAbsolutePath());
 		/*Check file exist */
 		if ( !file.exists() ) {
-			/* Else 404 error, ressource doesn't exist */
+			/* Else 404 error, resource doesn't exist */
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}

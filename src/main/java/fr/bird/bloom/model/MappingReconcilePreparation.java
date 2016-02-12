@@ -36,7 +36,8 @@ public class MappingReconcilePreparation {
      * @return MappingDwC
      */
     public MappingDwC getMappingDWC() {
-	return mappingDWC;
+
+        return mappingDWC;
     }
 
     /**
@@ -45,6 +46,7 @@ public class MappingReconcilePreparation {
      * @return void
      */
     public void setMappingDWC(MappingDwC mappingDWC) {
+
         this.mappingDWC = mappingDWC;
     }
 
@@ -53,6 +55,7 @@ public class MappingReconcilePreparation {
      * @return ReconciliationService
      */
     public ReconciliationService getReconcileDWC() {
+
         return reconcileDWC;
     }
     
@@ -62,6 +65,7 @@ public class MappingReconcilePreparation {
      * @return void
      */
     public void setReconcileDWC(ReconciliationService reconcileDWC) {
+
         this.reconcileDWC = reconcileDWC;
     }
 
@@ -70,6 +74,7 @@ public class MappingReconcilePreparation {
      * @return int
      */
     public int getIdFile() {
+
         return idFile;
     }
 
@@ -79,6 +84,7 @@ public class MappingReconcilePreparation {
      * @return void
      */
     public void setIdFile(int idFile) {
+
         this.idFile = idFile;
     }
 
@@ -87,6 +93,7 @@ public class MappingReconcilePreparation {
      * @return String
      */
     public String getOriginalName() {
+
         return originalName;
     }
 
@@ -95,6 +102,7 @@ public class MappingReconcilePreparation {
      * @param originalName
      */
     public void setOriginalName(String originalName) {
+
         this.originalName = originalName;
     }
 
@@ -103,6 +111,7 @@ public class MappingReconcilePreparation {
      * @return String
      */
     public String getOriginalExtension() {
+
         return originalExtension;
     }
 
@@ -111,6 +120,7 @@ public class MappingReconcilePreparation {
      * @param originalExtension
      */
     public void setOriginalExtension(String originalExtension) {
+
         this.originalExtension = originalExtension;
     }
 
@@ -119,7 +129,8 @@ public class MappingReconcilePreparation {
      * @return boolean
      */
 	public boolean isValid() {
-		return isValid;
+
+        return isValid;
 	}
 
 	/**
@@ -127,7 +138,8 @@ public class MappingReconcilePreparation {
 	 * @param isValid
 	 */
 	public void setValid(boolean isValid) {
-		this.isValid = isValid;
+
+        this.isValid = isValid;
 	}
     
 }

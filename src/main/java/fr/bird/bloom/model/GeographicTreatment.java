@@ -24,6 +24,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.*;
+
+
 /**
  * src.model
  * 
@@ -54,53 +56,57 @@ public class GeographicTreatment {
 	 * @param darwinCore
 	 */
 	public GeographicTreatment(DarwinCore darwinCore){
+
 		this.darwinCore = darwinCore;
 	}
 
+
 	/**
-	 * 
-	 * @return ArrayList<String>
+	 * Iso 2 code treatment (select null or incorrect iso 2 code and delete them)
 	 */
-	public void geoGraphicTreatment(){
-		/*
-		List<String> wrongIso2 = this.selectWrongIso2();
-		this.setWrongIso2List(wrongIso2);
-
-		this.deleteWrongIso2();
-		this.createTableClean();
-
-		List<String> wrongCoordinates = this.deleteWrongCoordinates();
-		this.setWrongCoordinatesList(wrongCoordinates);
-
-		List<String> wrongGeoSpatial = this.deleteWrongGeospatial();
-		this.setWrongGeoList(wrongGeoSpatial);
-
-		List<String> wrongPolygon = this.checkCoordinatesIso2Code();
-		this.setWrongPolygonList(wrongPolygon);
-		*/
-	}
-
 	public void geographicIso2Treatment(){
+
 		List<String> wrongIso2 = this.selectWrongIso2();
+
 		this.setWrongIso2List(wrongIso2);
 
 		this.deleteWrongIso2();
 	}
 
+	/**
+	 * Check wrong coordinates
+	 */
 	public void geographicCoordinatesTreatment(){
+
 		List<String> wrongCoordinates = this.deleteWrongCoordinates();
+
 		this.setWrongCoordinatesList(wrongCoordinates);
+
 	}
 
+	/**
+	 * Check "hasGeospatialIssues" tag
+	 * if tag "hasGeospatialIssues_" = true => wrong coordinate
+	 */
 	public void geographicSpatialIssuesTreatment(){
+
 		List<String> wrongGeoSpatial = this.deleteWrongGeospatial();
+
 		this.setWrongGeoList(wrongGeoSpatial);
+
 	}
 
+	/**
+	 * Check if coordinate are in its country (define by its iso 2 code)
+	 */
 	public void geographicPolygonTreatment(){
+
 		List<String> wrongPolygon = this.checkCoordinatesIso2Code();
+
 		this.setWrongPolygonList(wrongPolygon);
+
 	}
+
 	/**
 	 * Check if coordinates (latitude and longitude) are included in the country indicated by the iso2 code
 	 * 
@@ -108,34 +114,21 @@ public class GeographicTreatment {
 	 */
 	public List<String> checkCoordinatesIso2Code(){
 
-
-		//this.getDarwinCore().associateIdData();
-
 		List<String> listToDelete = new ArrayList<>();
 
-		//Map<String, List<String>> idAssoData = this.getDarwinCore().getIdAssoData();
 		final String resourcePath = BloomConfig.getResourcePath();
 		List<String> idList = this.getDarwinCore().getIDClean();
-		//int iLatitude = this.getDarwinCore().getIndiceFromTag("decimalLatitude_");
-		//int iLongitude = this.getDarwinCore().getIndiceFromTag("decimalLongitude_");
-		//int iIso2 = this.getDarwinCore().getIndiceFromTag("countryCode_");
-		//int iGbifID = this.getDarwinCore().getIndiceFromTag("gbifID_");
 
 		int nbWrongPolygon = 0;
 		List<String> listIDtoDelete = new ArrayList<>();
 		for(int i = 0 ; i< idList.size() ; i++){
 			String id_ = idList.get(i);
-			//System.out.println(id_);
-		//for (String id_ : idAssoData.keySet()) {
-			//System.out.println(id_);
 			if(!"id_".equals(id_ )){
-				//List<String> listInfos = idAssoData.get(id_);
 				boolean errorIso = true;
 				boolean errorCoord = false;
 				float latitude = -1;
 				float longitude = -1;
 				String iso2 = "error";
-				String gbifId_ = "error";
 				String iso3 = "error";
 
 				String valueLatitude = this.getDarwinCore().getValueFromColumn("decimalLatitude_", id_.replaceAll("\"", ""));
@@ -160,24 +153,12 @@ public class GeographicTreatment {
 				}
 
 				iso2 = this.getDarwinCore().getValueFromColumn("countryCode_", id_.replaceAll("\"", "")).replaceAll("\"", "");
-				//gbifId_ = this.getDarwinCore().getValueFromColumn("gbifID_", id_.replaceAll("\"", "")).replaceAll("\"", "");
 
 
 				if(!iso2.equals("error") && !errorCoord){
 					iso3 = this.convertIso2ToIso3(iso2);
 
-					/*
-					try {
-						latitude = Float.parseFloat(listInfos.get(iLatitude).replace("\"", ""));
-					}
-					catch (NumberFormatException nfe){
-						System.err.println(listInfos.get(iLatitude).replace("\"", ""));
-					}
-					longitude = Float.parseFloat(listInfos.get(iLongitude).replace("\"", ""));
-					iso2 = listInfos.get(iIso2);
-					*/
 
-					//gbifId_ = listInfos.get(iGbifID);
 					if(!iso3.equals("error")){
 						File geoJsonFile = new File(resourcePath + "gadm_json/" + iso3.toUpperCase() + "_adm0.json");
 						if(geoJsonFile.exists()){
@@ -195,8 +176,6 @@ public class GeographicTreatment {
 
 							if(!isContained){
 								errorIso = true;
-								//nbWrongPolygon ++;
-								//listIDtoDelete.add(id_);
 							}
 							else{
 								errorIso = false;
@@ -279,10 +258,10 @@ public class GeographicTreatment {
 			}
 			DatabaseTreatment newConnectionSelectID = new DatabaseTreatment(statement);
 			List<String> messagesSelectID = new ArrayList<>();
-			//String sqlSelectID =  + id_ + ";";
+
 			messagesSelectID.add("\n--- Select wrong matching between polygon and Iso2 code ---\n");
 			messagesSelectID.addAll(newConnectionSelectID.executeSQLcommand("executeQuery", sqlIDCleanToSelect));
-			//messagesSelectID.add(sqlIDCleanToSelect);
+
 			for (int j = 0; j < messagesSelectID.size(); j++) {
 				System.out.println(messagesSelectID.get(j));
 			}
@@ -302,17 +281,17 @@ public class GeographicTreatment {
 			}
 			DatabaseTreatment newConnectionDeleteID = new DatabaseTreatment(statementDelete);
 			List<String> messagesDeleteID = new ArrayList<>();
-			//String sqlDeleteID = "DELETE FROM Workflow.Clean_" + this.getUuid() + " WHERE id_=" + id_ + ";";
+
 			messagesDeleteID.add("\n--- Delete wrong matching between polygon and Iso2 code ---\n");
 			messagesDeleteID.addAll(newConnectionDeleteID.executeSQLcommand("executeUpdate", sqlIDCleanToDelete));
 			List<String> deleteIDResults = newConnectionDeleteID.getResultatSelect();
-			messagesDeleteID.add("nb lignes affectées :" + listToDelete.size());
+			messagesDeleteID.add("nb affected lines :" + listToDelete.size());
+
 			for (int i = 0; i < messagesDeleteID.size(); i++) {
 				System.out.println(messagesDeleteID.get(i));
 			}
 
 		}
-
 
 		this.setNbWrongPolygon(nbWrongPolygon);
 
@@ -443,6 +422,11 @@ public class GeographicTreatment {
 		return typePolygon;
 	}
 
+	/**
+	 * Select lines without iso 2 code or incorrect
+	 *
+	 * @return List<String>
+	 */
 	public List<String> selectWrongIso2(){
 
 		Statement statementIso2 = null;
@@ -460,7 +444,7 @@ public class GeographicTreatment {
 		//System.out.println(sqlSelectIso2);
 		messagesIso2.addAll(newConnectionIso2.executeSQLcommand(choiceStatementIso2, sqlSelectIso2));
 		List<String> resultatSelectWrongIso2 = newConnectionIso2.getResultatSelect();
-		messagesIso2.add("nb lignes affectées :" + Integer.toString(resultatSelectWrongIso2.size() - 1));
+		messagesIso2.add("nb affected lines : " + Integer.toString(resultatSelectWrongIso2.size() - 1));
 
 		for(int i = 0 ; i < messagesIso2.size() ; i++){
 			System.out.println(messagesIso2.get(i));
@@ -470,6 +454,7 @@ public class GeographicTreatment {
 
 		return resultatSelectWrongIso2;
 	}
+
 	/**
 	 * Create temporary table "temp" with only correct iso2 code in DarwinCoreInput table.
 	 * Iso2 code (countryCode_) is correct if it's contained in IsoCode table (iso2_).
@@ -562,9 +547,6 @@ public class GeographicTreatment {
 			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/wrong/");
 		}
 
-
-
-
 		for(int j = 0 ; j < messages.size() ; j++){
 			if(messages.get(j).contains("nb lignes affectées")){
 				this.setNbWrongCoordinates(Integer.parseInt(messages.get(j).split(":")[1]));
@@ -610,8 +592,6 @@ public class GeographicTreatment {
 			BloomUtils.createDirectory(BloomConfig.getDirectoryPath() + "temp/" + this.getUuid() + "/wrong/");
 		}
 
-
-
 		for(int j = 0 ; j < messages.size() ; j++){
 			System.out.println(messages.get(j));
 		}
@@ -621,133 +601,263 @@ public class GeographicTreatment {
 		return resultatSelect;
 	}
 
+	/**
+	 *
+	 * @return String
+	 */
 	public String getUuid() {
 
 		return uuid;
+
 	}
 
+	/**
+	 *
+	 * @param uuid
+	 */
 	public void setUuid(String uuid) {
 
 		this.uuid = uuid;
+
 	}
 
+	/**
+	 *
+	 * @return int
+	 */
 	public int getNbWrongGeospatialIssues() {
 
 		return nbWrongGeospatialIssues;
+
 	}
 
+	/**
+	 *
+	 * @param nbWrongGeospatialIssues
+	 */
 	public void setNbWrongGeospatialIssues(int nbWrongGeospatialIssues) {
+
 		this.nbWrongGeospatialIssues = nbWrongGeospatialIssues;
+
 	}
 
+	/**
+	 *
+	 * @return int
+	 */
 	public int getNbWrongCoordinates() {
 
 		return nbWrongCoordinates;
+
 	}
 
+	/**
+	 *
+	 * @param nbWrongCoordinates
+	 */
 	public void setNbWrongCoordinates(int nbWrongCoordinates) {
 
 		this.nbWrongCoordinates = nbWrongCoordinates;
+
 	}
 
+	/**
+	 *
+	 * @return int
+	 */
 	public int getNbWrongPolygon() {
+
 		return nbWrongPolygon;
+
 	}
 
+	/**
+	 *
+	 * @param nbWrongIso2
+	 */
 	public void setNbWrongPolygon(int nbWrongIso2) {
 
 		this.nbWrongPolygon = nbWrongIso2;
 	}
 
+	/**
+	 *
+	 * @return DarwinCore
+	 */
 	public DarwinCore getDarwinCore() {
 
 		return darwinCore;
 	}
 
+	/**
+	 *
+	 * @param darwinCore
+	 */
 	public void setDarwinCore(DarwinCore darwinCore) {
 
 		this.darwinCore = darwinCore;
 	}
 
+	/**
+	 *
+	 * @return List<String>
+	 */
 	public List<String> getWrongGeoList() {
 
 		return wrongGeoList;
 	}
 
+	/**
+	 *
+	 * @param wrongGeoList
+	 */
 	public void setWrongGeoList(List<String> wrongGeoList) {
 
 		this.wrongGeoList = wrongGeoList;
 	}
 
+	/**
+	 *
+	 * @return List<String>
+	 */
 	public List<String> getWrongCoordinatesList() {
 
 		return wrongCoordinatesList;
 	}
 
+	/**
+	 *
+	 * @param wrongCoordinatesList
+	 */
 	public void setWrongCoordinatesList(List<String> wrongCoordinatesList) {
+
 		this.wrongCoordinatesList = wrongCoordinatesList;
 	}
 
+	/**
+	 *
+	 * @return List<String>
+	 */
 	public List<String> getWrongPolygonList() {
 
 		return wrongPolygonList;
 	}
 
+	/**
+	 *
+	 * @param wrongPolygonList
+	 */
 	public void setWrongPolygonList(List<String> wrongPolygonList) {
+
 		this.wrongPolygonList = wrongPolygonList;
+
 	}
 
+	/**
+	 *
+	 * @return File
+	 */
 	public File getWrongGeoFile() {
 
 		return wrongGeoFile;
 	}
 
+	/**
+	 *
+	 * @param wrongGeoFile
+	 */
 	public void setWrongGeoFile(File wrongGeoFile) {
 
 		this.wrongGeoFile = wrongGeoFile;
 	}
 
+	/**
+	 *
+	 * @return File
+	 */
 	public File getWrongCoordinatesFile() {
 
 		return wrongCoordinatesFile;
 	}
 
+	/**
+	 *
+	 * @param wrongCoordinatesFile
+	 */
 	public void setWrongCoordinatesFile(File wrongCoordinatesFile) {
 
 		this.wrongCoordinatesFile = wrongCoordinatesFile;
 	}
 
+	/**
+	 *
+	 * @return File
+	 */
 	public File getWrongPolygonFile() {
 
 		return wrongPolygonFile;
 	}
 
+	/**
+	 *
+	 * @param wrongPolygonFile
+	 */
 	public void setWrongPolygonFile(File wrongPolygonFile) {
 
 		this.wrongPolygonFile = wrongPolygonFile;
 	}
 
+	/**
+	 *
+	 * @return int
+	 */
 	public int getNbWrongIso2() {
+
 		return nbWrongIso2;
 	}
 
+	/**
+	 *
+	 * @param nbWrongIso2
+	 */
 	public void setNbWrongIso2(int nbWrongIso2) {
+
 		this.nbWrongIso2 = nbWrongIso2;
 	}
 
+	/**
+	 *
+	 * @return List<String>
+	 */
 	public List<String> getWrongIso2List() {
+
 		return wrongIso2List;
 	}
 
+	/**
+	 *
+	 * @param wrongIso2List
+	 */
 	public void setWrongIso2List(List<String> wrongIso2List) {
+
 		this.wrongIso2List = wrongIso2List;
 	}
 
+	/**
+	 *
+	 * @return File
+	 */
 	public File getWrongIso2File() {
+
 		return wrongIso2File;
 	}
 
+	/**
+	 *
+	 * @param wrongIso2File
+	 */
 	public void setWrongIso2File(File wrongIso2File) {
+
 		this.wrongIso2File = wrongIso2File;
 	}
 }

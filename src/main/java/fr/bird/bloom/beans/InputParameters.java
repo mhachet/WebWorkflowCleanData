@@ -14,7 +14,7 @@ import fr.bird.bloom.model.MappingReconcilePreparation;
 
 /**
  * src.beans
- * <p>
+ *
  * Initiliaze
  */
 public class InputParameters {

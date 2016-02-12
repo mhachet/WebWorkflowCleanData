@@ -1,7 +1,5 @@
 package fr.bird.bloom.model;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -9,7 +7,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.*;
 public class DatabaseTreatment {
 
 	private ArrayList<String> resultatSelect;
@@ -21,6 +18,7 @@ public class DatabaseTreatment {
 	public DatabaseTreatment(Statement statement){
 		this.statement = statement;
 	}
+
 	/**
 	 * Do a connection to the database
 	 * @param String choiceStatement : execute, executeQuery or executeUpdate
@@ -29,34 +27,26 @@ public class DatabaseTreatment {
 	 */
 	public List<String> executeSQLcommand(String choiceStatement, String sql){
 
-		//this.getRessourcesMysql();
-
 		List<String > messages = new ArrayList<>();
 
 		try {
-			messages.add( "\nChargement du driver..." );
+			messages.add( "\nDriver is loading ..." );
 			Class.forName( "com.mysql.jdbc.Driver" );
-			messages.add( "Driver chargé !" );
+			messages.add( "Driver is loaded !" );
 		} catch ( ClassNotFoundException e ) {
-			messages.add( "Erreur lors du chargement : le driver n'a pas été trouvé dans le classpath ! <br/>"
+			messages.add( "Error during loading : driver couldn't be found in the classpath ! <br/>"
 					+ e.getMessage() );
 		}
 
 		try {
-			messages.add("Connexion à la base de données ...");
-			//connexion = DriverManager.getConnection( url, user, password );
-			messages.add("Connexion réussie !");
-
-			/* Create managing object of request */
-			//statement = connexion.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-
-			messages.add( "Objet requête créé !" );
+			messages.add("Database connection ...");
+			messages.add("Connection succeed !");
+			messages.add( "Request object created !" );
 
 			//global method for any SQL script - return a boolean : true if the instruction return ResultSet, false else
 			if(Objects.equals(choiceStatement, "execute")){
 				this.setResultat(statement.execute(sql));
 				messages.add(sql);
-				//messages.add(resultat.toString());
 			}
 			// SELECT - return ResultSet, with results : TDWG=
 			else if(Objects.equals(choiceStatement, "executeQuery")){
@@ -67,6 +57,7 @@ public class DatabaseTreatment {
 				setResultatSelect(resultMeta);
 				this.resultSet.close();
 			}
+
 			/* writing or deleting on DB (for INSERT, UPDATE, DELETE, ...)
 			 * give lines number edited by INSERT, UPDATE et DELETE
 			 * or 0 for no return methods like CREATE
@@ -74,7 +65,6 @@ public class DatabaseTreatment {
 			else if(Objects.equals(choiceStatement, "executeUpdate")){
 				i = statement.executeUpdate(sql);
 				messages.add(sql);
-				//messages.add("nb lignes affectées => " + Integer.toString(i));
 			}
 
 			statement.close();
@@ -128,9 +118,7 @@ public class DatabaseTreatment {
 
 		for (int i = 0; i < resultatCleantableFromidFile.size() ; i++){
 			String lineCleanData = resultatCleantableFromidFile.get(i);
-			//System.out.println("before : " + lineCleanData);
 			lineCleanData = lineCleanData.replace("\\\\\"", "\"");
-			//System.out.println("after : " + lineCleanData);
 		}
 
 		return resultatCleantableFromidFile;

@@ -8,6 +8,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.logging.*;
+
+
 class StreamGobbler extends Thread{
 	
     private InputStream is;
@@ -15,6 +17,7 @@ class StreamGobbler extends Thread{
     private OutputStream os;
     
     StreamGobbler(InputStream is, String type){
+
         this(is, type, null);
     }
     
@@ -23,7 +26,7 @@ class StreamGobbler extends Thread{
         this.type = type;
         this.os = redirect;
     }
-    
+
     public void run(){
         try{
             PrintWriter pw = null;
@@ -35,7 +38,6 @@ class StreamGobbler extends Thread{
             String line = null;
             while ( (line = br.readLine()) != null){
                 if (pw != null){
-                	//System.out.println(line);
                 	pw.println(line);
                 }
                 
