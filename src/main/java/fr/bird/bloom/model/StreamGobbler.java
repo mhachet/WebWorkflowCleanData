@@ -9,7 +9,9 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.logging.*;
 
-
+/**
+ * display R script for raster treatment
+ */
 class StreamGobbler extends Thread{
 	
     private InputStream is;
